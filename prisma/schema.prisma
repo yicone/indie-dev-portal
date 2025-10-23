@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Repo {
+  id               Int      @id @default(autoincrement())
+  name             String
+  slug             String   @unique
+  description      String?
+  repoPath         String
+  primaryLanguage  String
+  frameworks       Json
+  stars            Int      @default(0)
+  updatedAt        DateTime @updatedAt
+  createdAt        DateTime @default(now())
+  commits          Commit[]
+}
+
+model Commit {
+  id          Int      @id @default(autoincrement())
+  hash        String
+  message     String
+  author      String
+  committedAt DateTime
+  repo        Repo     @relation(fields: [repoId], references: [id], onDelete: Cascade)
+  repoId      Int
+
+  @@index([repoId])
+  @@index([committedAt])
+}
