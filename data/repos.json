@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Alpha",
+    "slug": "alpha",
+    "description": "AI-assisted note taking app with real-time sync.",
+    "repoPath": "/data/repos/alpha",
+    "primaryLanguage": "TypeScript",
+    "frameworks": ["Next.js", "TailwindCSS"],
+    "stars": 128
+  },
+  {
+    "name": "Beta",
+    "slug": "beta",
+    "description": "Developer portfolio static site with blog.",
+    "repoPath": "/data/repos/beta",
+    "primaryLanguage": "JavaScript",
+    "frameworks": ["React"],
+    "stars": 87
+  },
+  {
+    "name": "Gamma",
+    "slug": "gamma",
+    "description": "Internal tooling dashboard for CI/CD metrics.",
+    "repoPath": "/data/repos/gamma",
+    "primaryLanguage": "Python",
+    "frameworks": ["Flask"],
+    "stars": 205
+  },
+  {
+    "name": "Delta",
+    "slug": "delta",
+    "description": "Cross-platform UI component kit.",
+    "repoPath": "/data/repos/delta",
+    "primaryLanguage": "TypeScript",
+    "frameworks": ["Svelte", "Vite"],
+    "stars": 164
+  },
+  {
+    "name": "Epsilon",
+    "slug": "epsilon",
+    "description": "Serverless analytics pipeline and dashboard.",
+    "repoPath": "/data/repos/epsilon",
+    "primaryLanguage": "Go",
+    "frameworks": ["Nx", "React"],
+    "stars": 92
+  }
+]

@@ -1,0 +1,177 @@
+[
+  {
+    "repoSlug": "alpha",
+    "hash": "a1b2c3d",
+    "message": "feat: add AI summarizer for meeting notes",
+    "author": "Terry R.",
+    "committedAt": "2024-10-15T09:12:00.000Z"
+  },
+  {
+    "repoSlug": "alpha",
+    "hash": "d4e5f6g",
+    "message": "refactor: migrate websocket layer to socket.io",
+    "author": "Terry R.",
+    "committedAt": "2024-10-14T18:33:00.000Z"
+  },
+  {
+    "repoSlug": "alpha",
+    "hash": "h7i8j9k",
+    "message": "fix: resolve sync issues when offline",
+    "author": "Morgan L.",
+    "committedAt": "2024-10-13T13:47:00.000Z"
+  },
+  {
+    "repoSlug": "alpha",
+    "hash": "l0m1n2o",
+    "message": "chore: bump dependencies and update lint rules",
+    "author": "Morgan L.",
+    "committedAt": "2024-10-12T08:55:00.000Z"
+  },
+  {
+    "repoSlug": "alpha",
+    "hash": "p3q4r5s",
+    "message": "docs: update onboarding guide with AI tips",
+    "author": "Terry R.",
+    "committedAt": "2024-10-11T20:10:00.000Z"
+  },
+  {
+    "repoSlug": "beta",
+    "hash": "t6u7v8w",
+    "message": "feat: integrate MDX blog posts",
+    "author": "Alex K.",
+    "committedAt": "2024-10-16T11:05:00.000Z"
+  },
+  {
+    "repoSlug": "beta",
+    "hash": "x9y0z1a",
+    "message": "style: apply new hero animations",
+    "author": "Casey P.",
+    "committedAt": "2024-10-15T16:42:00.000Z"
+  },
+  {
+    "repoSlug": "beta",
+    "hash": "b2c3d4e",
+    "message": "fix: resolve responsive issues on tablets",
+    "author": "Alex K.",
+    "committedAt": "2024-10-14T21:18:00.000Z"
+  },
+  {
+    "repoSlug": "beta",
+    "hash": "f5g6h7i",
+    "message": "chore: add sitemap generation",
+    "author": "Casey P.",
+    "committedAt": "2024-10-13T07:25:00.000Z"
+  },
+  {
+    "repoSlug": "beta",
+    "hash": "j8k9l0m",
+    "message": "docs: update content strategy brief",
+    "author": "Alex K.",
+    "committedAt": "2024-10-12T12:32:00.000Z"
+  },
+  {
+    "repoSlug": "gamma",
+    "hash": "n1o2p3q",
+    "message": "feat: add deployment health timeline",
+    "author": "Dana S.",
+    "committedAt": "2024-10-15T10:45:00.000Z"
+  },
+  {
+    "repoSlug": "gamma",
+    "hash": "r4s5t6u",
+    "message": "refactor: modularize pipeline monitors",
+    "author": "Dana S.",
+    "committedAt": "2024-10-14T14:28:00.000Z"
+  },
+  {
+    "repoSlug": "gamma",
+    "hash": "v7w8x9y",
+    "message": "fix: eliminate duplicate alerts",
+    "author": "Priya M.",
+    "committedAt": "2024-10-13T09:57:00.000Z"
+  },
+  {
+    "repoSlug": "gamma",
+    "hash": "z0a1b2c",
+    "message": "chore: upgrade Python runtime to 3.13",
+    "author": "Priya M.",
+    "committedAt": "2024-10-12T19:40:00.000Z"
+  },
+  {
+    "repoSlug": "gamma",
+    "hash": "d3e4f5g",
+    "message": "docs: add incident response handbook",
+    "author": "Dana S.",
+    "committedAt": "2024-10-11T06:15:00.000Z"
+  },
+  {
+    "repoSlug": "delta",
+    "hash": "h6i7j8k",
+    "message": "feat: add design tokens for Catppuccin palette",
+    "author": "Jamie L.",
+    "committedAt": "2024-10-16T08:22:00.000Z"
+  },
+  {
+    "repoSlug": "delta",
+    "hash": "l9m0n1o",
+    "message": "refactor: extract animation utilities",
+    "author": "Jamie L.",
+    "committedAt": "2024-10-15T15:11:00.000Z"
+  },
+  {
+    "repoSlug": "delta",
+    "hash": "p2q3r4s",
+    "message": "fix: resolve focus states for buttons",
+    "author": "Sam C.",
+    "committedAt": "2024-10-14T20:05:00.000Z"
+  },
+  {
+    "repoSlug": "delta",
+    "hash": "t5u6v7w",
+    "message": "chore: update Storybook snapshots",
+    "author": "Sam C.",
+    "committedAt": "2024-10-13T11:48:00.000Z"
+  },
+  {
+    "repoSlug": "delta",
+    "hash": "x8y9z0a",
+    "message": "docs: polish contributing guidelines",
+    "author": "Jamie L.",
+    "committedAt": "2024-10-12T16:02:00.000Z"
+  },
+  {
+    "repoSlug": "epsilon",
+    "hash": "b1c2d3e",
+    "message": "feat: add multiregion ingestion",
+    "author": "Taylor Z.",
+    "committedAt": "2024-10-15T13:07:00.000Z"
+  },
+  {
+    "repoSlug": "epsilon",
+    "hash": "f4g5h6i",
+    "message": "refactor: migrate analytics to Vitest",
+    "author": "Taylor Z.",
+    "committedAt": "2024-10-14T17:19:00.000Z"
+  },
+  {
+    "repoSlug": "epsilon",
+    "hash": "j7k8l9m",
+    "message": "fix: resolve dashboard hydration issues",
+    "author": "Riley Q.",
+    "committedAt": "2024-10-13T22:40:00.000Z"
+  },
+  {
+    "repoSlug": "epsilon",
+    "hash": "n0o1p2q",
+    "message": "chore: reorganize Terraform modules",
+    "author": "Riley Q.",
+    "committedAt": "2024-10-12T10:19:00.000Z"
+  },
+  {
+    "repoSlug": "epsilon",
+    "hash": "r3s4t5u",
+    "message": "docs: add observability runbook",
+    "author": "Taylor Z.",
+    "committedAt": "2024-10-11T05:33:00.000Z"
+  }
+]
