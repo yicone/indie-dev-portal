@@ -44,7 +44,10 @@ export const transformRepo = (
   description: repo.description ?? null,
   repoPath: repo.repoPath,
   primaryLanguage: repo.primaryLanguage,
-  frameworks: (repo.frameworks as string[]) ?? [],
+  frameworks:
+    typeof repo.frameworks === "string"
+      ? (JSON.parse(repo.frameworks) as string[])
+      : [],
   stars: repo.stars,
   updatedAt: repo.updatedAt.toISOString(),
   createdAt: repo.createdAt.toISOString(),

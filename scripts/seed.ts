@@ -49,7 +49,7 @@ async function main() {
         description: repo.description,
         repoPath: repo.repoPath,
         primaryLanguage: repo.primaryLanguage,
-        frameworks: repo.frameworks,
+        frameworks: JSON.stringify(repo.frameworks ?? []),
         stars: repo.stars ?? 0,
       },
     });
