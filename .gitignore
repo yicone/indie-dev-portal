@@ -8,6 +8,7 @@ out
 .env.production.local
 pnpm-lock.yaml
 .prisma
+*.db
 .husky/_
 
 # General
