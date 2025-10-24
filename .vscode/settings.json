@@ -1,3 +1,11 @@
 {
-    "python.languageServer": "None"
+  "python.languageServer": "None",
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "idp",
+      "database": "${workspaceFolder:indie-dev-portal}/prisma/dev.db"
+    }
+  ]
 }
