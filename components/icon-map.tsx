@@ -4,19 +4,21 @@ import {
   SiJavascript,
   SiTypescript,
   SiReact,
-  SiVueDotJs,
+  SiVuedotjs,
   SiSvelte,
   SiNextdotjs,
   SiNx,
   SiFlask,
   SiTailwindcss,
   SiExpress,
+  SiGo,
 } from "react-icons/si";
 
 export type TechKey =
   | "Python"
   | "JavaScript"
   | "TypeScript"
+  | "Go"
   | "React"
   | "Vue"
   | "Svelte"
@@ -30,8 +32,9 @@ const iconMap: Record<TechKey, IconType> = {
   Python: SiPython,
   JavaScript: SiJavascript,
   TypeScript: SiTypescript,
+  Go: SiGo,
   React: SiReact,
-  Vue: SiVueDotJs,
+  Vue: SiVuedotjs,
   Svelte: SiSvelte,
   "Next.js": SiNextdotjs,
   Nx: SiNx,
