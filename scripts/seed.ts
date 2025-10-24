@@ -11,6 +11,9 @@ type RepoSeed = {
   repoPath: string;
   primaryLanguage: string;
   frameworks: string[];
+  ciStatus?: string;
+  lastOpenedAt?: string;
+  notes?: string;
   stars?: number;
 };
 
@@ -50,8 +53,11 @@ async function main() {
         repoPath: repo.repoPath,
         primaryLanguage: repo.primaryLanguage,
         frameworks: JSON.stringify(repo.frameworks ?? []),
+        ciStatus: repo.ciStatus ?? "pending",
+        lastOpenedAt: repo.lastOpenedAt ? new Date(repo.lastOpenedAt) : null,
+        notes: repo.notes ?? null,
         stars: repo.stars ?? 0
-      }
+      } as any
     });
 
     const repoCommits = commits.filter(

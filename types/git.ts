@@ -6,6 +6,9 @@ export type Repo = {
   repoPath: string;
   primaryLanguage: string;
   frameworks: string[];
+  ciStatus: "passing" | "failing" | "pending" | "none";
+  lastOpenedAt: string | null;
+  notes: string | null;
   stars: number;
   updatedAt: string;
   createdAt: string;

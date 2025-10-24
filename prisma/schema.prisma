@@ -15,6 +15,9 @@ model Repo {
   repoPath         String
   primaryLanguage  String
   frameworks       String
+  ciStatus         String   @default("pending")
+  lastOpenedAt     DateTime?
+  notes            String?
   stars            Int      @default(0)
   updatedAt        DateTime @updatedAt
   createdAt        DateTime @default(now())
