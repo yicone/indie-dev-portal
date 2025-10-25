@@ -82,7 +82,10 @@ export function ProjectCard({ repo }: ProjectCardProps) {
                 <span className="flex items-center justify-center rounded-xl text-background shadow-[0_12px_28px_-16px_rgba(137,180,250,0.35)]">
                   <Code2 className="h-5 w-5 stroke-primary" />
                 </span>
-                <h2 className="truncate text-base font-semibold text-foreground">
+                <h2
+                  className="truncate text-lg font-semibold text-foreground"
+                  title={repo.name}
+                >
                   {repo.name}
                 </h2>
                 <Badge className={cn('gap-1.5', status.className)}>
@@ -98,7 +101,10 @@ export function ProjectCard({ repo }: ProjectCardProps) {
                   </span>
                 </div>
               </div>
-              <p className="mt-1 truncate text-sm text-muted-foreground text-wrap">
+              <p
+                className="mt-1 truncate text-sm text-muted-foreground text-wrap"
+                title={repo.description ?? 'No description provided.'}
+              >
                 {repo.description ?? 'No description provided.'}
               </p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -150,7 +156,10 @@ export function ProjectCard({ repo }: ProjectCardProps) {
                   <span className="inline-block h-2 w-2 rounded-full bg-green" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-foreground">
+                  <p
+                    className="truncate text-sm font-medium text-foreground"
+                    title={commit.message}
+                  >
                     {commit.message}
                   </p>
                   <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
