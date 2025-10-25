@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Calendar,
   CheckCircle2,
@@ -24,6 +25,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { NotesDialog } from '@/components/dashboard/NotesDialog';
+import { openInVSCode, openInFinder, openGitDiff } from '@/lib/repoActions';
 
 type CIStatusStyle = {
   label: string;
@@ -67,6 +70,7 @@ type ProjectCardProps = {
 };
 
 export function ProjectCard({ repo }: ProjectCardProps) {
+  const [notesDialogOpen, setNotesDialogOpen] = useState(false);
   const status = CI_STATUS_META[repo.ciStatus] ?? CI_STATUS_META.none;
   const StatusIcon = status.icon;
 
@@ -195,6 +199,7 @@ export function ProjectCard({ repo }: ProjectCardProps) {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => openInVSCode(repo.repoPath)}
             className="flex-1 gap-2 rounded-full border-overlay0/60 bg-surface0/55 transition-colors hover:border-mauve hover:bg-mauve hover:text-background"
           >
             <ExternalLink className="h-3.5 w-3.5" /> VS Code
@@ -202,6 +207,7 @@ export function ProjectCard({ repo }: ProjectCardProps) {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => openInFinder(repo.repoPath)}
             className="flex-1 gap-2 rounded-full border-overlay0/60 bg-surface0/55 transition-colors hover:border-blue hover:bg-blue hover:text-background"
           >
             <FolderOpen className="h-3.5 w-3.5" /> Folder
@@ -209,6 +215,7 @@ export function ProjectCard({ repo }: ProjectCardProps) {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => openGitDiff(repo.repoPath)}
             className="gap-2 rounded-full border-overlay0/60 bg-surface0/55 transition-colors hover:border-green hover:bg-green hover:text-background"
           >
             <GitCompare className="h-3.5 w-3.5" /> Diff
@@ -216,12 +223,21 @@ export function ProjectCard({ repo }: ProjectCardProps) {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => setNotesDialogOpen(true)}
             className="gap-2 rounded-full border-overlay0/60 bg-surface0/55 transition-colors hover:border-yellow hover:bg-yellow hover:text-background"
           >
             <Edit3 className="h-3.5 w-3.5" /> Notes
           </Button>
         </footer>
       </CardContent>
+
+      <NotesDialog
+        open={notesDialogOpen}
+        onOpenChange={setNotesDialogOpen}
+        repoSlug={repo.slug}
+        repoName={repo.name}
+        initialNotes={repo.notes}
+      />
     </Card>
   );
 }

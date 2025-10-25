@@ -8,6 +8,7 @@ import type { Repo } from "@/types/git";
 import { DashboardHeader, type SortOption } from "@/components/dashboard/DashboardHeader";
 import { ProjectGrid } from "@/components/dashboard/ProjectGrid";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { ErrorState } from "@/components/dashboard/ErrorState";
 import { SkeletonGrid } from "@/components/dashboard/SkeletonGrid";
 import { calculateCommitFrequency, parseLastOpened } from "@/components/dashboard/utils";
 
@@ -19,9 +20,11 @@ export default function DashboardPage() {
   const [sortBy, setSortBy] = useState<SortOption>("lastOpened");
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, isRefetching, refetch } = useQuery({
+  const { data, isLoading, isError, error, isRefetching, refetch } = useQuery({
     queryKey: ["repos"],
     queryFn: fetchRepos,
+    retry: 2,
+    staleTime: 30000, // 30 seconds
   });
 
   const repos = useMemo(() => data ?? [], [data]);
@@ -99,6 +102,11 @@ export default function DashboardPage() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 pt-6">
         {isLoading ? (
           <SkeletonGrid />
+        ) : isError ? (
+          <ErrorState
+            message={error instanceof Error ? error.message : undefined}
+            onRetry={() => void refetch()}
+          />
         ) : filteredRepos.length === 0 ? (
           <EmptyState onReset={() => {
             setSearchQuery("");

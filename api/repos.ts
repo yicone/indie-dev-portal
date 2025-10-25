@@ -51,3 +51,30 @@ reposRouter.get("/:slug", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch repository" });
   }
 });
+
+reposRouter.patch("/:slug/notes", async (req, res) => {
+  const { slug } = req.params;
+  const { notes } = req.body;
+
+  if (typeof notes !== "string") {
+    return res.status(400).json({ error: "Notes must be a string" });
+  }
+
+  try {
+    const repo = await prisma.repo.update({
+      where: { slug },
+      data: { notes: notes.trim() || null },
+      include: {
+        commits: {
+          orderBy: { committedAt: "desc" },
+          take: 5,
+        },
+      },
+    });
+
+    res.json({ data: transformRepo(repo) });
+  } catch (error) {
+    console.error(`Failed to update notes for repo ${slug}`, error);
+    res.status(500).json({ error: "Failed to update notes" });
+  }
+});
