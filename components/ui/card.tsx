@@ -22,7 +22,7 @@ type CardHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
 const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("space-y-1.5 p-6", className)} {...props} />
+    <div ref={ref} className={cn("space-y-1.5 p-6 pb-4", className)} {...props} />
   ),
 );
 CardHeader.displayName = "CardHeader";
