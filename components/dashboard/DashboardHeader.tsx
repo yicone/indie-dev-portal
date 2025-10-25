@@ -59,19 +59,19 @@ export function DashboardHeader({
         </div>
 
         <div className="flex w-full gap-3 lg:max-w-3xl">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center">
+          <div className="flex gap-3 md:flex-row md:items-center">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/80" />
               <Input
                 placeholder="Search projects..."
                 value={searchQuery}
                 onChange={(event) => onSearchChange(event.target.value)}
-                className="h-9 rounded-2xl border border-border/50 bg-surface0/50 pl-14 text-sm shadow-[0_6px_18px_-12px_rgba(137,180,250,0.75)]"
+                className="h-9 rounded-lg border border-border/50 bg-surface0/50 pl-14 text-sm shadow-[0_6px_18px_-12px_rgba(137,180,250,0.75)]"
               />
             </div>
 
             <Select value={selectedLanguage} onValueChange={onLanguageChange}>
-              <SelectTrigger className="h-9 w-full rounded-2xl border border-border/50 bg-surface0/50 px-5 text-sm md:w-[180px]">
+              <SelectTrigger className="h-9 w-full rounded-lg border border-border/50 bg-surface0/50 px-5 text-sm md:w-[180px]">
                 <SelectValue placeholder="All Languages" />
               </SelectTrigger>
               <SelectContent align="end">
@@ -88,7 +88,7 @@ export function DashboardHeader({
               value={sortBy}
               onValueChange={(value) => onSortChange(value as SortOption)}
             >
-              <SelectTrigger className="h-9 w-full rounded-2xl border border-border/50 bg-surface0/50 px-5 text-sm md:w-[200px]">
+              <SelectTrigger className="h-9 w-full rounded-lg border border-border/50 bg-surface0/50 px-5 text-sm md:w-[200px]">
                 <SelectValue>
                   <span className="flex items-center gap-2">
                     <ArrowUpDown className="h-4 w-4" />
