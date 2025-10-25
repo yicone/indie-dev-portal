@@ -80,30 +80,36 @@ export function ProjectCard({ repo }: ProjectCardProps) {
 
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex flex-1 items-start gap-3">
+          <div className="flex w-full items-start gap-3">
             <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-nowrap items-center gap-2">
                 <span className="flex items-center justify-center rounded-xl text-background shadow-[0_12px_28px_-16px_rgba(137,180,250,0.35)]">
                   <Code2 className="h-5 w-5 stroke-primary" />
                 </span>
                 <h2
-                  className="truncate text-lg font-semibold text-foreground"
+                  className="truncate text-lg font-semibold text-foreground text-nowrap"
                   title={repo.name}
                 >
                   {repo.name}
                 </h2>
-                <Badge className={cn('gap-1.5', status.className)}>
+                <Badge
+                  className={[
+                    cn('gap-1.5', status.className),
+                    'text-nowrap',
+                    'ml-auto'
+                  ].join(' ')}
+                >
                   <StatusIcon className="h-3 w-3" />
                   {status.label}
                 </Badge>
-                <div className="hidden shrink-0 items-center ml-auto gap-2 text-xs text-muted-foreground/80 opacity-0 transition-opacity duration-300 sm:flex group-hover:opacity-100">
-                  <Calendar className="h-3.5 w-3.5" />
-                  <span>
-                    {repo.lastOpenedAt
-                      ? formatDateTime(repo.lastOpenedAt)
-                      : 'Never'}
-                  </span>
-                </div>
+              </div>
+              <div className="my-3 shrink-0 items-center gap-2 text-xs text-muted-foreground/80 transition-opacity duration-300 sm:flex">
+                <Calendar className="h-3.5 w-3.5" />
+                <span>
+                  {repo.lastOpenedAt
+                    ? formatDateTime(repo.lastOpenedAt)
+                    : 'Never'}
+                </span>
               </div>
               <p
                 className="mt-1 truncate text-sm text-muted-foreground text-wrap"
