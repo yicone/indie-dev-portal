@@ -16,7 +16,9 @@
     "test:api": "tsx scripts/test-api.ts",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
-    "db:seed": "tsx scripts/seed.ts"
+    "db:seed": "tsx scripts/seed.ts",
+    "db:clean-mock": "tsx scripts/clean-mock-data.ts",
+    "git:sync": "tsx scripts/sync-git-repos.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.18.0",
@@ -37,6 +39,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.1.0",
+    "simple-git": "^3.28.0",
     "tailwind-merge": "^2.5.2",
     "zod": "^3.23.8"
   },

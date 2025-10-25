@@ -5,14 +5,38 @@
 - Node.js 20+ installed
 - pnpm installed (`npm install -g pnpm`)
 - VS Code (optional, for protocol handlers)
+- Git repositories on your local machine
 
 ## Setup & Run
+
+### Option 1: Real Git Integration (Recommended)
 
 ```bash
 # 1. Install dependencies
 pnpm install
 
 # 2. Setup database
+pnpm db:generate
+pnpm db:migrate
+
+# 3. Configure git scan paths
+# Edit .env and add:
+# GIT_SCAN_PATHS="/Users/username/Projects,/Users/username/Workspace"
+
+# 4. Sync your git repositories
+pnpm git:sync
+
+# 5. Start development servers
+pnpm dev
+```
+
+### Option 2: Mock Data (Quick Test)
+
+```bash
+# 1. Install dependencies
+pnpm install
+
+# 2. Setup database with mock data
 pnpm db:generate
 pnpm db:migrate
 pnpm db:seed
@@ -22,8 +46,9 @@ pnpm dev
 ```
 
 The application will be available at:
-- **Frontend**: http://localhost:3000
-- **API**: http://localhost:4000
+
+- **Frontend**: <http://localhost:3000>
+- **API**: <http://localhost:4000>
 
 ## Verify Installation
 
@@ -75,6 +100,7 @@ pnpm db:seed
 ### VS Code Protocol Not Working
 
 The `vscode://` protocol requires VS Code to be installed and may be blocked by some browsers. Try:
+
 - Use Chrome/Edge (better protocol support)
 - Install VS Code if not already installed
 - Check browser console for errors
@@ -115,6 +141,7 @@ indie-dev-portal/
 ## Next Steps
 
 After verifying everything works:
+
 1. Review `IMPLEMENTATION_SUMMARY.md` for what was implemented
 2. Check `docs/FUNCTIONAL_SPEC.md` for detailed feature docs
 3. Customize mock data in `data/*.json` if desired
