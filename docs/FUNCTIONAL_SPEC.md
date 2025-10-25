@@ -229,23 +229,21 @@ pnpm format:write
 - Keyboard navigation support
 - Focus management in dialogs
 
-## Known Limitations
+## Known Limitations & Future Plans
 
-1. **Browser Protocols**: `vscode://` and `file://` may be blocked by browser security
-2. **No Real-Time Updates**: Requires manual sync (`pnpm git:sync`) to pick up changes
-3. **Local Only**: Only scans local filesystem, no remote repository integration
-4. **Single User**: No authentication or multi-user support
-5. **No Branch Info**: Doesn't track branches or branch status
-6. **Basic CI Detection**: Only detects presence of CI files, not actual build status
+For current limitations, workarounds, and detailed roadmap, see [ROADMAP.md](ROADMAP.md).
 
-## Future Enhancements
+**Key Limitations**:
 
-- Filesystem watching for automatic repository updates
-- Git hooks for real-time commit tracking
-- GitHub/GitLab API integration for remote repositories
-- Commit graph visualization
+- Manual sync required (no real-time updates)
+- Local repositories only (no remote integration)
+- Browser protocol restrictions
+
+**Planned Features**:
+
 - Branch detection and management
-- Real CI/CD status via webhooks
-- Repository health metrics and analytics
-- Dependency vulnerability scanning
-- Code statistics (lines of code, contributors)
+- GitHub/GitLab API integration
+- Real-time updates via file watcher
+- Commit graph visualization
+
+[View complete roadmap →](ROADMAP.md)

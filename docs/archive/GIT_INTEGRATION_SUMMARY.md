@@ -1,5 +1,17 @@
 # Git Integration Implementation Summary
 
+> **⚠️ DEPRECATED**: This document has been archived as of October 26, 2025.
+>
+> **Current Information**:
+>
+> - For complete git integration guide, see [GIT_INTEGRATION.md](../GIT_INTEGRATION.md)
+> - For quick start, see [QUICKSTART.md](../QUICKSTART.md)
+> - For API documentation, see [FUNCTIONAL_SPEC.md](../FUNCTIONAL_SPEC.md)
+>
+> This file is kept for historical reference only.
+
+---
+
 ## ✅ Completed
 
 Real git integration has been successfully implemented, replacing mock data with live repository parsing from your local filesystem.

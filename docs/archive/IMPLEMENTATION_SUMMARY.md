@@ -1,4 +1,16 @@
-# Implementation Summary - Functional Behavior Phase
+# Implementation Summary
+
+> **⚠️ DEPRECATED**: This document has been archived as of October 26, 2025.
+>
+> **Current Information**:
+>
+> - For git integration details, see [GIT_INTEGRATION.md](../GIT_INTEGRATION.md)
+> - For feature documentation, see [FUNCTIONAL_SPEC.md](../FUNCTIONAL_SPEC.md)
+> - For quick start guide, see [QUICKSTART.md](../QUICKSTART.md)
+>
+> This file is kept for historical reference only.
+
+--- - Functional Behavior Phase
 
 ## Completed Tasks
 

@@ -134,17 +134,19 @@ indie-dev-portal/
 
 ## Documentation
 
-- `IMPLEMENTATION_SUMMARY.md` - What was built
-- `docs/FUNCTIONAL_SPEC.md` - Detailed feature documentation
-- `AGENTS.md` - Agent collaboration guide
+- [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) - Detailed feature documentation
+- [GIT_INTEGRATION.md](GIT_INTEGRATION.md) - How git scanning works
+- [ROADMAP.md](ROADMAP.md) - Future plans and known limitations
+- [../AGENTS.md](../AGENTS.md) - Agent collaboration guide
+- [../CHANGELOG.md](../CHANGELOG.md) - Version history
 
 ## Next Steps
 
 After verifying everything works:
 
-1. Review `IMPLEMENTATION_SUMMARY.md` for what was implemented
-2. Check `docs/FUNCTIONAL_SPEC.md` for detailed feature docs
-3. Customize mock data in `data/*.json` if desired
-4. Run `pnpm test:api` to verify all endpoints
+1. Review [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) for detailed features
+2. Check [ROADMAP.md](ROADMAP.md) for limitations and future plans
+3. Configure git scanning paths in `.env`
+4. Run `pnpm git:sync` regularly to update repository data
 
 Enjoy your Personal Developer Dashboard! 🚀
