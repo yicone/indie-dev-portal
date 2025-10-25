@@ -89,7 +89,7 @@ export function ProjectCard({ repo }: ProjectCardProps) {
                   <StatusIcon className="h-3 w-3" />
                   {status.label}
                 </Badge>
-                <div className="hidden shrink-0 items-center justify-end gap-2 text-xs text-muted-foreground/80 opacity-0 transition-opacity duration-300 sm:flex group-hover:opacity-100">
+                <div className="hidden shrink-0 items-center ml-auto gap-2 text-xs text-muted-foreground/80 opacity-0 transition-opacity duration-300 sm:flex group-hover:opacity-100">
                   <Calendar className="h-3.5 w-3.5" />
                   <span>
                     {repo.lastOpenedAt
@@ -98,7 +98,7 @@ export function ProjectCard({ repo }: ProjectCardProps) {
                   </span>
                 </div>
               </div>
-              <p className="mt-1 truncate text-sm text-muted-foreground">
+              <p className="mt-1 truncate text-sm text-muted-foreground text-wrap">
                 {repo.description ?? 'No description provided.'}
               </p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
