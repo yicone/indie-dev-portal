@@ -81,7 +81,7 @@ export function ProjectCard({ repo }: ProjectCardProps) {
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex w-full items-start gap-3">
-            <div className="min-w-0">
+            <div className="min-w-0 w-full">
               <div className="flex flex-nowrap items-center gap-2">
                 <span className="flex items-center justify-center rounded-xl text-background shadow-[0_12px_28px_-16px_rgba(137,180,250,0.35)]">
                   <Code2 className="h-5 w-5 stroke-primary" />
