@@ -1,5 +1,17 @@
 # Project Status
 
+> **⚠️ DEPRECATED**: This document has been archived as of October 26, 2025.
+>
+> **Current Information**:
+>
+> - For project status and version history, see [CHANGELOG.md](../../CHANGELOG.md)
+> - For future plans and roadmap, see [ROADMAP.md](../ROADMAP.md)
+> - For feature documentation, see [FUNCTIONAL_SPEC.md](../FUNCTIONAL_SPEC.md)
+>
+> This file is kept for historical reference only.
+
+---
+
 **Last Updated**: October 25, 2025
 
 ## Current State
