@@ -9,12 +9,14 @@ Real git integration has been successfully implemented, replacing mock data with
 ### 1. Git Service Layer (`lib/gitService.ts`)
 
 **Core Functions:**
+
 - `scanForRepos()` - Recursively scan directories for git repositories
 - `parseGitRepo()` - Extract metadata from a single repository
 - `scanAndParseRepos()` - Scan multiple paths and parse all repos
 - `isGitRepo()` - Check if directory is a git repository
 
 **Metadata Extraction:**
+
 - **Primary Language**: Analyzes file extensions (TypeScript, JavaScript, Python, Go, Rust, etc.)
 - **Frameworks**: Detects from config files and package.json dependencies
 - **CI Status**: Checks for GitHub Actions, GitLab CI, CircleCI, etc.
@@ -24,6 +26,7 @@ Real git integration has been successfully implemented, replacing mock data with
 ### 2. Sync Script (`scripts/sync-git-repos.ts`)
 
 **Features:**
+
 - Scans configured paths for git repositories
 - Creates new repos or updates existing ones
 - Preserves user data (notes, lastOpenedAt)
@@ -31,6 +34,7 @@ Real git integration has been successfully implemented, replacing mock data with
 - Provides detailed progress output
 
 **Usage:**
+
 ```bash
 pnpm git:sync
 ```
@@ -38,6 +42,7 @@ pnpm git:sync
 ### 3. Configuration
 
 **Environment Variables:**
+
 ```bash
 GIT_SCAN_PATHS="/Users/username/Projects,/Users/username/Workspace"
 GIT_SCAN_DEPTH=2
@@ -137,6 +142,7 @@ curl http://localhost:4000/repos | jq '.data[] | select(.slug == "indie-dev-port
 ### No API Changes Required
 
 The git integration works seamlessly with existing API:
+
 - Same endpoints (`/repos`, `/commits`)
 - Same data structure
 - Same frontend code
@@ -194,12 +200,14 @@ pnpm git:sync
 ## Files Created/Modified
 
 ### New Files
+
 - `lib/gitService.ts` - Git integration service layer
 - `scripts/sync-git-repos.ts` - Repository sync script
 - `docs/GIT_INTEGRATION.md` - Integration documentation
 - `GIT_INTEGRATION_SUMMARY.md` - This file
 
 ### Modified Files
+
 - `.env.example` - Added git configuration
 - `package.json` - Added `git:sync` script
 - `QUICKSTART.md` - Added git integration steps
@@ -226,16 +234,19 @@ pnpm git:sync
 ### Common Issues
 
 **No repos found:**
+
 - Check `GIT_SCAN_PATHS` is set correctly
 - Verify paths exist and are readable
 - Ensure paths contain git repositories
 
 **Slow scanning:**
+
 - Reduce `GIT_SCAN_DEPTH`
 - Scan fewer directories
 - Exclude large monorepos
 
 **Permission errors:**
+
 - Ensure read access to scan paths
 - Check directory permissions
 
@@ -253,6 +264,7 @@ pnpm git:sync
 Real git integration is now live and working! The dashboard displays actual repositories from your local filesystem with automatically detected metadata, frameworks, and commit history.
 
 **Next Steps:**
+
 1. Configure your scan paths in `.env`
 2. Run `pnpm git:sync` to sync your repos
 3. Enjoy your personalized developer dashboard!
