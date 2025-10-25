@@ -42,6 +42,11 @@
 - **[tooling-agent]**
   - Maintain configs: `package.json`, `.eslintrc.json`, `tsconfig.json`, Tailwind/PostCSS settings.
   - Manage Husky + lint-staged hooks and ensure Prettier/ESLint rules stay consistent across agents.
+- **[documentation-agent]**
+  - Maintain documentation structure and consistency across all docs.
+  - Follow naming conventions in `docs/NAMING_CONVENTIONS.md`.
+  - Update `docs/FIXES_INDEX.md` when fixes are implemented.
+  - Keep documentation synced with code changes.
 
 ## Collaboration Workflow
 
@@ -51,6 +56,29 @@
 - **Git Sync** Run `pnpm git:sync` to discover and update repositories from filesystem.
 - **Lint/Format** Use `pnpm lint` and `pnpm format:write` before handoffs.
 - **Design Verification** Cross-check every UI change against the prototype folder before merging.
+
+## Documentation Workflow
+
+### Quick Reference
+
+**📍 For AI Agents**: Read `docs/FIXES_INDEX.md` first for all fixes, then follow links to detailed docs if needed.
+
+**For complete documentation guidelines**, see:
+
+- `docs/FIXES_INDEX.md` - AI retrieval patterns and fix summaries
+- `docs/NAMING_CONVENTIONS.md` - File naming standards and structure
+
+### When Implementing Fixes
+
+1. **Create detailed doc**: `docs/fixes/YYYY-MM-DD-<description>.md`
+2. **Add summary** to `docs/FIXES_INDEX.md`
+3. **Follow checklist** in the detailed doc template
+
+### When Code Changes
+
+- Update related docs immediately (feature docs, API docs, README, AGENTS.md)
+- Check for outdated references: `grep -r "old-name" docs/`
+- Move deprecated docs to `docs/archive/` with deprecation notice
 
 ## Notes
 
