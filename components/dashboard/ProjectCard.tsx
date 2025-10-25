@@ -104,11 +104,11 @@ export function ProjectCard({ repo }: ProjectCardProps) {
                 </Badge>
               </div>
               <div className="my-3 shrink-0 items-center gap-2 text-xs text-muted-foreground/80 transition-opacity duration-300 sm:flex">
-                <Calendar className="h-3.5 w-3.5" />
+                <GitCommit className="h-3.5 w-3.5" />
                 <span>
-                  {repo.lastOpenedAt
-                    ? formatDateTime(repo.lastOpenedAt)
-                    : 'Never'}
+                  {repo.commits[0]?.committedAt
+                    ? formatRelativeTime(repo.commits[0].committedAt)
+                    : 'No commits'}
                 </span>
               </div>
               <p
@@ -177,7 +177,7 @@ export function ProjectCard({ repo }: ProjectCardProps) {
                       {commit.hash.slice(0, 7)}
                     </span>
                     <span className="flex items-center gap-1">
-                      <GitBranch className="h-3 w-3" /> {commit.repoSlug}
+                      <GitBranch className="h-3 w-3" /> main
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />{' '}
