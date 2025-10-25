@@ -232,15 +232,20 @@ pnpm format:write
 ## Known Limitations
 
 1. **Browser Protocols**: `vscode://` and `file://` may be blocked by browser security
-2. **Local Only**: No remote git operations, purely local data
-3. **Single User**: No authentication or multi-user support
-4. **Mock Data**: Uses seeded data, not live git parsing
+2. **No Real-Time Updates**: Requires manual sync (`pnpm git:sync`) to pick up changes
+3. **Local Only**: Only scans local filesystem, no remote repository integration
+4. **Single User**: No authentication or multi-user support
+5. **No Branch Info**: Doesn't track branches or branch status
+6. **Basic CI Detection**: Only detects presence of CI files, not actual build status
 
 ## Future Enhancements
 
-- Real git integration (parse actual repos)
-- GitHub/GitLab API integration
+- Filesystem watching for automatic repository updates
+- Git hooks for real-time commit tracking
+- GitHub/GitLab API integration for remote repositories
 - Commit graph visualization
-- Branch management
-- CI/CD status webhooks
-- Repository health metrics
+- Branch detection and management
+- Real CI/CD status via webhooks
+- Repository health metrics and analytics
+- Dependency vulnerability scanning
+- Code statistics (lines of code, contributors)
