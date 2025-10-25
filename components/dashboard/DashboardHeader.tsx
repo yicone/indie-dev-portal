@@ -40,6 +40,14 @@ export function DashboardHeader({
 }: DashboardHeaderProps) {
   const { theme, setTheme } = useTheme();
   const isDark = theme === 'dark';
+  const selectedLanguageLabel =
+    selectedLanguage === 'all' ? 'All Languages' : selectedLanguage;
+  const sortLabel =
+    sortBy === 'lastOpened'
+      ? 'Last opened'
+      : sortBy === 'name'
+        ? 'Name'
+        : 'Commit frequency';
 
   return (
     <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -67,12 +75,17 @@ export function DashboardHeader({
                 value={searchQuery}
                 onChange={(event) => onSearchChange(event.target.value)}
                 className="h-9 rounded-lg border border-border/50 bg-surface0/50 pl-14 text-sm shadow-[0_6px_18px_-12px_rgba(137,180,250,0.75)]"
+                title={searchQuery ? searchQuery : undefined}
               />
             </div>
 
             <Select value={selectedLanguage} onValueChange={onLanguageChange}>
               <SelectTrigger className="h-9 w-full rounded-lg border border-border/50 bg-surface0/50 px-5 text-sm md:w-[180px]">
-                <SelectValue placeholder="All Languages" />
+                <SelectValue placeholder="All Languages">
+                  <span className="truncate" title={selectedLanguageLabel}>
+                    {selectedLanguageLabel}
+                  </span>
+                </SelectValue>
               </SelectTrigger>
               <SelectContent align="end">
                 <SelectItem value="all">All Languages</SelectItem>
@@ -90,11 +103,9 @@ export function DashboardHeader({
             >
               <SelectTrigger className="h-9 w-full rounded-lg border border-border/50 bg-surface0/50 px-5 text-sm md:w-[200px]">
                 <SelectValue>
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-2" title={sortLabel}>
                     <ArrowUpDown className="h-4 w-4" />
-                    {sortBy === 'lastOpened' && 'Last opened'}
-                    {sortBy === 'name' && 'Name'}
-                    {sortBy === 'commitFrequency' && 'Commit frequency'}
+                    {sortLabel}
                   </span>
                 </SelectValue>
               </SelectTrigger>
