@@ -150,7 +150,7 @@ export function ProjectCard({ repo }: ProjectCardProps) {
             {repo.commits.slice(0, 5).map((commit) => (
               <li
                 key={commit.id}
-                className="group/commit flex items-start gap-2.5 rounded-xl border border-border/40 bg-background/45 p-3 transition-colors hover:border-mauve/50 hover:bg-background/55"
+                className="group/commit flex items-start gap-2.5 rounded-md p-2 transition-colors duration-200 hover:bg-accent/50"
               >
                 <div className="mt-1 flex h-2 w-2 flex-shrink-0 items-center justify-center">
                   <span className="inline-block h-2 w-2 rounded-full bg-green" />
