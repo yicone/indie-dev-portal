@@ -1,6 +1,6 @@
-import { simpleGit, SimpleGit, LogResult } from "simple-git";
-import { promises as fs } from "fs";
-import path from "path";
+import { simpleGit, SimpleGit, LogResult } from 'simple-git';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 export type GitRepoInfo = {
   name: string;
@@ -9,7 +9,7 @@ export type GitRepoInfo = {
   repoPath: string;
   primaryLanguage: string;
   frameworks: string[];
-  ciStatus: "passing" | "failing" | "pending" | "none";
+  ciStatus: 'passing' | 'failing' | 'pending' | 'none';
   lastOpenedAt: Date | null;
   notes: string | null;
   stars: number;
@@ -28,18 +28,18 @@ export type GitCommitInfo = {
  */
 async function detectPrimaryLanguage(repoPath: string): Promise<string> {
   const languageMap: Record<string, string> = {
-    ".ts": "TypeScript",
-    ".tsx": "TypeScript",
-    ".js": "JavaScript",
-    ".jsx": "JavaScript",
-    ".py": "Python",
-    ".go": "Go",
-    ".rs": "Rust",
-    ".java": "Java",
-    ".rb": "Ruby",
-    ".php": "PHP",
-    ".swift": "Swift",
-    ".kt": "Kotlin",
+    '.ts': 'TypeScript',
+    '.tsx': 'TypeScript',
+    '.js': 'JavaScript',
+    '.jsx': 'JavaScript',
+    '.py': 'Python',
+    '.go': 'Go',
+    '.rs': 'Rust',
+    '.java': 'Java',
+    '.rb': 'Ruby',
+    '.php': 'PHP',
+    '.swift': 'Swift',
+    '.kt': 'Kotlin',
   };
 
   const extensionCounts: Record<string, number> = {};
@@ -53,11 +53,11 @@ async function detectPrimaryLanguage(repoPath: string): Promise<string> {
       for (const entry of entries) {
         // Skip common directories
         if (
-          entry.name.startsWith(".") ||
-          entry.name === "node_modules" ||
-          entry.name === "dist" ||
-          entry.name === "build" ||
-          entry.name === "vendor"
+          entry.name.startsWith('.') ||
+          entry.name === 'node_modules' ||
+          entry.name === 'dist' ||
+          entry.name === 'build' ||
+          entry.name === 'vendor'
         ) {
           continue;
         }
@@ -82,7 +82,7 @@ async function detectPrimaryLanguage(repoPath: string): Promise<string> {
 
   // Find most common extension
   let maxCount = 0;
-  let primaryExt = ".js"; // Default
+  let primaryExt = '.js'; // Default
 
   for (const [ext, count] of Object.entries(extensionCounts)) {
     if (count > maxCount) {
@@ -91,7 +91,7 @@ async function detectPrimaryLanguage(repoPath: string): Promise<string> {
     }
   }
 
-  return languageMap[primaryExt] || "Unknown";
+  return languageMap[primaryExt] || 'Unknown';
 }
 
 /**
@@ -99,25 +99,25 @@ async function detectPrimaryLanguage(repoPath: string): Promise<string> {
  */
 async function detectFrameworks(repoPath: string): Promise<string[]> {
   const frameworkIndicators: Record<string, string> = {
-    "package.json": "Node.js",
-    "next.config.js": "Next.js",
-    "next.config.mjs": "Next.js",
-    "next.config.ts": "Next.js",
-    "vite.config.ts": "Vite",
-    "vite.config.js": "Vite",
-    "angular.json": "Angular",
-    "vue.config.js": "Vue",
-    "nuxt.config.js": "Nuxt",
-    "svelte.config.js": "Svelte",
-    "remix.config.js": "Remix",
-    "astro.config.mjs": "Astro",
-    "gatsby-config.js": "Gatsby",
-    "tsconfig.json": "TypeScript",
-    "Cargo.toml": "Cargo",
-    "go.mod": "Go Modules",
-    "requirements.txt": "Python",
-    "Pipfile": "Pipenv",
-    "poetry.lock": "Poetry",
+    'package.json': 'Node.js',
+    'next.config.js': 'Next.js',
+    'next.config.mjs': 'Next.js',
+    'next.config.ts': 'Next.js',
+    'vite.config.ts': 'Vite',
+    'vite.config.js': 'Vite',
+    'angular.json': 'Angular',
+    'vue.config.js': 'Vue',
+    'nuxt.config.js': 'Nuxt',
+    'svelte.config.js': 'Svelte',
+    'remix.config.js': 'Remix',
+    'astro.config.mjs': 'Astro',
+    'gatsby-config.js': 'Gatsby',
+    'tsconfig.json': 'TypeScript',
+    'Cargo.toml': 'Cargo',
+    'go.mod': 'Go Modules',
+    'requirements.txt': 'Python',
+    Pipfile: 'Pipenv',
+    'poetry.lock': 'Poetry',
   };
 
   const frameworks = new Set<string>();
@@ -132,21 +132,21 @@ async function detectFrameworks(repoPath: string): Promise<string[]> {
     }
 
     // Check package.json for additional frameworks
-    if (files.includes("package.json")) {
+    if (files.includes('package.json')) {
       try {
-        const packageJsonPath = path.join(repoPath, "package.json");
-        const packageJson = JSON.parse(await fs.readFile(packageJsonPath, "utf-8"));
+        const packageJsonPath = path.join(repoPath, 'package.json');
+        const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
         const deps = {
           ...packageJson.dependencies,
           ...packageJson.devDependencies,
         };
 
-        if (deps.react) frameworks.add("React");
-        if (deps.express) frameworks.add("Express");
-        if (deps["@nestjs/core"]) frameworks.add("NestJS");
-        if (deps.fastify) frameworks.add("Fastify");
-        if (deps.tailwindcss) frameworks.add("Tailwind");
-        if (deps.prisma || deps["@prisma/client"]) frameworks.add("Prisma");
+        if (deps.react) frameworks.add('React');
+        if (deps.express) frameworks.add('Express');
+        if (deps['@nestjs/core']) frameworks.add('NestJS');
+        if (deps.fastify) frameworks.add('Fastify');
+        if (deps.tailwindcss) frameworks.add('Tailwind');
+        if (deps.prisma || deps['@prisma/client']) frameworks.add('Prisma');
       } catch {
         // Ignore JSON parse errors
       }
@@ -161,14 +161,16 @@ async function detectFrameworks(repoPath: string): Promise<string[]> {
 /**
  * Check for CI configuration
  */
-async function detectCIStatus(repoPath: string): Promise<"passing" | "failing" | "pending" | "none"> {
+async function detectCIStatus(
+  repoPath: string
+): Promise<'passing' | 'failing' | 'pending' | 'none'> {
   const ciFiles = [
-    ".github/workflows",
-    ".gitlab-ci.yml",
-    ".circleci/config.yml",
-    "azure-pipelines.yml",
-    ".travis.yml",
-    "Jenkinsfile",
+    '.github/workflows',
+    '.gitlab-ci.yml',
+    '.circleci/config.yml',
+    'azure-pipelines.yml',
+    '.travis.yml',
+    'Jenkinsfile',
   ];
 
   try {
@@ -178,7 +180,7 @@ async function detectCIStatus(repoPath: string): Promise<"passing" | "failing" |
       const ciPath = path.join(repoPath, ciFile);
       try {
         await fs.access(ciPath);
-        return "pending"; // CI exists but we don't know status
+        return 'pending'; // CI exists but we don't know status
       } catch {
         // File doesn't exist, continue
       }
@@ -187,7 +189,7 @@ async function detectCIStatus(repoPath: string): Promise<"passing" | "failing" |
     // Ignore errors
   }
 
-  return "none";
+  return 'none';
 }
 
 /**
@@ -196,8 +198,8 @@ async function detectCIStatus(repoPath: string): Promise<"passing" | "failing" |
 async function getRepoDescription(repoPath: string): Promise<string | null> {
   // Try package.json first
   try {
-    const packageJsonPath = path.join(repoPath, "package.json");
-    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, "utf-8"));
+    const packageJsonPath = path.join(repoPath, 'package.json');
+    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
     if (packageJson.description) {
       return packageJson.description;
     }
@@ -206,15 +208,15 @@ async function getRepoDescription(repoPath: string): Promise<string | null> {
   }
 
   // Try README
-  const readmeFiles = ["README.md", "README.txt", "README"];
+  const readmeFiles = ['README.md', 'README.txt', 'README'];
   for (const readme of readmeFiles) {
     try {
       const readmePath = path.join(repoPath, readme);
-      const content = await fs.readFile(readmePath, "utf-8");
+      const content = await fs.readFile(readmePath, 'utf-8');
       // Get first non-empty line that's not a heading
-      const lines = content.split("\n").filter((line) => line.trim());
+      const lines = content.split('\n').filter((line) => line.trim());
       for (const line of lines) {
-        if (!line.startsWith("#") && line.length > 10 && line.length < 200) {
+        if (!line.startsWith('#') && line.length > 10 && line.length < 200) {
           return line.trim();
         }
       }
@@ -229,10 +231,7 @@ async function getRepoDescription(repoPath: string): Promise<string | null> {
 /**
  * Parse commits from git log
  */
-async function getCommits(
-  git: SimpleGit,
-  limit = 10,
-): Promise<GitCommitInfo[]> {
+async function getCommits(git: SimpleGit, limit = 10): Promise<GitCommitInfo[]> {
   try {
     const log: LogResult = await git.log({ maxCount: limit });
 
@@ -243,7 +242,7 @@ async function getCommits(
       committedAt: new Date(commit.date),
     }));
   } catch (error) {
-    console.error("Failed to get commits:", error);
+    console.error('Failed to get commits:', error);
     return [];
   }
 }
@@ -264,10 +263,7 @@ export async function isGitRepo(dirPath: string): Promise<boolean> {
 /**
  * Scan a directory for git repositories
  */
-export async function scanForRepos(
-  basePath: string,
-  maxDepth = 2,
-): Promise<string[]> {
+export async function scanForRepos(basePath: string, maxDepth = 2): Promise<string[]> {
   const repos: string[] = [];
 
   async function scan(dirPath: string, depth = 0): Promise<void> {
@@ -284,11 +280,7 @@ export async function scanForRepos(
       const entries = await fs.readdir(dirPath, { withFileTypes: true });
 
       for (const entry of entries) {
-        if (
-          entry.isDirectory() &&
-          !entry.name.startsWith(".") &&
-          entry.name !== "node_modules"
-        ) {
+        if (entry.isDirectory() && !entry.name.startsWith('.') && entry.name !== 'node_modules') {
           await scan(path.join(dirPath, entry.name), depth + 1);
         }
       }
@@ -307,17 +299,16 @@ export async function scanForRepos(
 export async function parseGitRepo(repoPath: string): Promise<GitRepoInfo> {
   const git = simpleGit(repoPath);
   const repoName = path.basename(repoPath);
-  const slug = repoName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const slug = repoName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
   // Get all metadata in parallel
-  const [description, primaryLanguage, frameworks, ciStatus, commits] =
-    await Promise.all([
-      getRepoDescription(repoPath),
-      detectPrimaryLanguage(repoPath),
-      detectFrameworks(repoPath),
-      detectCIStatus(repoPath),
-      getCommits(git, 10),
-    ]);
+  const [description, primaryLanguage, frameworks, ciStatus, commits] = await Promise.all([
+    getRepoDescription(repoPath),
+    detectPrimaryLanguage(repoPath),
+    detectFrameworks(repoPath),
+    detectCIStatus(repoPath),
+    getCommits(git, 10),
+  ]);
 
   return {
     name: repoName,
@@ -337,10 +328,7 @@ export async function parseGitRepo(repoPath: string): Promise<GitRepoInfo> {
 /**
  * Scan multiple paths and parse all git repositories
  */
-export async function scanAndParseRepos(
-  scanPaths: string[],
-  maxDepth = 2,
-): Promise<GitRepoInfo[]> {
+export async function scanAndParseRepos(scanPaths: string[], maxDepth = 2): Promise<GitRepoInfo[]> {
   const allRepoPaths = new Set<string>();
 
   // Scan all paths
@@ -355,7 +343,7 @@ export async function scanAndParseRepos(
 
   // Parse all repositories
   const repoInfos = await Promise.all(
-    Array.from(allRepoPaths).map((repoPath) => parseGitRepo(repoPath)),
+    Array.from(allRepoPaths).map((repoPath) => parseGitRepo(repoPath))
   );
 
   return repoInfos;

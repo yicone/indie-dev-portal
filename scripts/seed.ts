@@ -53,16 +53,14 @@ async function main() {
         repoPath: repo.repoPath,
         primaryLanguage: repo.primaryLanguage,
         frameworks: JSON.stringify(repo.frameworks ?? []),
-        ciStatus: repo.ciStatus ?? "pending",
+        ciStatus: repo.ciStatus ?? 'pending',
         lastOpenedAt: repo.lastOpenedAt ? new Date(repo.lastOpenedAt) : null,
         notes: repo.notes ?? null,
-        stars: repo.stars ?? 0
-      } as any
+        stars: repo.stars ?? 0,
+      } as any,
     });
 
-    const repoCommits = commits.filter(
-      (commit) => commit.repoSlug === repo.slug
-    );
+    const repoCommits = commits.filter((commit) => commit.repoSlug === repo.slug);
 
     if (repoCommits.length > 0) {
       await prisma.commit.createMany({
@@ -71,8 +69,8 @@ async function main() {
           hash: commit.hash,
           message: commit.message,
           author: commit.author,
-          committedAt: new Date(commit.committedAt)
-        }))
+          committedAt: new Date(commit.committedAt),
+        })),
       });
     }
   }

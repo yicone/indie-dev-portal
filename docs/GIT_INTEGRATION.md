@@ -275,7 +275,7 @@ import { scanAndParseRepos } from './lib/gitService';
 const repos = await scanAndParseRepos(['/path/to/projects'], 2);
 
 // Filter, transform, or process repos
-const filtered = repos.filter(r => r.primaryLanguage === 'TypeScript');
+const filtered = repos.filter((r) => r.primaryLanguage === 'TypeScript');
 
 // Sync to database
 // ... your logic

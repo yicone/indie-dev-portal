@@ -84,6 +84,7 @@ docs/
 
 ```markdown
 ## YYYY-MM-DD: Fix Title
+
 **File**: [fixes/YYYY-MM-DD-description.md](fixes/YYYY-MM-DD-description.md)  
 **Status**: ✅ Completed / 🚧 In Progress / ⏳ Planned
 **Issue**: Brief description  
@@ -191,11 +192,11 @@ When documentation becomes outdated:
 
 ## Quick Reference
 
-| Type | Pattern | Example |
-|------|---------|---------|
-| Fix (dated) | `fixes/YYYY-MM-DD-<desc>.md` | `fixes/2025-10-26-last-committed.md` |
-| Feature | `<FEATURE>.md` | `GIT_INTEGRATION.md` |
-| Guide | `guides/<GUIDE>.md` | `guides/DEPLOYMENT.md` |
-| API | `api/<ENDPOINT>.md` | `api/REPOS.md` |
-| Architecture | `architecture/<COMPONENT>.md` | `architecture/DATABASE.md` |
-| Version | `versions/v<X.Y.Z>-<TYPE>.md` | `versions/v2.0.0-BREAKING.md` |
+| Type         | Pattern                       | Example                              |
+| ------------ | ----------------------------- | ------------------------------------ |
+| Fix (dated)  | `fixes/YYYY-MM-DD-<desc>.md`  | `fixes/2025-10-26-last-committed.md` |
+| Feature      | `<FEATURE>.md`                | `GIT_INTEGRATION.md`                 |
+| Guide        | `guides/<GUIDE>.md`           | `guides/DEPLOYMENT.md`               |
+| API          | `api/<ENDPOINT>.md`           | `api/REPOS.md`                       |
+| Architecture | `architecture/<COMPONENT>.md` | `architecture/DATABASE.md`           |
+| Version      | `versions/v<X.Y.Z>-<TYPE>.md` | `versions/v2.0.0-BREAKING.md`        |

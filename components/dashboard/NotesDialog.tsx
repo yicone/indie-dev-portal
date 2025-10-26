@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,9 +11,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { updateRepoNotes } from "@/lib/repoActions";
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { updateRepoNotes } from '@/lib/repoActions';
 
 type NotesDialogProps = {
   open: boolean;
@@ -30,13 +30,13 @@ export function NotesDialog({
   repoName,
   initialNotes,
 }: NotesDialogProps) {
-  const [notes, setNotes] = useState(initialNotes ?? "");
+  const [notes, setNotes] = useState(initialNotes ?? '');
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: () => updateRepoNotes(repoSlug, notes),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["repos"] });
+      void queryClient.invalidateQueries({ queryKey: ['repos'] });
       onOpenChange(false);
     },
   });
@@ -72,18 +72,12 @@ export function NotesDialog({
           >
             Cancel
           </Button>
-          <Button
-            type="button"
-            onClick={handleSave}
-            disabled={mutation.isPending}
-          >
-            {mutation.isPending ? "Saving..." : "Save"}
+          <Button type="button" onClick={handleSave} disabled={mutation.isPending}>
+            {mutation.isPending ? 'Saving...' : 'Save'}
           </Button>
         </DialogFooter>
         {mutation.isError && (
-          <p className="text-sm text-red">
-            Failed to save notes. Please try again.
-          </p>
+          <p className="text-sm text-red">Failed to save notes. Please try again.</p>
         )}
       </DialogContent>
     </Dialog>

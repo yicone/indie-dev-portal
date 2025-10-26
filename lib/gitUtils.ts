@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import type { Commit, Repo } from "@/types/git";
+import type { Commit, Repo } from '@/types/git';
 
 const commitSchema = z.object({
   id: z.number(),
@@ -19,7 +19,7 @@ const repoSchema = z.object({
   repoPath: z.string(),
   primaryLanguage: z.string(),
   frameworks: z.array(z.string()),
-  ciStatus: z.enum(["passing", "failing", "pending", "none"]),
+  ciStatus: z.enum(['passing', 'failing', 'pending', 'none']),
   lastOpenedAt: z.string().nullable(),
   notes: z.string().nullable(),
   stars: z.number(),
@@ -36,12 +36,12 @@ const commitsResponseSchema = z.object({
   data: z.array(commitSchema),
 });
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000';
 
 async function fetchJson<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
   const response = await fetch(input, {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     ...init,
   });

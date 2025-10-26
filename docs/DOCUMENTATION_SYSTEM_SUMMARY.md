@@ -145,12 +145,12 @@ High-level structure:
 
 Key examples of Single Source of Truth (SSOT):
 
-| Information Type | Authority | References |
-|------------------|-----------|------------|
-| Known Limitations | `docs/ROADMAP.md` | README, FUNCTIONAL_SPEC |
-| Features | `docs/FUNCTIONAL_SPEC.md` | README (highlights) |
-| Bug Fixes | `docs/FIXES_INDEX.md` → `docs/fixes/*.md` | README (if major) |
-| Documentation Rules | `docs/DOCUMENTATION_MANAGEMENT.md` | AGENTS.md, README |
+| Information Type    | Authority                                 | References              |
+| ------------------- | ----------------------------------------- | ----------------------- |
+| Known Limitations   | `docs/ROADMAP.md`                         | README, FUNCTIONAL_SPEC |
+| Features            | `docs/FUNCTIONAL_SPEC.md`                 | README (highlights)     |
+| Bug Fixes           | `docs/FIXES_INDEX.md` → `docs/fixes/*.md` | README (if major)       |
+| Documentation Rules | `docs/DOCUMENTATION_MANAGEMENT.md`        | AGENTS.md, README       |
 
 [See complete authority mapping →](DOCUMENTATION_MANAGEMENT.md#authority-mapping)
 

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { ArrowLeft, ArrowRight, ListFilter } from "lucide-react";
+import { ArrowLeft, ArrowRight, ListFilter } from 'lucide-react';
 
-import type { Repo } from "@/types/git";
-import { Button } from "@/components/ui/button";
-import { ProjectCard } from "@/components/dashboard/ProjectCard";
+import type { Repo } from '@/types/git';
+import { Button } from '@/components/ui/button';
+import { ProjectCard } from '@/components/dashboard/ProjectCard';
 
 type ProjectGridProps = {
   repos: Repo[];
@@ -38,7 +38,7 @@ export function ProjectGrid({
           <div>
             <p className="text-sm font-medium text-foreground">Project overview</p>
             <p className="text-xs text-muted-foreground">
-              Showing <strong>{startItem}</strong>–<strong>{endItem}</strong> of {" "}
+              Showing <strong>{startItem}</strong>–<strong>{endItem}</strong> of{' '}
               <strong>{totalItems}</strong> repositories.
             </p>
           </div>

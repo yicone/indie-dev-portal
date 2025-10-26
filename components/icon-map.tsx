@@ -1,4 +1,4 @@
-import { type IconType } from "react-icons";
+import { type IconType } from 'react-icons';
 import {
   SiPython,
   SiJavascript,
@@ -12,21 +12,21 @@ import {
   SiTailwindcss,
   SiExpress,
   SiGo,
-} from "react-icons/si";
+} from 'react-icons/si';
 
 export type TechKey =
-  | "Python"
-  | "JavaScript"
-  | "TypeScript"
-  | "Go"
-  | "React"
-  | "Vue"
-  | "Svelte"
-  | "Next.js"
-  | "Nx"
-  | "Flask"
-  | "TailwindCSS"
-  | "Express";
+  | 'Python'
+  | 'JavaScript'
+  | 'TypeScript'
+  | 'Go'
+  | 'React'
+  | 'Vue'
+  | 'Svelte'
+  | 'Next.js'
+  | 'Nx'
+  | 'Flask'
+  | 'TailwindCSS'
+  | 'Express';
 
 const iconMap: Record<TechKey, IconType> = {
   Python: SiPython,
@@ -36,7 +36,7 @@ const iconMap: Record<TechKey, IconType> = {
   React: SiReact,
   Vue: SiVuedotjs,
   Svelte: SiSvelte,
-  "Next.js": SiNextdotjs,
+  'Next.js': SiNextdotjs,
   Nx: SiNx,
   Flask: SiFlask,
   TailwindCSS: SiTailwindcss,

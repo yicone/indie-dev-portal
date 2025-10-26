@@ -100,13 +100,13 @@ pnpm db:seed      # Seed from data/*.json
 
 **Base URL**: `http://localhost:4000`
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/health` | GET | Health check |
-| `/repos` | GET | List all repos with 5 recent commits |
-| `/repos/:slug` | GET | Get single repo with 10 recent commits |
-| `/repos/:slug/notes` | PATCH | Update repo notes |
-| `/commits` | GET | Get commits for repo (query: `repoSlug`, `limit`) |
+| Endpoint             | Method | Description                                       |
+| -------------------- | ------ | ------------------------------------------------- |
+| `/health`            | GET    | Health check                                      |
+| `/repos`             | GET    | List all repos with 5 recent commits              |
+| `/repos/:slug`       | GET    | Get single repo with 10 recent commits            |
+| `/repos/:slug/notes` | PATCH  | Update repo notes                                 |
+| `/commits`           | GET    | Get commits for repo (query: `repoSlug`, `limit`) |
 
 **Framework Serialization**:
 

@@ -120,14 +120,14 @@
 
 ## 📊 Priority Matrix
 
-| Feature | Impact | Effort | Priority |
-|---------|--------|--------|----------|
-| Branch Detection | High | Low | **P0** |
-| Unit Tests | High | Medium | **P0** |
-| GitHub API | High | High | **P1** |
-| File Watcher | Medium | Medium | **P1** |
-| Commit Graph | Medium | Low | **P2** |
-| Multi-user | Low | High | **P3** |
+| Feature          | Impact | Effort | Priority |
+| ---------------- | ------ | ------ | -------- |
+| Branch Detection | High   | Low    | **P0**   |
+| Unit Tests       | High   | Medium | **P0**   |
+| GitHub API       | High   | High   | **P1**   |
+| File Watcher     | Medium | Medium | **P1**   |
+| Commit Graph     | Medium | Low    | **P2**   |
+| Multi-user       | Low    | High   | **P3**   |
 
 ## 🔄 Version Planning
 

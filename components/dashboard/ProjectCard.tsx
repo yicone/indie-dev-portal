@@ -15,7 +15,7 @@ import {
   Moon,
   StickyNote,
   Sun,
-  XCircle
+  XCircle,
 } from 'lucide-react';
 
 import type { Repo } from '@/types/git';
@@ -38,23 +38,23 @@ const CI_STATUS_META: Record<Repo['ciStatus'], CIStatusStyle> = {
   passing: {
     label: 'Passing',
     icon: CheckCircle2,
-    className: 'border-green/40 bg-green/15 text-green'
+    className: 'border-green/40 bg-green/15 text-green',
   },
   pending: {
     label: 'Pending',
     icon: Clock,
-    className: 'border-yellow/40 bg-yellow/15 text-yellow'
+    className: 'border-yellow/40 bg-yellow/15 text-yellow',
   },
   failing: {
     label: 'Failing',
     icon: XCircle,
-    className: 'border-red/40 bg-red/15 text-red'
+    className: 'border-red/40 bg-red/15 text-red',
   },
   none: {
     label: 'No CI',
     icon: CheckCircle2,
-    className: 'border-border/60 bg-surface0/80 text-muted-foreground'
-  }
+    className: 'border-border/60 bg-surface0/80 text-muted-foreground',
+  },
 };
 
 const LANGUAGE_BADGE_MAP: Record<string, string> = {
@@ -62,7 +62,7 @@ const LANGUAGE_BADGE_MAP: Record<string, string> = {
   typescript: 'border-blue/40 bg-blue/15 text-blue',
   python: 'border-green/40 bg-green/15 text-green',
   go: 'border-sky/40 bg-sky/15 text-sky',
-  rust: 'border-peach/40 bg-peach/15 text-peach'
+  rust: 'border-peach/40 bg-peach/15 text-peach',
 };
 
 type ProjectCardProps = {
@@ -93,11 +93,7 @@ export function ProjectCard({ repo }: ProjectCardProps) {
                   {repo.name}
                 </h2>
                 <Badge
-                  className={[
-                    cn('gap-1.5', status.className),
-                    'text-nowrap',
-                    'ml-auto'
-                  ].join(' ')}
+                  className={[cn('gap-1.5', status.className), 'text-nowrap', 'ml-auto'].join(' ')}
                 >
                   <StatusIcon className="h-3 w-3" />
                   {status.label}
@@ -136,9 +132,7 @@ export function ProjectCard({ repo }: ProjectCardProps) {
                       variant="outline"
                       className="gap-1 border-overlay0/60 bg-surface0/60 text-foreground"
                     >
-                      {Icon ? (
-                        <Icon className="h-3.5 w-3.5 text-muted-foreground" />
-                      ) : null}
+                      {Icon ? <Icon className="h-3.5 w-3.5 text-muted-foreground" /> : null}
                       {framework}
                     </Badge>
                   );
@@ -180,8 +174,7 @@ export function ProjectCard({ repo }: ProjectCardProps) {
                       <GitBranch className="h-3 w-3" /> main
                     </span>
                     <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />{' '}
-                      {formatRelativeTime(commit.committedAt)}
+                      <Clock className="h-3 w-3" /> {formatRelativeTime(commit.committedAt)}
                     </span>
                   </div>
                 </div>
@@ -195,9 +188,7 @@ export function ProjectCard({ repo }: ProjectCardProps) {
             <div className="mb-2 flex items-center gap-2 font-semibold text-yellow">
               <StickyNote className="h-4 w-4" /> Notes
             </div>
-            <p className="line-clamp-3 leading-relaxed text-muted-foreground">
-              {repo.notes}
-            </p>
+            <p className="line-clamp-3 leading-relaxed text-muted-foreground">{repo.notes}</p>
           </section>
         ) : null}
 

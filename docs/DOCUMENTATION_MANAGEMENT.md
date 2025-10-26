@@ -32,11 +32,13 @@
 
 ```markdown
 <!-- ❌ BAD: Duplicating content -->
+
 README.md: Full list of 10 known limitations
 FUNCTIONAL_SPEC.md: Same full list of 10 known limitations
 ROADMAP.md: Same full list of 10 known limitations
 
 <!-- ✅ GOOD: SSOT with references -->
+
 ROADMAP.md: Full list of 10 known limitations (AUTHORITY)
 README.md: 3 key limitations + link to ROADMAP.md
 FUNCTIONAL_SPEC.md: Brief mention + link to ROADMAP.md
@@ -130,15 +132,15 @@ docs/
 
 ### Authority Mapping
 
-| Information Type | Authority Document | Reference Documents |
-|------------------|-------------------|---------------------|
-| **Known Limitations** | `docs/ROADMAP.md` | README.md, FUNCTIONAL_SPEC.md |
-| **Future Roadmap** | `docs/ROADMAP.md` | README.md, FUNCTIONAL_SPEC.md |
-| **Features** | `docs/FUNCTIONAL_SPEC.md` | README.md (highlights only) |
-| **Version History** | `CHANGELOG.md` | README.md, docs/README.md |
-| **Quick Start** | `docs/QUICKSTART.md` | README.md (condensed) |
-| **Bug Fixes** | `docs/FIXES_INDEX.md` → `docs/fixes/*.md` | README.md (if major) |
-| **Naming Standards** | `docs/NAMING_CONVENTIONS.md` | AGENTS.md (reference) |
+| Information Type      | Authority Document                        | Reference Documents           |
+| --------------------- | ----------------------------------------- | ----------------------------- |
+| **Known Limitations** | `docs/ROADMAP.md`                         | README.md, FUNCTIONAL_SPEC.md |
+| **Future Roadmap**    | `docs/ROADMAP.md`                         | README.md, FUNCTIONAL_SPEC.md |
+| **Features**          | `docs/FUNCTIONAL_SPEC.md`                 | README.md (highlights only)   |
+| **Version History**   | `CHANGELOG.md`                            | README.md, docs/README.md     |
+| **Quick Start**       | `docs/QUICKSTART.md`                      | README.md (condensed)         |
+| **Bug Fixes**         | `docs/FIXES_INDEX.md` → `docs/fixes/*.md` | README.md (if major)          |
+| **Naming Standards**  | `docs/NAMING_CONVENTIONS.md`              | AGENTS.md (reference)         |
 
 ### Reference Pattern
 
@@ -146,6 +148,7 @@ When referencing authority documents:
 
 ```markdown
 <!-- Brief summary (2-3 key points) -->
+
 - Point 1
 - Point 2
 - Point 3
@@ -203,6 +206,7 @@ When referencing authority documents:
 
    ```markdown
    <!-- Update the authoritative source -->
+
    docs/ROADMAP.md: Add new limitation
    ```
 
@@ -210,6 +214,7 @@ When referencing authority documents:
 
    ```markdown
    <!-- Only if the change is significant -->
+
    README.md: Update summary if it affects top 3 items
    ```
 
@@ -234,11 +239,12 @@ When referencing authority documents:
    # Document Title
 
    > **⚠️ DEPRECATED**: This document has been archived as of YYYY-MM-DD.
-   > 
+   >
    > **Current Information**:
+   >
    > - For [topic A], see [NEW_DOC_A.md](../NEW_DOC_A.md)
    > - For [topic B], see [NEW_DOC_B.md](../NEW_DOC_B.md)
-   > 
+   >
    > This file is kept for historical reference only.
 
    ---
@@ -312,8 +318,11 @@ Brief 1-2 sentence description.
 ## Quick Start (5-10 commands)
 
 ## Documentation
+
 ### For Users
+
 ### For Developers
+
 ### For Contributors
 
 ## Tech Stack (1-3 lines)
@@ -358,15 +367,21 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+
 ### Changed
+
 ### Deprecated
+
 ### Removed
+
 ### Fixed
+
 ### Security
 
 ## [1.0.0] - YYYY-MM-DD
 
 ### Added
+
 - Feature A
 - Feature B
 ```
@@ -383,13 +398,16 @@ All notable changes to this project will be documented in this file.
 ## Known Limitations
 
 ### Current Constraints
+
 1. **Limitation 1**: Description + workaround
 2. **Limitation 2**: Description + workaround
 
 ## Roadmap
 
 ### Short-term (1-3 months)
+
 ### Mid-term (3-6 months)
+
 ### Long-term (6+ months)
 
 ## Priority Matrix
@@ -411,6 +429,7 @@ Quick reference for all bug fixes and improvements.
 ## Recent Fixes
 
 ### [Fix Title](fixes/YYYY-MM-DD-description.md)
+
 **Date**: YYYY-MM-DD  
 **Impact**: High/Medium/Low  
 **Summary**: 1-2 sentence description
@@ -428,6 +447,7 @@ Quick reference for all bug fixes and improvements.
 
 ```markdown
 **📍 Entry Points (Always Start Here)**:
+
 - `docs/FIXES_INDEX.md` → Links to detailed fixes
 - `README.md` → Project overview and quick start
 - `AGENTS.md` → Agent collaboration guide
@@ -563,7 +583,7 @@ When reviewing documentation changes:
 
 ### New Feature Documentation
 
-```markdown
+````markdown
 # Feature Name
 
 > **Authority**: This is the authoritative documentation for [Feature Name].
@@ -589,6 +609,7 @@ Brief description of what this feature does.
 # Configuration example
 SETTING_NAME=value
 ```
+````
 
 ## Examples
 
@@ -613,15 +634,15 @@ See [ROADMAP.md](ROADMAP.md#known-limitations) for current limitations.
 - [Related Doc 1](path/to/doc1.md)
 - [Related Doc 2](path/to/doc2.md)
 
-```
+````
 
 ### New Fix Documentation
 
 ```markdown
 # Fix: [Brief Title]
 
-**Date**: YYYY-MM-DD  
-**Impact**: High/Medium/Low  
+**Date**: YYYY-MM-DD
+**Impact**: High/Medium/Low
 **Status**: ✅ Fixed / 🚧 In Progress / ⏳ Planned
 
 ## Problem
@@ -649,7 +670,7 @@ old code
 
 // After
 new code
-```
+````
 
 ## Testing
 
@@ -745,6 +766,7 @@ How to avoid this issue in the future.
 
 ---
 
-**Last Updated**: October 26, 2025  
-**Maintained By**: [documentation-agent]  
+**Last Updated**: October 26, 2025
+**Maintained By**: [documentation-agent]
 **Review Frequency**: Quarterly
+```
