@@ -1,5 +1,18 @@
 # Documentation Restructure Progress
 
+> **⚠️ ARCHIVED**: This document has been archived as of 2025-10-26.
+>
+> **Current Information**:
+>
+> - The restructure has been completed successfully
+> - For current documentation structure, see [../DOCUMENTATION_MANAGEMENT.md](../DOCUMENTATION_MANAGEMENT.md)
+> - For documentation index, see [../README.md](../README.md)
+> - For change history, see [../../CHANGELOG.md](../../CHANGELOG.md)
+>
+> This file is kept for historical reference only.
+
+---
+
 ## ✅ Phase 1: Structure Adjustment - COMPLETED
 
 **Date**: October 26, 2025

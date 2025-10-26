@@ -7,8 +7,8 @@ Complete index of all documentation files for the Personal Developer Dashboard p
 Choose your starting point based on your role:
 
 - **👤 For Users**: Start with [QUICKSTART.md](QUICKSTART.md)
-- **🤖 For AI Agents**: Start with [FIXES_INDEX.md](FIXES_INDEX.md)
-- **👨‍💻 For Contributors**: Start with [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md)
+- **🤖 For AI Agents**: Start with [FIXES_INDEX.md](FIXES_INDEX.md) or [DOCUMENTATION_MANAGEMENT.md](DOCUMENTATION_MANAGEMENT.md)
+- **👨‍💻 For Contributors**: Start with [DOCUMENTATION_SYSTEM_SUMMARY.md](DOCUMENTATION_SYSTEM_SUMMARY.md) (quick overview) or [DOCUMENTATION_MANAGEMENT.md](DOCUMENTATION_MANAGEMENT.md) (complete guide)
 - **🔧 For Developers**: Start with [../AGENTS.md](../AGENTS.md)
 
 ## 📚 All Documentation Files
@@ -27,9 +27,10 @@ Choose your starting point based on your role:
 | File | Description | Audience |
 |------|-------------|----------|
 | [../AGENTS.md](../AGENTS.md) | AI agent collaboration guide | AI agents, Developers |
+| [DOCUMENTATION_MANAGEMENT.md](DOCUMENTATION_MANAGEMENT.md) | **Complete documentation management guide** | **AI agents, Contributors** |
+| [DOCUMENTATION_SYSTEM_SUMMARY.md](DOCUMENTATION_SYSTEM_SUMMARY.md) | Quick reference for documentation system | All users |
 | [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md) | Documentation standards | Contributors, AI agents |
 | [FIXES_INDEX.md](FIXES_INDEX.md) | Bug fixes and improvements index | AI agents, Developers |
-| [DOCUMENTATION_RESTRUCTURE_PLAN.md](DOCUMENTATION_RESTRUCTURE_PLAN.md) | Documentation reorganization plan | Maintainers |
 
 ### Project Documentation
 
@@ -59,6 +60,8 @@ Archived files:
 - [PROJECT_STATUS.md](archive/PROJECT_STATUS.md) - Superseded by CHANGELOG.md and ROADMAP.md
 - [IMPLEMENTATION_SUMMARY.md](archive/IMPLEMENTATION_SUMMARY.md) - Superseded by GIT_INTEGRATION.md
 - [GIT_INTEGRATION_SUMMARY.md](archive/GIT_INTEGRATION_SUMMARY.md) - Superseded by GIT_INTEGRATION.md
+- [DOCUMENTATION_RESTRUCTURE_PLAN.md](archive/DOCUMENTATION_RESTRUCTURE_PLAN.md) - Restructure completed
+- [RESTRUCTURE_PROGRESS.md](archive/RESTRUCTURE_PROGRESS.md) - Restructure completed
 
 ## 🔍 Finding Information
 
@@ -71,6 +74,7 @@ Archived files:
 - **Known Issues**: [ROADMAP.md](ROADMAP.md#known-limitations)
 - **Bug Fixes**: [FIXES_INDEX.md](FIXES_INDEX.md)
 - **Documentation Standards**: [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md)
+- **Documentation System**: [DOCUMENTATION_SYSTEM_SUMMARY.md](DOCUMENTATION_SYSTEM_SUMMARY.md)
 - **Version History**: [../CHANGELOG.md](../CHANGELOG.md)
 
 ### By Audience
@@ -122,11 +126,11 @@ See [../AGENTS.md](../AGENTS.md#documentation-workflow) for detailed workflow.
 
 ## 📊 Documentation Statistics
 
-- **Total Files**: 13 active + 3 archived
+- **Total Files**: 12 active + 5 archived
 - **Root Directory**: 3 files (README, AGENTS, CHANGELOG)
-- **docs/ Directory**: 10 files
-- **Archived**: 3 files
-- **Last Major Restructure**: October 26, 2025
+- **docs/ Directory**: 9 files
+- **Archived**: 5 files
+- **Last Major Update**: October 26, 2025
 
 ---
 

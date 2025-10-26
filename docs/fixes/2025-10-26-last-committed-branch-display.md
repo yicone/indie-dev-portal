@@ -162,6 +162,6 @@ If you already have repositories in the database:
 
 ## Related Documentation
 
-- [Git Integration Guide](GIT_INTEGRATION.md) - How git scanning works
-- [Functional Spec](FUNCTIONAL_SPEC.md) - Complete feature documentation
-- [API Documentation](../api/repos.ts) - API endpoint details
+- [Git Integration Guide](../GIT_INTEGRATION.md) - How git scanning works
+- [Functional Spec](../FUNCTIONAL_SPEC.md) - Complete feature documentation
+- [API Documentation](../../api/repos.ts) - API endpoint details

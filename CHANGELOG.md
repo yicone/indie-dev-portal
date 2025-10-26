@@ -51,6 +51,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Documentation Management System**: Complete documentation management framework
+  - `docs/DOCUMENTATION_MANAGEMENT.md`: Comprehensive guide for AI agents and contributors
+  - Documentation templates in `docs/templates/` for new projects
+  - SSOT (Single Source of Truth) principle implementation
+  - Hybrid approach (index + detailed files) for AI optimization
+  - Audience-oriented organization (Users/Developers/Contributors)
+  - Progressive disclosure pattern (summaries + links)
+
+### Changed
+
+- **AGENTS.md**: Updated `[documentation-agent]` responsibilities to reference new management guide
+- **README.md**: Added documentation standards to Contributing section
+- **docs/README.md**: Added DOCUMENTATION_MANAGEMENT.md to entry points and index
+
 ### Planned
 
 See [ROADMAP.md](docs/ROADMAP.md) for future plans and known limitations.

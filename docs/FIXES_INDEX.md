@@ -61,7 +61,7 @@ This approach minimizes tool calls while maintaining detailed documentation.
 
 ## 2025-10-25: Real Git Integration
 
-**File**: [GIT_INTEGRATION_SUMMARY.md](../GIT_INTEGRATION_SUMMARY.md)  
+**File**: [GIT_INTEGRATION_SUMMARY.md](archive/GIT_INTEGRATION_SUMMARY.md)  
 **Status**: ✅ Completed  
 **Issue**: Dashboard using mock data instead of real repositories
 
