@@ -11,6 +11,7 @@
     "lint": "next lint",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
+    "format:file": "prettier --write",
     "prepare": "husky install",
     "typecheck": "tsc --noEmit",
     "test:api": "tsx scripts/test-api.ts",
