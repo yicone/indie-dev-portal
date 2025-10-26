@@ -46,7 +46,7 @@
 ### ✅ 4. UI Interactions & Button Functionality
 
 - **VS Code Button**: Opens repo via `vscode://file/` protocol
-- **Folder Button**: Opens in Finder via `file://` protocol  
+- **Folder Button**: Opens in Finder via `file://` protocol
 - **Diff Button**: Opens VS Code git diff view
 - **Notes Button**: Opens modal dialog with save functionality
 - Created `NotesDialog` component with:

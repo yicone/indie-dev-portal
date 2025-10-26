@@ -1,0 +1,19 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+out
+dist
+build
+
+# Database
+*.db
+*.db-journal
+
+# Prototype (reference only, should not be formatted)
+prototype/
+
+# Generated files
+.next/
+coverage/

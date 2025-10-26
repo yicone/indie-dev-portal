@@ -1,4 +1,4 @@
-import type { Commit } from "@/types/git";
+import type { Commit } from '@/types/git';
 
 export function calculateCommitFrequency(commits: Commit[]): number {
   if (commits.length === 0) return 0;

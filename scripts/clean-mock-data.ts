@@ -18,10 +18,10 @@ async function cleanMockData() {
       where: {
         repo: {
           slug: {
-            in: MOCK_SLUGS
-          }
-        }
-      }
+            in: MOCK_SLUGS,
+          },
+        },
+      },
     });
 
     console.log(`  ✓ Deleted ${deletedCommits.count} mock commits`);
@@ -30,9 +30,9 @@ async function cleanMockData() {
     const deletedRepos = await prisma.repo.deleteMany({
       where: {
         slug: {
-          in: MOCK_SLUGS
-        }
-      }
+          in: MOCK_SLUGS,
+        },
+      },
     });
 
     console.log(`  ✓ Deleted ${deletedRepos.count} mock repositories`);

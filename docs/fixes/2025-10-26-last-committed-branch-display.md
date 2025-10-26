@@ -64,7 +64,7 @@ To fully fix this, we need to:
      // ... existing fields
      currentBranch String?
    }
-   
+
    model Commit {
      // ... existing fields
      branch String?
@@ -85,7 +85,7 @@ To fully fix this, we need to:
      // ... existing fields
      currentBranch: string | null;
    };
-   
+
    export type Commit = {
      // ... existing fields
      branch: string | null;

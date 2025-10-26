@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { AlertTriangle, RefreshCcw } from "lucide-react";
+import { AlertTriangle, RefreshCcw } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 type ErrorStateProps = {
   message?: string;
@@ -16,19 +16,12 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
         <AlertTriangle className="h-7 w-7" />
       </span>
       <div className="space-y-2">
-        <h2 className="text-xl font-semibold text-foreground">
-          Failed to load repositories
-        </h2>
+        <h2 className="text-xl font-semibold text-foreground">Failed to load repositories</h2>
         <p className="text-sm text-muted-foreground">
-          {message ?? "An error occurred while fetching your projects. Please try again."}
+          {message ?? 'An error occurred while fetching your projects. Please try again.'}
         </p>
       </div>
-      <Button
-        type="button"
-        variant="secondary"
-        className="rounded-full px-5"
-        onClick={onRetry}
-      >
+      <Button type="button" variant="secondary" className="rounded-full px-5" onClick={onRetry}>
         <RefreshCcw className="mr-2 h-4 w-4" /> Retry
       </Button>
     </section>

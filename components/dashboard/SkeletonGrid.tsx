@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from '@/components/ui/skeleton';
 
 const CARD_HEIGHT = 420;
 

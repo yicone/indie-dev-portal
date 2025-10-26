@@ -1,19 +1,19 @@
-import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { JetBrains_Mono } from 'next/font/google';
+import './globals.css';
 
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
-import { QueryProvider } from "@/components/providers/QueryProvider";
+import { ThemeProvider } from '@/components/providers/ThemeProvider';
+import { QueryProvider } from '@/components/providers/QueryProvider';
 
 const jetBrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains",
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: "Personal Developer Dashboard",
-  description: "Track projects, commits, and language trends at a glance.",
+  title: 'Personal Developer Dashboard',
+  description: 'Track projects, commits, and language trends at a glance.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

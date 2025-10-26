@@ -103,6 +103,7 @@ This approach minimizes tool calls while maintaining detailed documentation.
 **Solution**: Brief description of the fix
 
 **Files Modified**:
+
 - `file1.ts` - What changed
 - `file2.tsx` - What changed
 

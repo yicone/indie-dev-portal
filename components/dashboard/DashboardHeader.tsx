@@ -8,7 +8,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -36,18 +36,13 @@ export function DashboardHeader({
   sortBy,
   onSortChange,
   onRefresh,
-  isRefreshing = false
+  isRefreshing = false,
 }: DashboardHeaderProps) {
   const { theme, setTheme } = useTheme();
   const isDark = theme === 'dark';
-  const selectedLanguageLabel =
-    selectedLanguage === 'all' ? 'All Languages' : selectedLanguage;
+  const selectedLanguageLabel = selectedLanguage === 'all' ? 'All Languages' : selectedLanguage;
   const sortLabel =
-    sortBy === 'lastOpened'
-      ? 'Last opened'
-      : sortBy === 'name'
-        ? 'Name'
-        : 'Commit frequency';
+    sortBy === 'lastOpened' ? 'Last opened' : sortBy === 'name' ? 'Name' : 'Commit frequency';
 
   return (
     <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -57,9 +52,7 @@ export function DashboardHeader({
             <span className="text-lg font-semibold tracking-tight">DP</span>
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">
-              Dev Portal
-            </h1>
+            <h1 className="text-2xl font-semibold text-foreground">Dev Portal</h1>
             <p className="text-sm text-muted-foreground">
               {/* Monitor your repositories, commits, and workflows at a glance. */}
             </p>
@@ -97,10 +90,7 @@ export function DashboardHeader({
               </SelectContent>
             </Select>
 
-            <Select
-              value={sortBy}
-              onValueChange={(value) => onSortChange(value as SortOption)}
-            >
+            <Select value={sortBy} onValueChange={(value) => onSortChange(value as SortOption)}>
               <SelectTrigger className="h-9 w-full rounded-lg border border-border/50 bg-surface0/50 px-5 text-sm md:w-[200px]">
                 <SelectValue>
                   <span className="flex items-center gap-2" title={sortLabel}>
@@ -112,9 +102,7 @@ export function DashboardHeader({
               <SelectContent align="end">
                 <SelectItem value="lastOpened">Last opened</SelectItem>
                 <SelectItem value="name">Name</SelectItem>
-                <SelectItem value="commitFrequency">
-                  Commit frequency
-                </SelectItem>
+                <SelectItem value="commitFrequency">Commit frequency</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -130,9 +118,7 @@ export function DashboardHeader({
             disabled={isRefreshing}
             aria-label="Refresh repositories"
           >
-            <RefreshCw
-              className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`}
-            />
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </Button>
           <Button
             type="button"
@@ -142,11 +128,7 @@ export function DashboardHeader({
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
             aria-label="Toggle theme"
           >
-            {isDark ? (
-              <Sun className="h-4 w-4" />
-            ) : (
-              <Moon className="h-4 w-4" />
-            )}
+            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
         </div>
       </div>

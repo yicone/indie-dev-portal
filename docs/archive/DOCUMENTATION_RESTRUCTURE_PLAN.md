@@ -71,15 +71,15 @@ touch CHANGELOG.md
 
 **Information Ownership**:
 
-| Information Type | Authority (SSOT) | References From |
-|------------------|------------------|-----------------|
-| **Features List** | `docs/FUNCTIONAL_SPEC.md` | README (highlights only) |
-| **Known Limitations** | `docs/ROADMAP.md` | All other files reference this |
-| **Next Steps / Roadmap** | `docs/ROADMAP.md` | All other files reference this |
-| **Quick Start** | `docs/QUICKSTART.md` | README (short version + link) |
-| **Git Integration** | `docs/GIT_INTEGRATION.md` | README (overview + link) |
-| **Fixes** | `docs/FIXES_INDEX.md` | README (link only) |
-| **Project Status** | `CHANGELOG.md` + `docs/ROADMAP.md` | README (summary + links) |
+| Information Type         | Authority (SSOT)                   | References From                |
+| ------------------------ | ---------------------------------- | ------------------------------ |
+| **Features List**        | `docs/FUNCTIONAL_SPEC.md`          | README (highlights only)       |
+| **Known Limitations**    | `docs/ROADMAP.md`                  | All other files reference this |
+| **Next Steps / Roadmap** | `docs/ROADMAP.md`                  | All other files reference this |
+| **Quick Start**          | `docs/QUICKSTART.md`               | README (short version + link)  |
+| **Git Integration**      | `docs/GIT_INTEGRATION.md`          | README (overview + link)       |
+| **Fixes**                | `docs/FIXES_INDEX.md`              | README (link only)             |
+| **Project Status**       | `CHANGELOG.md` + `docs/ROADMAP.md` | README (summary + links)       |
 
 **Deduplication Actions**:
 
@@ -102,7 +102,7 @@ touch CHANGELOG.md
 
 **New README.md Structure**:
 
-```markdown
+````markdown
 # Personal Developer Dashboard
 
 [Brief 2-3 sentence description]
@@ -132,6 +132,7 @@ pnpm git:sync
 # 4. Start development
 pnpm dev
 ```
+````
 
 [Detailed setup guide →](docs/QUICKSTART.md)
 
@@ -165,7 +166,7 @@ pnpm dev
 
 MIT
 
-```
+````
 
 ## 🚨 Potential Conflicts & Solutions
 
@@ -178,7 +179,7 @@ MIT
 # After moving files, update all references
 grep -r "QUICKSTART.md" . --include="*.md" | grep -v "node_modules"
 # Manually update each reference from QUICKSTART.md to docs/QUICKSTART.md
-```
+````
 
 **Prevention**: Use relative links consistently:
 
@@ -197,10 +198,10 @@ grep -r "QUICKSTART.md" . --include="*.md" | grep -v "node_modules"
 
   ```markdown
   ## Known Limitations
-  
+
   - No real-time updates (requires manual `pnpm git:sync`)
   - Local repositories only (no GitHub/GitLab integration yet)
-  
+
   [See complete list and workarounds →](docs/ROADMAP.md#known-limitations)
   ```
 
@@ -241,10 +242,10 @@ Add to top of archived files:
 
 ```markdown
 > **⚠️ DEPRECATED**: This document has been archived.
-> 
+>
 > - For project status, see [CHANGELOG.md](../../CHANGELOG.md) and [ROADMAP.md](../ROADMAP.md)
 > - For git integration, see [GIT_INTEGRATION.md](../GIT_INTEGRATION.md)
-> 
+>
 > This file is kept for historical reference only.
 ```
 
@@ -270,28 +271,28 @@ Add to AGENTS.md:
 
 ### Root Directory Files
 
-| Before | After | Change |
-|--------|-------|--------|
-| 6 files | 3 files | -50% |
-| 32.4 KB total | ~15 KB total | -54% |
+| Before        | After        | Change |
+| ------------- | ------------ | ------ |
+| 6 files       | 3 files      | -50%   |
+| 32.4 KB total | ~15 KB total | -54%   |
 
 ### Content Duplication
 
-| Content Type | Before | After | Reduction |
-|--------------|--------|-------|-----------|
-| Known Limitations | 6 copies | 1 authority + references | -83% |
-| Features List | 4 copies | 1 authority + highlights | -75% |
-| Next Steps | 4 copies | 1 unified roadmap | -75% |
-| Quick Start | 3 copies | 1 detailed + 1 brief | -67% |
+| Content Type      | Before   | After                    | Reduction |
+| ----------------- | -------- | ------------------------ | --------- |
+| Known Limitations | 6 copies | 1 authority + references | -83%      |
+| Features List     | 4 copies | 1 authority + highlights | -75%      |
+| Next Steps        | 4 copies | 1 unified roadmap        | -75%      |
+| Quick Start       | 3 copies | 1 detailed + 1 brief     | -67%      |
 
 ### User Experience
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Time to find info | ~3 mins | ~30 secs | 6x faster |
-| Files to check | 3-4 files | 1-2 files | 50% fewer |
-| Broken links | High risk | Low risk | Systematic |
-| Maintenance effort | High | Low | 60% reduction |
+| Metric             | Before    | After     | Improvement   |
+| ------------------ | --------- | --------- | ------------- |
+| Time to find info  | ~3 mins   | ~30 secs  | 6x faster     |
+| Files to check     | 3-4 files | 1-2 files | 50% fewer     |
+| Broken links       | High risk | Low risk  | Systematic    |
+| Maintenance effort | High      | Low       | 60% reduction |
 
 ## ✅ Implementation Checklist
 

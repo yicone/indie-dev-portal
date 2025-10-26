@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { AlertCircle, RefreshCcw } from "lucide-react";
+import { AlertCircle, RefreshCcw } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 type EmptyStateProps = {
   onReset: () => void;
@@ -20,12 +20,7 @@ export function EmptyState({ onReset }: EmptyStateProps) {
           Adjust your search terms or filters to discover more repositories.
         </p>
       </div>
-      <Button
-        type="button"
-        variant="secondary"
-        className="rounded-full px-5"
-        onClick={onReset}
-      >
+      <Button type="button" variant="secondary" className="rounded-full px-5" onClick={onReset}>
         <RefreshCcw className="mr-2 h-4 w-4" /> Reset filters
       </Button>
     </section>

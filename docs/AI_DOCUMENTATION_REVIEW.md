@@ -81,12 +81,12 @@ Edit `.agents/doc-review-config.yml`:
 
 ```yaml
 # Choose your agent
-agent: "gemini-cli" # or "codex-cli"
+agent: 'gemini-cli' # or "codex-cli"
 
 # Agent-specific settings
 env:
-  gemini_model: "gemini-pro"
-  codex_model: "gpt-4"
+  gemini_model: 'gemini-pro'
+  codex_model: 'gpt-4'
 ```
 
 ### Enable/Disable AI Checks
@@ -122,12 +122,12 @@ Edit `.agents/doc-review-config.yml` to customize what each level checks:
 ```yaml
 checks:
   quick:
-    - name: "File Naming Convention"
+    - name: 'File Naming Convention'
       blocking: true
       timeout: 5
 
   standard:
-    - name: "SSOT Violations"
+    - name: 'SSOT Violations'
       blocking: false
       timeout: 15
 ```
@@ -294,8 +294,8 @@ name: Documentation Review
 on:
   pull_request:
     paths:
-      - "docs/**"
-      - "*.md"
+      - 'docs/**'
+      - '*.md'
 
 jobs:
   doc-review:
@@ -306,7 +306,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: '18'
 
       - name: Install dependencies
         run: pnpm install

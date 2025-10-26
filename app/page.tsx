@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-import { fetchRepos } from "@/lib/gitUtils";
-import type { Repo } from "@/types/git";
-import { DashboardHeader, type SortOption } from "@/components/dashboard/DashboardHeader";
-import { ProjectGrid } from "@/components/dashboard/ProjectGrid";
-import { EmptyState } from "@/components/dashboard/EmptyState";
-import { ErrorState } from "@/components/dashboard/ErrorState";
-import { SkeletonGrid } from "@/components/dashboard/SkeletonGrid";
-import { calculateCommitFrequency, parseLastOpened } from "@/components/dashboard/utils";
+import { fetchRepos } from '@/lib/gitUtils';
+import type { Repo } from '@/types/git';
+import { DashboardHeader, type SortOption } from '@/components/dashboard/DashboardHeader';
+import { ProjectGrid } from '@/components/dashboard/ProjectGrid';
+import { EmptyState } from '@/components/dashboard/EmptyState';
+import { ErrorState } from '@/components/dashboard/ErrorState';
+import { SkeletonGrid } from '@/components/dashboard/SkeletonGrid';
+import { calculateCommitFrequency, parseLastOpened } from '@/components/dashboard/utils';
 
 const PAGE_SIZE = 6;
 
 export default function DashboardPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState("all");
-  const [sortBy, setSortBy] = useState<SortOption>("lastOpened");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('all');
+  const [sortBy, setSortBy] = useState<SortOption>('lastOpened');
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError, error, isRefetching, refetch } = useQuery({
-    queryKey: ["repos"],
+    queryKey: ['repos'],
     queryFn: fetchRepos,
     retry: 2,
     staleTime: 30000, // 30 seconds
@@ -30,14 +30,13 @@ export default function DashboardPage() {
   const repos = useMemo(() => data ?? [], [data]);
 
   const languages = useMemo(
-    () =>
-      [
-        "all",
-        ...Array.from(new Set(repos.map((repo) => repo.primaryLanguage))).sort(
-          (a, b) => a.localeCompare(b),
-        ),
-      ],
-    [repos],
+    () => [
+      'all',
+      ...Array.from(new Set(repos.map((repo) => repo.primaryLanguage))).sort((a, b) =>
+        a.localeCompare(b)
+      ),
+    ],
+    [repos]
   );
 
   const filteredRepos = useMemo(() => {
@@ -46,13 +45,13 @@ export default function DashboardPage() {
     return repos
       .filter((repo) => {
         const matchesSearch = normalizedQuery
-          ? [repo.name, repo.slug, repo.description ?? ""].some((value) =>
-              value.toLowerCase().includes(normalizedQuery),
+          ? [repo.name, repo.slug, repo.description ?? ''].some((value) =>
+              value.toLowerCase().includes(normalizedQuery)
             )
           : true;
 
         const matchesLanguage =
-          selectedLanguage === "all" || repo.primaryLanguage === selectedLanguage;
+          selectedLanguage === 'all' || repo.primaryLanguage === selectedLanguage;
 
         return matchesSearch && matchesLanguage;
       })
@@ -92,7 +91,7 @@ export default function DashboardPage() {
         onSearchChange={handleSearchChange}
         selectedLanguage={selectedLanguage}
         onLanguageChange={handleLanguageChange}
-        languages={languages.filter((language) => language !== "all")}
+        languages={languages.filter((language) => language !== 'all')}
         sortBy={sortBy}
         onSortChange={handleSortChange}
         onRefresh={() => void refetch()}
@@ -108,11 +107,13 @@ export default function DashboardPage() {
             onRetry={() => void refetch()}
           />
         ) : filteredRepos.length === 0 ? (
-          <EmptyState onReset={() => {
-            setSearchQuery("");
-            setSelectedLanguage("all");
-            setSortBy("lastOpened");
-          }} />
+          <EmptyState
+            onReset={() => {
+              setSearchQuery('');
+              setSelectedLanguage('all');
+              setSortBy('lastOpened');
+            }}
+          />
         ) : (
           <ProjectGrid
             repos={paginatedRepos}
@@ -130,13 +131,11 @@ export default function DashboardPage() {
 
 function sortRepos(a: Repo, b: Repo, sortBy: SortOption) {
   switch (sortBy) {
-    case "name":
+    case 'name':
       return a.name.localeCompare(b.name);
-    case "commitFrequency":
-      return (
-        calculateCommitFrequency(b.commits) - calculateCommitFrequency(a.commits)
-      );
-    case "lastOpened":
+    case 'commitFrequency':
+      return calculateCommitFrequency(b.commits) - calculateCommitFrequency(a.commits);
+    case 'lastOpened':
     default:
       return parseLastOpened(b.lastOpenedAt) - parseLastOpened(a.lastOpenedAt);
   }

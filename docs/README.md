@@ -15,34 +15,34 @@ Choose your starting point based on your role:
 
 ### User Documentation
 
-| File | Description | Audience |
-|------|-------------|----------|
-| [QUICKSTART.md](QUICKSTART.md) | Get up and running in 5 minutes | New users |
-| [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) | Complete feature documentation | All users |
-| [GIT_INTEGRATION.md](GIT_INTEGRATION.md) | How git repository scanning works | Users, Developers |
-| [ROADMAP.md](ROADMAP.md) | Future plans and known limitations | All users |
+| File                                     | Description                        | Audience          |
+| ---------------------------------------- | ---------------------------------- | ----------------- |
+| [QUICKSTART.md](QUICKSTART.md)           | Get up and running in 5 minutes    | New users         |
+| [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) | Complete feature documentation     | All users         |
+| [GIT_INTEGRATION.md](GIT_INTEGRATION.md) | How git repository scanning works  | Users, Developers |
+| [ROADMAP.md](ROADMAP.md)                 | Future plans and known limitations | All users         |
 
 ### Developer Documentation
 
-| File | Description | Audience |
-|------|-------------|----------|
-| [../AGENTS.md](../AGENTS.md) | AI agent collaboration guide | AI agents, Developers |
-| [DOCUMENTATION_MANAGEMENT.md](DOCUMENTATION_MANAGEMENT.md) | **Complete documentation management guide** | **AI agents, Contributors** |
-| [DOCUMENTATION_SYSTEM_SUMMARY.md](DOCUMENTATION_SYSTEM_SUMMARY.md) | Quick reference for documentation system | All users |
-| [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md) | Documentation standards | Contributors, AI agents |
-| [FIXES_INDEX.md](FIXES_INDEX.md) | Bug fixes and improvements index | AI agents, Developers |
+| File                                                               | Description                                 | Audience                    |
+| ------------------------------------------------------------------ | ------------------------------------------- | --------------------------- |
+| [../AGENTS.md](../AGENTS.md)                                       | AI agent collaboration guide                | AI agents, Developers       |
+| [DOCUMENTATION_MANAGEMENT.md](DOCUMENTATION_MANAGEMENT.md)         | **Complete documentation management guide** | **AI agents, Contributors** |
+| [DOCUMENTATION_SYSTEM_SUMMARY.md](DOCUMENTATION_SYSTEM_SUMMARY.md) | Quick reference for documentation system    | All users                   |
+| [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md)                     | Documentation standards                     | Contributors, AI agents     |
+| [FIXES_INDEX.md](FIXES_INDEX.md)                                   | Bug fixes and improvements index            | AI agents, Developers       |
 
 ### Project Documentation
 
-| File | Description | Audience |
-|------|-------------|----------|
-| [../README.md](../README.md) | Project overview and navigation hub | Everyone |
-| [../CHANGELOG.md](../CHANGELOG.md) | Version history and changes | Everyone |
+| File                               | Description                         | Audience |
+| ---------------------------------- | ----------------------------------- | -------- |
+| [../README.md](../README.md)       | Project overview and navigation hub | Everyone |
+| [../CHANGELOG.md](../CHANGELOG.md) | Version history and changes         | Everyone |
 
 ### Fix Documentation
 
-| Directory | Description | Audience |
-|-----------|-------------|----------|
+| Directory        | Description                | Audience              |
+| ---------------- | -------------------------- | --------------------- |
 | [fixes/](fixes/) | Detailed fix documentation | AI agents, Developers |
 
 Current fixes:
@@ -51,8 +51,8 @@ Current fixes:
 
 ### Archived Documentation
 
-| Directory | Description | Note |
-|-----------|-------------|------|
+| Directory            | Description              | Note                      |
+| -------------------- | ------------------------ | ------------------------- |
 | [archive/](archive/) | Deprecated documentation | Historical reference only |
 
 Archived files:

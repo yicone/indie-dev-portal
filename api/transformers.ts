@@ -1,4 +1,4 @@
-import type { Commit, Repo } from "@prisma/client";
+import type { Commit, Repo } from '@prisma/client';
 
 export type CommitResponse = {
   id: number;
@@ -9,7 +9,7 @@ export type CommitResponse = {
   repoSlug: string;
 };
 
-type CIStatusValue = "passing" | "failing" | "pending" | "none";
+type CIStatusValue = 'passing' | 'failing' | 'pending' | 'none';
 
 export type RepoResponse = {
   id: number;
@@ -28,10 +28,7 @@ export type RepoResponse = {
   commits: CommitResponse[];
 };
 
-export const transformCommit = (
-  commit: Commit,
-  repoSlug: string,
-): CommitResponse => ({
+export const transformCommit = (commit: Commit, repoSlug: string): CommitResponse => ({
   id: commit.id,
   hash: commit.hash,
   message: commit.message,
@@ -40,9 +37,7 @@ export const transformCommit = (
   repoSlug,
 });
 
-export const transformRepo = (
-  repo: Repo & { commits?: Commit[] },
-): RepoResponse => ({
+export const transformRepo = (repo: Repo & { commits?: Commit[] }): RepoResponse => ({
   id: repo.id,
   name: repo.name,
   slug: repo.slug,
@@ -50,7 +45,7 @@ export const transformRepo = (
   repoPath: repo.repoPath,
   primaryLanguage: repo.primaryLanguage,
   frameworks: parseFrameworks((repo as RepoWithMeta).frameworks ?? repo.frameworks),
-  ciStatus: (repo as RepoWithMeta).ciStatus ?? "pending",
+  ciStatus: (repo as RepoWithMeta).ciStatus ?? 'pending',
   lastOpenedAt: parseDate((repo as RepoWithMeta).lastOpenedAt ?? null),
   notes: (repo as RepoWithMeta).notes ?? null,
   stars: repo.stars,
@@ -68,17 +63,17 @@ type RepoWithMeta = Repo & {
 
 function parseFrameworks(value: unknown): string[] {
   if (Array.isArray(value)) {
-    return value.filter((item): item is string => typeof item === "string");
+    return value.filter((item): item is string => typeof item === 'string');
   }
 
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     try {
       const parsed = JSON.parse(value);
       return Array.isArray(parsed)
-        ? parsed.filter((item): item is string => typeof item === "string")
+        ? parsed.filter((item): item is string => typeof item === 'string')
         : [];
     } catch (error) {
-      console.warn("Failed to parse frameworks JSON", error);
+      console.warn('Failed to parse frameworks JSON', error);
       return [];
     }
   }

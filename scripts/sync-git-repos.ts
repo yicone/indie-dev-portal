@@ -4,30 +4,30 @@
  * Scans configured paths for git repos and updates the database
  */
 
-import "dotenv/config";
-import { prisma } from "../lib/prisma";
-import { scanAndParseRepos } from "../lib/gitService";
+import 'dotenv/config';
+import { prisma } from '../lib/prisma';
+import { scanAndParseRepos } from '../lib/gitService';
 
 async function syncRepos() {
-  console.log("🔍 Scanning for git repositories...\n");
+  console.log('🔍 Scanning for git repositories...\n');
 
   // Get scan paths from environment
-  const scanPathsEnv = process.env.GIT_SCAN_PATHS || "";
+  const scanPathsEnv = process.env.GIT_SCAN_PATHS || '';
   const scanPaths = scanPathsEnv
-    .split(",")
+    .split(',')
     .map((p) => p.trim())
     .filter((p) => p.length > 0);
 
   if (scanPaths.length === 0) {
-    console.error("❌ No scan paths configured!");
-    console.error("   Set GIT_SCAN_PATHS in your .env file");
+    console.error('❌ No scan paths configured!');
+    console.error('   Set GIT_SCAN_PATHS in your .env file');
     console.error('   Example: GIT_SCAN_PATHS="/Users/username/Projects"');
     process.exit(1);
   }
 
   const maxDepth = Number(process.env.GIT_SCAN_DEPTH) || 2;
 
-  console.log(`📂 Scan paths: ${scanPaths.join(", ")}`);
+  console.log(`📂 Scan paths: ${scanPaths.join(', ')}`);
   console.log(`📊 Max depth: ${maxDepth}\n`);
 
   // Scan and parse repositories
@@ -36,7 +36,7 @@ async function syncRepos() {
   console.log(`✅ Found ${repoInfos.length} git repositories\n`);
 
   if (repoInfos.length === 0) {
-    console.log("No repositories found. Exiting.");
+    console.log('No repositories found. Exiting.');
     return;
   }
 
@@ -124,7 +124,7 @@ async function syncRepos() {
 
 syncRepos()
   .catch((error) => {
-    console.error("Fatal error:", error);
+    console.error('Fatal error:', error);
     process.exit(1);
   })
   .finally(() => {
