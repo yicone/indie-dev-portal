@@ -55,7 +55,17 @@ if [[ -z "$AGENT" ]]; then
 fi
 
 # Check if agent is available
-if ! command -v "$AGENT" &> /dev/null; then
+# For gemini-cli, also check for 'gemini' command
+AGENT_CMD="$AGENT"
+if [[ "$AGENT" == "gemini-cli" ]]; then
+    if command -v gemini &> /dev/null; then
+        AGENT_CMD="gemini"
+    elif ! command -v "$AGENT" &> /dev/null; then
+        echo -e "${YELLOW}⚠️  Agent '$AGENT' (or 'gemini') not found in PATH${NC}"
+        echo -e "${YELLOW}   Skipping AI checks. Install $AGENT or set DOC_AI_CHECK=false${NC}"
+        exit 0
+    fi
+elif ! command -v "$AGENT" &> /dev/null; then
     echo -e "${YELLOW}⚠️  Agent '$AGENT' not found in PATH${NC}"
     echo -e "${YELLOW}   Skipping AI checks. Install $AGENT or set DOC_AI_CHECK=false${NC}"
     exit 0
@@ -67,16 +77,16 @@ CONTEXT_FILES="AGENTS.md,docs/DOCUMENTATION_MANAGEMENT.md,docs/NAMING_CONVENTION
 # Build prompt based on level
 case "$LEVEL" in
     quick)
-        PROMPT=$(cat <<EOF
+        PROMPT=$(cat <<'EOF'
 You are a documentation reviewer for this project.
 
-Read these context files to understand the project's documentation standards:
+Read these context files to understand the project documentation standards:
 - AGENTS.md (agent collaboration protocol)
 - docs/DOCUMENTATION_MANAGEMENT.md (documentation rules)
 - docs/NAMING_CONVENTIONS.md (naming standards)
 
 Changed files to review:
-$CHANGED_FILES
+CHANGED_FILES_PLACEHOLDER
 
 Perform QUICK checks:
 1. File Naming Convention - Verify files follow naming conventions
@@ -90,20 +100,21 @@ Output format (one line per check):
 Keep it brief. Exit with summary line: "RESULT: PASS/WARNING/FAIL"
 EOF
 )
+        PROMPT="${PROMPT//CHANGED_FILES_PLACEHOLDER/$CHANGED_FILES}"
         TIMEOUT=10
         ;;
     
     standard)
-        PROMPT=$(cat <<EOF
+        PROMPT=$(cat <<'EOF'
 You are a documentation reviewer for this project.
 
-Read these context files to understand the project's documentation standards:
+Read these context files to understand the project documentation standards:
 - AGENTS.md (agent collaboration protocol)
 - docs/DOCUMENTATION_MANAGEMENT.md (complete documentation rules and SSOT mapping)
 - docs/NAMING_CONVENTIONS.md (naming standards)
 
 Changed files to review:
-$CHANGED_FILES
+CHANGED_FILES_PLACEHOLDER
 
 Perform STANDARD checks:
 1. SSOT Violations - Check for duplicate content without proper cross-referencing
@@ -119,11 +130,12 @@ For each check, output:
 End with summary: "RESULT: PASS/WARNING/FAIL - [count] issues found"
 EOF
 )
+        PROMPT="${PROMPT//CHANGED_FILES_PLACEHOLDER/$CHANGED_FILES}"
         TIMEOUT=30
         ;;
     
     deep)
-        PROMPT=$(cat <<EOF
+        PROMPT=$(cat <<'EOF'
 You are a documentation reviewer performing a comprehensive audit.
 
 Read these context files:
@@ -133,7 +145,7 @@ Read these context files:
 - docs/DOCUMENTATION_SYSTEM_SUMMARY.md
 
 Changed files to review:
-$CHANGED_FILES
+CHANGED_FILES_PLACEHOLDER
 
 Perform COMPREHENSIVE audit:
 1. SSOT compliance across all files
@@ -166,6 +178,7 @@ Recommendations:
 RESULT: PASS/WARNING/FAIL
 EOF
 )
+        PROMPT="${PROMPT//CHANGED_FILES_PLACEHOLDER/$CHANGED_FILES}"
         TIMEOUT=60
         ;;
     
@@ -183,16 +196,132 @@ echo -e "${BLUE}🔍 Running $AGENT...${NC}"
 PROMPT_FILE=$(mktemp)
 echo "$PROMPT" > "$PROMPT_FILE"
 
-# Run agent with timeout
-# Note: This is a simplified version. Adjust based on your actual agent CLI
-set +e
-if timeout "$TIMEOUT" "$AGENT" \
-    --context="$CONTEXT_FILES" \
-    --prompt-file="$PROMPT_FILE" \
-    > "$RESULT_FILE" 2>&1; then
+# Function to run agent based on type (with timeout)
+run_agent() {
+    local agent="$1"
+    local prompt_file="$2"
+    local context_files="$3"
+    local result_file="$4"
+    local timeout_duration="$5"
     
-    AGENT_EXIT_CODE=0
+    case "$agent" in
+        gemini-cli|gemini)
+            # Gemini CLI format: gemini -p "prompt with @file references"
+            # Build prompt with @file references
+            local prompt_with_context="Context files to read:"$'\n'
+            IFS=',' read -ra FILES <<< "$context_files"
+            for file in "${FILES[@]}"; do
+                if [[ -f "$file" ]]; then
+                    prompt_with_context+="@$file"$'\n'
+                fi
+            done
+            prompt_with_context+=$'\n'
+            local prompt_content
+            prompt_content=$(<"$prompt_file")
+            prompt_with_context+="$prompt_content"
+            
+            # Use the actual gemini command (not gemini-cli)
+            $TIMEOUT_CMD "$timeout_duration" gemini \
+                -p "$prompt_with_context" \
+                > "$result_file" 2>&1
+            ;;
+            
+        codex-cli|codex|openai-cli)
+            # Codex/OpenAI CLI format: codex --prompt-file prompt.txt --context file1,file2
+            $TIMEOUT_CMD "$timeout_duration" codex \
+                --prompt-file="$prompt_file" \
+                --context="$context_files" \
+                --output="$result_file" \
+                2>&1
+            ;;
+            
+        claude-cli|claude)
+            # Claude CLI format: claude --prompt "$(cat prompt.txt)" --files file1,file2
+            $TIMEOUT_CMD "$timeout_duration" claude \
+                --prompt "$(cat "$prompt_file")" \
+                --files "$context_files" \
+                > "$result_file" 2>&1
+            ;;
+            
+        *)
+            # Generic fallback - try common format
+            echo -e "${YELLOW}⚠️  Unknown agent type: $agent, using generic format${NC}"
+            $TIMEOUT_CMD "$timeout_duration" "$agent" \
+                --prompt-file="$prompt_file" \
+                --context="$context_files" \
+                > "$result_file" 2>&1
+            ;;
+    esac
+}
+
+# Function to run agent without timeout
+run_agent_no_timeout() {
+    local agent="$1"
+    local prompt_file="$2"
+    local context_files="$3"
+    local result_file="$4"
+    
+    case "$agent" in
+        gemini-cli|gemini)
+            # Gemini CLI format: gemini -p "prompt with @file references"
+            local prompt_with_context="Context files to read:"$'\n'
+            IFS=',' read -ra FILES <<< "$context_files"
+            for file in "${FILES[@]}"; do
+                if [[ -f "$file" ]]; then
+                    prompt_with_context+="@$file"$'\n'
+                fi
+            done
+            prompt_with_context+=$'\n'
+            local prompt_content
+            prompt_content=$(<"$prompt_file")
+            prompt_with_context+="$prompt_content"
+            
+            gemini -p "$prompt_with_context" > "$result_file" 2>&1
+            ;;
+            
+        codex-cli|codex|openai-cli)
+            codex \
+                --prompt-file="$prompt_file" \
+                --context="$context_files" \
+                --output="$result_file" \
+                2>&1
+            ;;
+            
+        claude-cli|claude)
+            claude \
+                --prompt "$(cat "$prompt_file")" \
+                --files "$context_files" \
+                > "$result_file" 2>&1
+            ;;
+            
+        *)
+            echo -e "${YELLOW}⚠️  Unknown agent type: $agent, using generic format${NC}"
+            "$agent" \
+                --prompt-file="$prompt_file" \
+                --context="$context_files" \
+                > "$result_file" 2>&1
+            ;;
+    esac
+}
+
+# Check if timeout command is available (not available on macOS by default)
+TIMEOUT_CMD=""
+if command -v timeout &> /dev/null; then
+    TIMEOUT_CMD="timeout"
+elif command -v gtimeout &> /dev/null; then
+    TIMEOUT_CMD="gtimeout"
+fi
+
+# Run agent with timeout (if available)
+set +e
+if [[ -n "$TIMEOUT_CMD" ]]; then
+    run_agent "$AGENT" "$PROMPT_FILE" "$CONTEXT_FILES" "$RESULT_FILE" "$TIMEOUT"
+    AGENT_EXIT_CODE=$?
 else
+    echo -e "${YELLOW}⚠️  timeout command not available, running without timeout${NC}"
+    echo -e "${YELLOW}   Install coreutils (brew install coreutils) for timeout support${NC}"
+    # Run without timeout - modify run_agent to handle this
+    run_agent_no_timeout "$AGENT" "$PROMPT_FILE" "$CONTEXT_FILES" "$RESULT_FILE"
     AGENT_EXIT_CODE=$?
 fi
 set -e
