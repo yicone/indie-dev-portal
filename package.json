@@ -18,7 +18,12 @@
     "db:generate": "prisma generate",
     "db:seed": "tsx scripts/seed.ts",
     "db:clean-mock": "tsx scripts/clean-mock-data.ts",
-    "git:sync": "tsx scripts/sync-git-repos.ts"
+    "git:sync": "tsx scripts/sync-git-repos.ts",
+    "lint:md": "prettier --check '**/*.md'",
+    "doc:check": "DOC_AI_CHECK=true ./scripts/doc-agent-check.sh standard",
+    "doc:check:quick": "./scripts/doc-agent-check.sh quick",
+    "doc:check:full": "./scripts/doc-agent-check.sh deep",
+    "doc:links": "./scripts/check-links.sh"
   },
   "dependencies": {
     "@prisma/client": "^5.18.0",
