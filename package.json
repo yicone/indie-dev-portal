@@ -12,7 +12,7 @@
     "format": "prettier --check .",
     "format:write": "prettier --write .",
     "format:file": "prettier --write",
-    "prepare": "husky install",
+    "prepare": "husky",
     "typecheck": "tsc --noEmit",
     "test:api": "tsx scripts/test-api.ts",
     "db:migrate": "prisma migrate dev",
