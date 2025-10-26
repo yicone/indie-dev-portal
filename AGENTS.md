@@ -43,10 +43,13 @@
   - Maintain configs: `package.json`, `.eslintrc.json`, `tsconfig.json`, Tailwind/PostCSS settings.
   - Manage Husky + lint-staged hooks and ensure Prettier/ESLint rules stay consistent across agents.
 - **[documentation-agent]**
-  - Maintain documentation structure and consistency across all docs.
-  - Follow naming conventions in `docs/NAMING_CONVENTIONS.md`.
-  - Update `docs/FIXES_INDEX.md` when fixes are implemented.
-  - Keep documentation synced with code changes.
+  - **Primary Guide**: Follow `docs/DOCUMENTATION_MANAGEMENT.md` for all documentation tasks
+  - Maintain Single Source of Truth (SSOT) principle across all docs
+  - Use hybrid approach: index files for quick access, detailed files for depth
+  - Follow naming conventions in `docs/NAMING_CONVENTIONS.md`
+  - Update `docs/FIXES_INDEX.md` when fixes are implemented
+  - Keep documentation synced with code changes
+  - Perform weekly/monthly/quarterly maintenance tasks as defined in the guide
 
 ## Collaboration Workflow
 
@@ -59,26 +62,42 @@
 
 ## Documentation Workflow
 
-### Quick Reference
+### Primary Guide
 
-**📍 For AI Agents**: Read `docs/FIXES_INDEX.md` first for all fixes, then follow links to detailed docs if needed.
+**📍 For [documentation-agent]**: Follow `docs/DOCUMENTATION_MANAGEMENT.md` for comprehensive documentation management guidelines.
 
-**For complete documentation guidelines**, see:
+### Quick Reference for All Agents
 
-- `docs/FIXES_INDEX.md` - AI retrieval patterns and fix summaries
-- `docs/NAMING_CONVENTIONS.md` - File naming standards and structure
+**Entry Points** (Always start here):
+
+- `docs/FIXES_INDEX.md` → Bug fixes and improvements
+- `README.md` → Project overview and navigation
+- `AGENTS.md` → This file (agent collaboration)
+- `docs/NAMING_CONVENTIONS.md` → Documentation standards
+- `docs/DOCUMENTATION_MANAGEMENT.md` → Complete documentation guide
 
 ### When Implementing Fixes
 
 1. **Create detailed doc**: `docs/fixes/YYYY-MM-DD-<description>.md`
 2. **Add summary** to `docs/FIXES_INDEX.md`
 3. **Follow checklist** in the detailed doc template
+4. **Update CHANGELOG.md** if user-facing
 
 ### When Code Changes
 
 - Update related docs immediately (feature docs, API docs, README, AGENTS.md)
 - Check for outdated references: `grep -r "old-name" docs/`
 - Move deprecated docs to `docs/archive/` with deprecation notice
+- Verify Single Source of Truth (SSOT) compliance
+
+### Documentation Principles
+
+1. **Single Source of Truth (SSOT)**: Every piece of information has ONE authoritative source
+2. **Hybrid Approach**: Index files for quick access, detailed files for depth
+3. **Audience-Oriented**: Organize by user type (Users/Developers/Contributors)
+4. **Progressive Disclosure**: Brief summaries + links to details
+
+See `docs/DOCUMENTATION_MANAGEMENT.md` for complete guidelines.
 
 ## Notes
 

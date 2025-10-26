@@ -126,7 +126,21 @@ DATABASE_URL="file:./dev.db"
 
 ## 🤝 Contributing
 
-This project was built with AI pair programming using Windsurf Cascade. See [AGENTS.md](AGENTS.md) for the multi-agent collaboration workflow.
+This project was built with AI pair programming using Windsurf Cascade.
+
+**For Contributors**:
+
+- **AI Agents**: See [AGENTS.md](AGENTS.md) for collaboration workflow
+- **Documentation**: Follow [Documentation Management Guide](docs/DOCUMENTATION_MANAGEMENT.md)
+- **Code Style**: Run `pnpm lint` and `pnpm format:write` before committing
+
+**Documentation Standards**:
+
+- **SSOT Principle**: Every piece of information has one authoritative source
+- **Hybrid Approach**: Index files for quick access, detailed files for depth
+- **Entry Points**: Start with `docs/FIXES_INDEX.md`, `README.md`, or `AGENTS.md`
+
+[Complete documentation guide →](docs/DOCUMENTATION_MANAGEMENT.md)
 
 ## 📄 License
 
