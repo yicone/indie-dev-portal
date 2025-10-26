@@ -15,18 +15,14 @@ This project uses AI agents to automatically review documentation changes before
 
 ### Prerequisites
 
-1. **Install an AI agent CLI** (one of the following):
-   - [Gemini CLI](https://github.com/google/generative-ai-cli) (recommended for speed)
-   - [Codex CLI](https://github.com/openai/codex-cli) (recommended for depth)
-   - Or any CLI agent that follows the [AGENTS.md](../AGENTS.md) protocol
+1. **Install an AI agent CLI** (Gemini, Codex, or Claude)
+   - **📖 See [AI Agents Setup Guide](AI_AGENTS_SETUP.md)** for installation instructions
 
 2. **Verify installation**:
 
    ```bash
    # Check if agent is available
-   gemini-cli --version
-   # or
-   codex-cli --version
+   gemini --version  # or codex --version, or claude --version
    ```
 
 ### Basic Usage
@@ -65,6 +61,8 @@ pnpm doc:links
 pnpm lint:md
 ```
 
+> **💡 Note**: For agent configuration and environment setup, see [AI Agents Setup Guide](AI_AGENTS_SETUP.md).
+
 ### Check Levels
 
 | Level        | Time   | Checks                          | When to Use              |
@@ -77,17 +75,9 @@ pnpm lint:md
 
 ### Agent Selection
 
-Edit `.agents/doc-review-config.yml`:
+The system supports multiple AI agents (Gemini, Codex, Claude). To configure your preferred agent, edit `.agents/doc-review-config.yml` and set the `agent` field.
 
-```yaml
-# Choose your agent
-agent: 'gemini-cli' # or "codex-cli"
-
-# Agent-specific settings
-env:
-  gemini_model: 'gemini-pro'
-  codex_model: 'gpt-4'
-```
+**📖 For detailed setup instructions**, see [AI Agents Setup Guide](AI_AGENTS_SETUP.md).
 
 ### Enable/Disable AI Checks
 
@@ -202,45 +192,20 @@ checks:
 
 ## 🛠️ Troubleshooting
 
-### AI Agent Not Found
+### Common Issues
 
-```
-⚠️ Agent 'gemini-cli' not found in PATH
-   Skipping AI checks. Install gemini-cli or set DOC_AI_CHECK=false
-```
-
-**Solution**: Install the agent or disable AI checks:
+**Agent Not Found**:
 
 ```bash
+# Quick fix: disable AI checks for this commit
 DOC_AI_CHECK=false git commit -m "docs: update"
 ```
 
-### Check Timeout
+**Check Timeout**: This is normal for large changes. The commit proceeds without AI validation. Run manual check later with `pnpm doc:check`.
 
-```
-⚠️ Agent check timed out after 30s
-   Proceeding without AI validation
-```
+**False Positives**: Skip AI checks with `DOC_AI_CHECK=false` and report the issue.
 
-**Solution**: This is normal for large changes. The commit proceeds without AI validation. Run manual check later:
-
-```bash
-pnpm doc:check
-```
-
-### False Positives
-
-If AI reports incorrect issues:
-
-1. **Skip for this commit**:
-
-   ```bash
-   DOC_AI_CHECK=false git commit -m "docs: update"
-   ```
-
-2. **Report the issue**: Add to `.agents/doc-review-config.yml` to refine prompts
-
-3. **Adjust sensitivity**: Modify check thresholds in config
+**📖 For detailed troubleshooting**, including agent installation, PATH configuration, API keys, and timeout adjustments, see [AI Agents Setup Guide - Troubleshooting](AI_AGENTS_SETUP.md#troubleshooting).
 
 ## 🎓 Best Practices
 

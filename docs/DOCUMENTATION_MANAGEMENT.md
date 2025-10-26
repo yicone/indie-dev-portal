@@ -263,8 +263,9 @@ When referencing authority documents:
 
 ### General Rules
 
-- Use `SCREAMING_SNAKE_CASE.md` for root-level docs
-- Use `kebab-case.md` for docs/ subdirectories
+- Use `SCREAMING_SNAKE_CASE.md` for root-level docs (`/README.md`, `/AGENTS.md`)
+- Use `SCREAMING_SNAKE_CASE.md` for docs/ directory files (`docs/QUICKSTART.md`, `docs/FUNCTIONAL_SPEC.md`)
+- Use `kebab-case.md` for docs/ **subdirectories** (`docs/fixes/`, `docs/guides/`, `docs/api/`)
 - Use dates for temporal documents: `YYYY-MM-DD-description.md`
 
 ### Examples

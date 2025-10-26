@@ -147,9 +147,9 @@ Examples:
 
 ## File Naming Rules
 
-1. **Use UPPERCASE for major docs**: `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`
-2. **Use descriptive names**: Avoid generic names like `doc1.md`, `notes.md`
-3. **Use hyphens for multi-word**: `git-integration.md` not `git_integration.md`
+1. **Root level and docs/ directory**: Use `SCREAMING_SNAKE_CASE.md` (e.g., `README.md`, `docs/QUICKSTART.md`, `docs/AI_AGENTS_SETUP.md`)
+2. **docs/ subdirectories**: Use `kebab-case.md` (e.g., `docs/fixes/2025-10-26-fix.md`, `docs/guides/git-setup.md`)
+3. **Use descriptive names**: Avoid generic names like `doc1.md`, `notes.md`
 4. **Include dates for time-sensitive docs**: `2025-10-25-migration.md`
 5. **Group related docs in folders**: `docs/fixes/`, `docs/guides/`, `docs/api/`
 
