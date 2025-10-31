@@ -5,7 +5,7 @@ import cors from 'cors';
 import { reposRouter } from './repos';
 import { commitsRouter } from './commits';
 import { contributionsRouter } from './contributions';
-import sessionsRouter from './sessions';
+import { sessionsRouter } from './sessions';
 import { geminiCliManager } from './services/geminiCliManager';
 import * as sessionService from './services/sessionService';
 

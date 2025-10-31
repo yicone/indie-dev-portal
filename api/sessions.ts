@@ -2,7 +2,7 @@
  * Agent Sessions API Routes
  */
 
-import express, { Request, Response } from 'express';
+import { Router, Request, Response } from 'express';
 import * as sessionService from './services/sessionService';
 import type {
   CreateSessionRequest,
@@ -11,13 +11,13 @@ import type {
   SessionStatus,
 } from '@/types/agent';
 
-const router = express.Router();
+export const sessionsRouter = Router();
 
 /**
  * POST /api/sessions
  * Create a new agent session
  */
-router.post('/', async (req: Request, res: Response) => {
+sessionsRouter.post('/', async (req: Request, res: Response) => {
   try {
     const request: CreateSessionRequest = req.body;
 
@@ -53,7 +53,7 @@ router.post('/', async (req: Request, res: Response) => {
  * GET /api/sessions
  * List agent sessions
  */
-router.get('/', async (req: Request, res: Response) => {
+sessionsRouter.get('/', async (req: Request, res: Response) => {
   try {
     const query: ListSessionsQuery = {
       repoId: req.query.repoId ? parseInt(req.query.repoId as string, 10) : undefined,
@@ -74,7 +74,7 @@ router.get('/', async (req: Request, res: Response) => {
  * GET /api/sessions/:id
  * Get session details
  */
-router.get('/:id', async (req: Request, res: Response) => {
+sessionsRouter.get('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const session = await sessionService.getSession(id);
@@ -94,7 +94,7 @@ router.get('/:id', async (req: Request, res: Response) => {
  * POST /api/sessions/:id/prompt
  * Send a prompt to an agent session
  */
-router.post('/:id/prompt', async (req: Request, res: Response) => {
+sessionsRouter.post('/:id/prompt', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const request: SendPromptRequest = req.body;
@@ -125,7 +125,7 @@ router.post('/:id/prompt', async (req: Request, res: Response) => {
  * GET /api/sessions/:id/messages
  * Get messages for a session
  */
-router.get('/:id/messages', async (req: Request, res: Response) => {
+sessionsRouter.get('/:id/messages', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const since = req.query.since as string | undefined;
@@ -142,7 +142,7 @@ router.get('/:id/messages', async (req: Request, res: Response) => {
  * DELETE /api/sessions/:id
  * Cancel a session
  */
-router.delete('/:id', async (req: Request, res: Response) => {
+sessionsRouter.delete('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     await sessionService.cancelSession(id);
@@ -152,5 +152,3 @@ router.delete('/:id', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to cancel session' });
   }
 });
-
-export default router;

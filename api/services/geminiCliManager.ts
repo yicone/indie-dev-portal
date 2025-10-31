@@ -40,7 +40,7 @@ class GeminiCliManager extends EventEmitter {
       // Spawn Gemini CLI with ACP mode and workspace
       const geminiProcess = spawn(
         this.geminiCliPath,
-        ['--experimental-acp', '--workspace', repoPath],
+        ['--experimental-acp', '--workspace', repoPath, '--approval-mode', 'yolo'],
         {
           stdio: ['pipe', 'pipe', 'pipe'],
           env: {
@@ -48,6 +48,7 @@ class GeminiCliManager extends EventEmitter {
             // Ensure non-interactive mode
             NO_COLOR: '1',
           },
+          cwd: repoPath,
         }
       );
 
