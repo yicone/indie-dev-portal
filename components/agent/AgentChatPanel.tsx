@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { X, Send } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { X, Send, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useAgentChat } from '@/lib/contexts/AgentChatContext';
@@ -19,11 +19,20 @@ export function AgentChatPanel() {
     sendMessage,
     connectionStatus,
     createSession,
+    isTyping,
+    error,
+    clearError,
   } = useAgentChat();
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [creatingSession, setCreatingSession] = useState(false);
   const { data: repos } = useQuery({ queryKey: ['repos'], queryFn: fetchRepos });
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
 
   if (!isOpen) return null;
 
@@ -36,6 +45,7 @@ export function AgentChatPanel() {
     try {
       await sendMessage(input);
       setInput('');
+      clearError();
     } catch (error) {
       console.error('Failed to send message:', error);
     } finally {
@@ -148,6 +158,36 @@ export function AgentChatPanel() {
             );
           })
         )}
+
+        {/* Typing Indicator */}
+        {isTyping && (
+          <div className="flex justify-start">
+            <div className="bg-muted rounded-lg p-3 flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span className="text-sm text-muted-foreground">Agent is typing...</span>
+            </div>
+          </div>
+        )}
+
+        {/* Error Display */}
+        {error && (
+          <div className="flex justify-center">
+            <div className="bg-destructive/10 text-destructive rounded-lg p-3 flex items-center gap-2 max-w-[80%]">
+              <AlertCircle className="h-4 w-4 flex-shrink-0" />
+              <p className="text-sm">{error}</p>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearError}
+                className="ml-auto h-6 w-6 p-0"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}

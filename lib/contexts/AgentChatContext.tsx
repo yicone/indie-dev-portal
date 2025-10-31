@@ -11,11 +11,14 @@ interface AgentChatContextType {
   sessions: Map<string, AgentSessionData>;
   messages: Map<string, AgentMessageData[]>;
   connectionStatus: ConnectionStatus;
+  isTyping: boolean;
+  error: string | null;
   openPanel: () => void;
   closePanel: () => void;
   setActiveSession: (sessionId: string | null) => void;
   createSession: (repoId: number) => Promise<void>;
   sendMessage: (text: string) => Promise<void>;
+  clearError: () => void;
 }
 
 const AgentChatContext = createContext<AgentChatContextType | undefined>(undefined);
@@ -25,6 +28,8 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [sessions, setSessions] = useState<Map<string, AgentSessionData>>(new Map());
   const [messages, setMessages] = useState<Map<string, AgentMessageData[]>>(new Map());
+  const [isTyping, setIsTyping] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const wsUrl =
     typeof window !== 'undefined' ? `ws://${window.location.hostname}:4000` : 'ws://localhost:4000';
@@ -44,6 +49,12 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
       case 'message.new':
         // New message
         const { sessionId, messageId, role, content, timestamp } = message.payload;
+
+        // Stop typing indicator when agent message arrives
+        if (role === 'agent') {
+          setIsTyping(false);
+        }
+
         setMessages((prev) => {
           const newMessages = new Map(prev);
           const sessionMessages = newMessages.get(sessionId) || [];
@@ -69,6 +80,8 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
 
       case 'error':
         console.error('[AgentChat] Error:', message.payload);
+        setError(message.payload.message || 'An error occurred');
+        setIsTyping(false);
         break;
     }
   }, []);
@@ -110,6 +123,9 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
       }
 
       try {
+        setError(null);
+        setIsTyping(true);
+
         const response = await fetch(`http://localhost:4000/sessions/${activeSessionId}/prompt`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -121,11 +137,17 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         }
       } catch (error) {
         console.error('[AgentChat] Failed to send message:', error);
+        setError(error instanceof Error ? error.message : 'Failed to send message');
+        setIsTyping(false);
         throw error;
       }
     },
     [activeSessionId]
   );
+
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   const value: AgentChatContextType = {
     isOpen,
@@ -133,11 +155,14 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
     sessions,
     messages,
     connectionStatus,
+    isTyping,
+    error,
     openPanel,
     closePanel,
     setActiveSession: setActiveSessionId,
     createSession,
     sendMessage,
+    clearError,
   };
 
   return <AgentChatContext.Provider value={value}>{children}</AgentChatContext.Provider>;
