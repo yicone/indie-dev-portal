@@ -8,6 +8,7 @@ import { contributionsRouter } from './contributions';
 import { sessionsRouter } from './sessions';
 import { geminiCliManager } from './services/geminiCliManager';
 import * as sessionService from './services/sessionService';
+import { websocketService } from './services/websocketService';
 
 const app = express();
 
@@ -53,6 +54,9 @@ const shutdown = async () => {
   // Stop cleanup interval
   clearInterval(cleanupInterval);
 
+  // Shutdown WebSocket server
+  await websocketService.shutdown();
+
   // Shutdown all agent sessions
   await sessionService.shutdownAllSessions();
 
@@ -63,6 +67,9 @@ const shutdown = async () => {
 process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
 
-app.listen(port, () => {
+const httpServer = app.listen(port, () => {
   console.log(`API server listening on http://localhost:${port}`);
+
+  // Initialize WebSocket server
+  websocketService.initialize(httpServer);
 });
