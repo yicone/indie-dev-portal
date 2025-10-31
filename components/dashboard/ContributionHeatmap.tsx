@@ -102,10 +102,16 @@ export function ContributionHeatmap() {
           {/* Grid Container */}
           <div className="flex gap-3">
             {/* Day Labels */}
-            <div className="flex w-8 flex-shrink-0 flex-col justify-between text-xs leading-3 text-muted-foreground">
-              <span className="flex h-[12px] items-center">Mon</span>
-              <span className="flex h-[12px] items-center">Wed</span>
-              <span className="flex h-[12px] items-center">Fri</span>
+            <div className="relative flex w-8 flex-shrink-0 text-xs leading-3 text-muted-foreground">
+              <div className="absolute left-0 top-0 flex h-full flex-col gap-[2px]">
+                <span className="flex-1 w-8 items-center opacity-0">Sun</span>
+                <span className="flex-1 w-8 items-center justify-end pr-1">Mon</span>
+                <span className="flex-1 w-8 items-center opacity-0">Tue</span>
+                <span className="flex-1 w-8 items-center justify-end pr-1">Wed</span>
+                <span className="flex-1 w-8 items-center opacity-0">Thu</span>
+                <span className="flex-1 w-8 items-center justify-end pr-1">Fri</span>
+                <span className="flex-1 w-8 items-center opacity-0">Sat</span>
+              </div>
             </div>
 
             {/* Heatmap Cells */}
@@ -162,10 +168,16 @@ export function ContributionHeatmap() {
             {/* Grid Container */}
             <div className="flex gap-3">
               {/* Day Labels */}
-              <div className="flex w-8 flex-shrink-0 flex-col justify-between text-xs leading-3 text-muted-foreground">
-                <span className="flex h-[12px] items-center">Mon</span>
-                <span className="flex h-[12px] items-center">Wed</span>
-                <span className="flex h-[12px] items-center">Fri</span>
+              <div className="relative flex w-8 flex-shrink-0 text-xs leading-3 text-muted-foreground">
+                <div className="absolute left-0 top-0 flex h-full flex-col gap-[2px]">
+                  <span className="flex-1 w-8 items-center opacity-0">Sun</span>
+                  <span className="flex-1 w-8 items-center justify-end pr-1">Mon</span>
+                  <span className="flex-1 w-8 items-center opacity-0">Tue</span>
+                  <span className="flex-1 w-8 items-center justify-end pr-1">Wed</span>
+                  <span className="flex-1 w-8 items-center opacity-0">Thu</span>
+                  <span className="flex-1 w-8 items-center justify-end pr-1">Fri</span>
+                  <span className="flex-1 w-8 items-center opacity-0">Sat</span>
+                </div>
               </div>
 
               {/* Heatmap Cells */}
@@ -275,10 +287,16 @@ function HeatmapSkeleton() {
           {/* Grid Container */}
           <div className="flex gap-3">
             {/* Day Labels Skeleton */}
-            <div className="flex w-8 flex-shrink-0 flex-col justify-between text-xs leading-3">
-              <div className="flex h-[12px] w-7 animate-pulse items-center rounded bg-surface0" />
-              <div className="flex h-[12px] w-7 animate-pulse items-center rounded bg-surface0" />
-              <div className="flex h-[12px] w-7 animate-pulse items-center rounded bg-surface0" />
+            <div className="relative flex w-8 flex-shrink-0 text-xs leading-3">
+              <div className="absolute left-0 top-0 flex h-full flex-col gap-[2px]">
+                <div className="flex-1 w-7 items-center opacity-0" />
+                <div className="flex-1 w-7 animate-pulse items-center rounded bg-surface0" />
+                <div className="flex-1 w-7 items-center opacity-0" />
+                <div className="flex-1 w-7 animate-pulse items-center rounded bg-surface0" />
+                <div className="flex-1 w-7 items-center opacity-0" />
+                <div className="flex-1 w-7 animate-pulse items-center rounded bg-surface0" />
+                <div className="flex-1 w-7 items-center opacity-0" />
+              </div>
             </div>
 
             {/* Heatmap Cells Skeleton */}
