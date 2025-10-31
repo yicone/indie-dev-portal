@@ -7,6 +7,12 @@ import { useAgentChat } from '@/lib/contexts/AgentChatContext';
 export function AgentFloatingButton() {
   const { openPanel, sessions } = useAgentChat();
 
+  // Count only active and completed sessions
+  const activeSessionCount = Array.from(sessions.values()).filter((session) => {
+    const s = session as unknown as { status: string };
+    return s.status === 'active' || s.status === 'completed';
+  }).length;
+
   return (
     <Button
       onClick={openPanel}
@@ -15,9 +21,9 @@ export function AgentFloatingButton() {
       aria-label="Open AI Assistant"
     >
       <MessageSquare className="h-6 w-6" />
-      {sessions.size > 0 && (
+      {activeSessionCount > 0 && (
         <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-xs text-primary-foreground flex items-center justify-center">
-          {sessions.size}
+          {activeSessionCount}
         </span>
       )}
     </Button>

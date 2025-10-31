@@ -134,9 +134,16 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
       const response = await fetch(`http://localhost:4000/sessions/${sessionId}/messages`);
       if (response.ok) {
         const messagesData = await response.json();
+        // Parse content for each message
+        const parsedMessages = messagesData.map(
+          (msg: { content: string; [key: string]: unknown }) => ({
+            ...msg,
+            parsedContent: JSON.parse(msg.content),
+          })
+        );
         setMessages((prev) => {
           const newMessages = new Map(prev);
-          newMessages.set(sessionId, messagesData);
+          newMessages.set(sessionId, parsedMessages);
           return newMessages;
         });
       }
