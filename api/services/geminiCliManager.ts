@@ -37,10 +37,11 @@ class GeminiCliManager extends EventEmitter {
     console.log(`[GeminiCliManager] Spawning Gemini CLI for session ${sessionId} at ${repoPath}`);
 
     try {
-      // Spawn Gemini CLI with ACP mode and workspace
+      // Spawn Gemini CLI with ACP mode
+      // Set cwd to repo path so Gemini CLI uses it as workspace
       const geminiProcess = spawn(
         this.geminiCliPath,
-        ['--experimental-acp', '--workspace', repoPath, '--approval-mode', 'yolo'],
+        ['--experimental-acp', '--approval-mode', 'yolo'],
         {
           stdio: ['pipe', 'pipe', 'pipe'],
           env: {

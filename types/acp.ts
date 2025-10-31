@@ -30,7 +30,8 @@ export interface ACPError {
 export interface ACPSessionNew {
   method: 'session/new';
   params: {
-    workspace?: string;
+    cwd: string;
+    mcpServers?: unknown[];
   };
 }
 

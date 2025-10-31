@@ -87,6 +87,11 @@ export class ACPClient extends EventEmitter {
    * Handle parsed ACP message
    */
   private handleACPMessage(message: ACPMessage): void {
+    console.log(
+      `[ACPClient] Received message for session ${this.sessionId}:`,
+      JSON.stringify(message)
+    );
+
     // Handle notifications (no id field)
     if (!message.id && message.method) {
       this.handleNotification(message);
@@ -134,6 +139,7 @@ export class ACPClient extends EventEmitter {
     };
 
     const requestJson = JSON.stringify(request) + '\n';
+    console.log(`[ACPClient] Sending request for session ${this.sessionId}:`, requestJson.trim());
     this.process.stdin.write(requestJson);
 
     return id;
@@ -142,8 +148,11 @@ export class ACPClient extends EventEmitter {
   /**
    * Create a new ACP session
    */
-  async createSession(workspace: string): Promise<string> {
-    const params: ACPSessionNew['params'] = { workspace };
+  async createSession(cwd: string): Promise<string> {
+    const params: ACPSessionNew['params'] = {
+      cwd,
+      mcpServers: [], // No MCP servers for now
+    };
     const requestId = this.sendRequest('session/new', params);
 
     return new Promise((resolve, reject) => {
