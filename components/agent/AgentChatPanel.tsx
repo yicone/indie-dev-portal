@@ -39,6 +39,11 @@ export function AgentChatPanel() {
   if (!isOpen) return null;
 
   const sessionMessages = activeSessionId ? messages.get(activeSessionId) || [] : [];
+  const currentSession = activeSessionId ? sessions.get(activeSessionId) : null;
+  const currentSessionStatus = currentSession
+    ? (currentSession as unknown as { status: string }).status
+    : null;
+  const canSendMessage = activeSessionId && currentSessionStatus === 'active';
 
   const handleSend = async () => {
     if (!input.trim() || sending) return;
@@ -103,18 +108,24 @@ export function AgentChatPanel() {
               onChange={(e) => setActiveSession(e.target.value || null)}
             >
               <option value="">Select a session...</option>
-              {Array.from(sessions.values()).map((session) => {
-                const s = session as unknown as {
-                  id: string;
-                  status: string;
-                  repo?: { name: string };
-                };
-                return (
-                  <option key={s.id} value={s.id}>
-                    {s.repo?.name || `Session ${s.id.slice(0, 8)}`} - {s.status}
-                  </option>
-                );
-              })}
+              {Array.from(sessions.values())
+                .filter((session) => {
+                  const s = session as unknown as { status: string };
+                  // Only show active and completed sessions
+                  return s.status === 'active' || s.status === 'completed';
+                })
+                .map((session) => {
+                  const s = session as unknown as {
+                    id: string;
+                    status: string;
+                    repo?: { name: string };
+                  };
+                  return (
+                    <option key={s.id} value={s.id}>
+                      {s.repo?.name || `Session ${s.id.slice(0, 8)}`} - {s.status}
+                    </option>
+                  );
+                })}
             </select>
           </div>
         ) : null}
@@ -162,7 +173,12 @@ export function AgentChatPanel() {
         {!activeSessionId ? (
           <div className="text-center text-muted-foreground py-8">
             <p>No active session</p>
-            <p className="text-sm">Select a project above to start</p>
+            <p className="text-sm">Select a session or create a new one</p>
+          </div>
+        ) : !canSendMessage ? (
+          <div className="text-center text-muted-foreground py-8">
+            <p>Session is {currentSessionStatus}</p>
+            <p className="text-sm">You can view messages but cannot send new ones</p>
           </div>
         ) : sessionMessages.length === 0 ? (
           <div className="text-center text-muted-foreground py-8">
@@ -244,13 +260,13 @@ export function AgentChatPanel() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask me anything..."
+            placeholder={canSendMessage ? 'Ask me anything...' : 'Session is not active'}
             className="min-h-[60px] max-h-[120px]"
-            disabled={!activeSessionId || sending}
+            disabled={!canSendMessage || sending}
           />
           <Button
             onClick={handleSend}
-            disabled={!input.trim() || !activeSessionId || sending}
+            disabled={!input.trim() || !canSendMessage || sending}
             size="icon"
             className="h-[60px] w-[60px]"
           >

@@ -128,6 +128,23 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
   const openPanel = useCallback(() => setIsOpen(true), []);
   const closePanel = useCallback(() => setIsOpen(false), []);
 
+  // Load messages for a session
+  const loadSessionMessages = useCallback(async (sessionId: string) => {
+    try {
+      const response = await fetch(`http://localhost:4000/sessions/${sessionId}/messages`);
+      if (response.ok) {
+        const messagesData = await response.json();
+        setMessages((prev) => {
+          const newMessages = new Map(prev);
+          newMessages.set(sessionId, messagesData);
+          return newMessages;
+        });
+      }
+    } catch (error) {
+      console.error('[AgentChat] Failed to load messages:', error);
+    }
+  }, []);
+
   // Load existing sessions on mount
   useEffect(() => {
     const loadSessions = async () => {
@@ -212,6 +229,17 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
     setError(null);
   }, []);
 
+  // Enhanced setActiveSession that loads messages
+  const handleSetActiveSession = useCallback(
+    (sessionId: string | null) => {
+      setActiveSessionId(sessionId);
+      if (sessionId) {
+        loadSessionMessages(sessionId);
+      }
+    },
+    [loadSessionMessages]
+  );
+
   const value: AgentChatContextType = {
     isOpen,
     activeSessionId,
@@ -222,7 +250,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
     error,
     openPanel,
     closePanel,
-    setActiveSession: setActiveSessionId,
+    setActiveSession: handleSetActiveSession,
     createSession,
     sendMessage,
     clearError,
