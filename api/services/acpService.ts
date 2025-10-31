@@ -20,7 +20,8 @@ interface ACPClientOptions {
 
 export class ACPClient extends EventEmitter {
   private process: ChildProcess;
-  private sessionId: string;
+  private sessionId: string; // Our internal session ID
+  private acpSessionId?: string; // Gemini CLI's session ID
   private messageBuffer: string = '';
   private requestId: number = 0;
 
@@ -169,6 +170,7 @@ export class ACPClient extends EventEmitter {
             reject(new Error(message.error.message));
           } else {
             const result = message.result as { sessionId: string };
+            this.acpSessionId = result.sessionId; // Save Gemini CLI's session ID
             resolve(result.sessionId);
           }
         }
@@ -182,9 +184,13 @@ export class ACPClient extends EventEmitter {
    * Send a prompt to the agent
    */
   async sendPrompt(prompt: string): Promise<void> {
+    if (!this.acpSessionId) {
+      throw new Error('ACP session not initialized');
+    }
+
     const params: ACPSessionPrompt['params'] = {
-      sessionId: this.sessionId,
-      prompt,
+      sessionId: this.acpSessionId, // Use Gemini CLI's session ID
+      prompt: [{ type: 'text', text: prompt }],
     };
 
     this.sendRequest('session/prompt', params);
@@ -195,8 +201,12 @@ export class ACPClient extends EventEmitter {
    * Cancel the session
    */
   async cancelSession(reason?: string): Promise<void> {
+    if (!this.acpSessionId) {
+      return; // Session not initialized, nothing to cancel
+    }
+
     const params: ACPSessionCancel['params'] = {
-      sessionId: this.sessionId,
+      sessionId: this.acpSessionId, // Use Gemini CLI's session ID
       reason,
     };
 

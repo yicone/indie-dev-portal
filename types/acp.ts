@@ -49,7 +49,7 @@ export interface ACPSessionPrompt {
   method: 'session/prompt';
   params: {
     sessionId: string;
-    prompt: string;
+    prompt: Array<{ type: 'text'; text: string }>;
   };
 }
 
