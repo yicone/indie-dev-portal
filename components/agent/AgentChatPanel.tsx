@@ -5,14 +5,25 @@ import { X, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useAgentChat } from '@/lib/contexts/AgentChatContext';
+import { useQuery } from '@tanstack/react-query';
+import { fetchRepos } from '@/lib/gitUtils';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 export function AgentChatPanel() {
-  const { isOpen, closePanel, activeSessionId, messages, sendMessage, connectionStatus } =
-    useAgentChat();
+  const {
+    isOpen,
+    closePanel,
+    activeSessionId,
+    messages,
+    sendMessage,
+    connectionStatus,
+    createSession,
+  } = useAgentChat();
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
+  const [creatingSession, setCreatingSession] = useState(false);
+  const { data: repos } = useQuery({ queryKey: ['repos'], queryFn: fetchRepos });
 
   if (!isOpen) return null;
 
@@ -60,12 +71,46 @@ export function AgentChatPanel() {
         </Button>
       </div>
 
+      {/* Project Selector (when no active session) */}
+      {!activeSessionId && repos && repos.length > 0 && (
+        <div className="p-4 border-b">
+          <label className="text-sm font-medium mb-2 block">Select a project:</label>
+          <select
+            className="w-full p-2 rounded-md border bg-background"
+            onChange={async (e) => {
+              const repoId = parseInt(e.target.value);
+              if (repoId) {
+                setCreatingSession(true);
+                try {
+                  await createSession(repoId);
+                } catch (error) {
+                  console.error('Failed to create session:', error);
+                } finally {
+                  setCreatingSession(false);
+                }
+              }
+            }}
+            defaultValue=""
+            disabled={creatingSession}
+          >
+            <option value="">
+              {creatingSession ? 'Creating session...' : 'Choose a repository...'}
+            </option>
+            {repos.map((repo) => (
+              <option key={repo.id} value={repo.id}>
+                {repo.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {!activeSessionId ? (
           <div className="text-center text-muted-foreground py-8">
             <p>No active session</p>
-            <p className="text-sm">Select a project and start a conversation</p>
+            <p className="text-sm">Select a project above to start</p>
           </div>
         ) : sessionMessages.length === 0 ? (
           <div className="text-center text-muted-foreground py-8">
