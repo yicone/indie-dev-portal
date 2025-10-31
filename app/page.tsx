@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchRepos } from '@/lib/gitUtils';
 import type { Repo } from '@/types/git';
 import { DashboardHeader, type SortOption } from '@/components/dashboard/DashboardHeader';
+import { ContributionHeatmap } from '@/components/dashboard/ContributionHeatmap';
 import { ProjectGrid } from '@/components/dashboard/ProjectGrid';
 import { EmptyState } from '@/components/dashboard/EmptyState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
@@ -99,6 +100,10 @@ export default function DashboardPage() {
       />
 
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 pt-6">
+        {/* Contribution Heatmap */}
+        <ContributionHeatmap />
+
+        {/* Project Grid */}
         {isLoading ? (
           <SkeletonGrid />
         ) : isError ? (
