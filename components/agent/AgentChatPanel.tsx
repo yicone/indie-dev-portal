@@ -64,17 +64,26 @@ export function AgentChatPanel() {
     <div className="fixed right-0 top-0 h-full w-full md:w-[400px] bg-background border-l shadow-2xl z-40 flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <h2 className="font-semibold">AI Assistant</h2>
-          <div
-            className={`h-2 w-2 rounded-full ${
-              connectionStatus === 'connected'
-                ? 'bg-green-500'
+          <div className="flex items-center gap-1.5">
+            <div
+              className={`h-2 w-2 rounded-full ${
+                connectionStatus === 'connected'
+                  ? 'bg-green-500'
+                  : connectionStatus === 'connecting'
+                    ? 'bg-yellow-500 animate-pulse'
+                    : 'bg-red-500'
+              }`}
+            />
+            <span className="text-xs text-muted-foreground">
+              {connectionStatus === 'connected'
+                ? 'Connected'
                 : connectionStatus === 'connecting'
-                  ? 'bg-yellow-500'
-                  : 'bg-red-500'
-            }`}
-          />
+                  ? 'Connecting...'
+                  : 'Disconnected'}
+            </span>
+          </div>
         </div>
         <Button variant="ghost" size="icon" onClick={closePanel}>
           <X className="h-4 w-4" />
@@ -146,13 +155,18 @@ export function AgentChatPanel() {
                     messageRole === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
                   }`}
                 >
-                  {messageRole === 'agent' ? (
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
-                    </div>
-                  ) : (
-                    <p className="text-sm whitespace-pre-wrap">{content}</p>
-                  )}
+                  <div>
+                    {messageRole === 'agent' ? (
+                      <div className="prose prose-sm dark:prose-invert max-w-none">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+                      </div>
+                    ) : (
+                      <p className="text-sm whitespace-pre-wrap">{content}</p>
+                    )}
+                    <p className="text-xs opacity-60 mt-1">
+                      {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
