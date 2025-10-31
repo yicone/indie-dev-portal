@@ -1,0 +1,213 @@
+/**
+ * ACP Service Layer
+ * Handles communication with Gemini CLI via Agent Client Protocol
+ */
+
+import { ChildProcess } from 'child_process';
+import { EventEmitter } from 'events';
+import type {
+  ACPMessage,
+  ACPSessionNew,
+  ACPSessionPrompt,
+  ACPSessionUpdate,
+  ACPSessionCancel,
+} from '@/types/acp';
+
+interface ACPClientOptions {
+  process: ChildProcess;
+  sessionId: string;
+}
+
+export class ACPClient extends EventEmitter {
+  private process: ChildProcess;
+  private sessionId: string;
+  private messageBuffer: string = '';
+  private requestId: number = 0;
+
+  constructor(options: ACPClientOptions) {
+    super();
+    this.process = options.process;
+    this.sessionId = options.sessionId;
+    this.setupStreams();
+  }
+
+  /**
+   * Set up stdio streams for JSON-RPC communication
+   */
+  private setupStreams(): void {
+    if (!this.process.stdout || !this.process.stdin) {
+      throw new Error('Process stdio streams not available');
+    }
+
+    // Listen for stdout data (agent responses)
+    this.process.stdout.on('data', (data: Buffer) => {
+      this.handleStdoutData(data);
+    });
+
+    // Handle stream errors
+    this.process.stdout.on('error', (error) => {
+      console.error(`[ACPClient] stdout error for session ${this.sessionId}:`, error);
+      this.emit('error', error);
+    });
+
+    this.process.stdin.on('error', (error) => {
+      console.error(`[ACPClient] stdin error for session ${this.sessionId}:`, error);
+      this.emit('error', error);
+    });
+  }
+
+  /**
+   * Handle stdout data from Gemini CLI
+   */
+  private handleStdoutData(data: Buffer): void {
+    this.messageBuffer += data.toString();
+
+    // Try to parse complete JSON-RPC messages
+    const lines = this.messageBuffer.split('\n');
+    this.messageBuffer = lines.pop() || ''; // Keep incomplete line in buffer
+
+    for (const line of lines) {
+      if (line.trim()) {
+        try {
+          const message: ACPMessage = JSON.parse(line);
+          this.handleACPMessage(message);
+        } catch (error) {
+          console.error(
+            `[ACPClient] Failed to parse JSON-RPC message for session ${this.sessionId}:`,
+            line,
+            error
+          );
+          this.emit('parse-error', { line, error });
+        }
+      }
+    }
+  }
+
+  /**
+   * Handle parsed ACP message
+   */
+  private handleACPMessage(message: ACPMessage): void {
+    // Handle notifications (no id field)
+    if (!message.id && message.method) {
+      this.handleNotification(message);
+      return;
+    }
+
+    // Handle responses (has id field)
+    if (message.id) {
+      this.emit('response', message);
+      return;
+    }
+
+    // Handle errors
+    if (message.error) {
+      console.error(`[ACPClient] ACP error for session ${this.sessionId}:`, message.error);
+      this.emit('acp-error', message.error);
+    }
+  }
+
+  /**
+   * Handle ACP notifications from agent
+   */
+  private handleNotification(message: ACPMessage): void {
+    if (message.method === 'session/update') {
+      this.emit('session-update', message.params as ACPSessionUpdate['params']);
+    } else {
+      this.emit('notification', message);
+    }
+  }
+
+  /**
+   * Send JSON-RPC request to agent
+   */
+  private sendRequest(method: string, params: unknown): number {
+    if (!this.process.stdin) {
+      throw new Error('Process stdin not available');
+    }
+
+    const id = ++this.requestId;
+    const request: ACPMessage = {
+      jsonrpc: '2.0',
+      id,
+      method,
+      params,
+    };
+
+    const requestJson = JSON.stringify(request) + '\n';
+    this.process.stdin.write(requestJson);
+
+    return id;
+  }
+
+  /**
+   * Create a new ACP session
+   */
+  async createSession(workspace: string): Promise<string> {
+    const params: ACPSessionNew['params'] = { workspace };
+    const requestId = this.sendRequest('session/new', params);
+
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Session creation timeout'));
+      }, 30000);
+
+      const handleResponse = (message: ACPMessage) => {
+        if (message.id === requestId) {
+          clearTimeout(timeout);
+          this.off('response', handleResponse);
+
+          if (message.error) {
+            reject(new Error(message.error.message));
+          } else {
+            const result = message.result as { sessionId: string };
+            resolve(result.sessionId);
+          }
+        }
+      };
+
+      this.on('response', handleResponse);
+    });
+  }
+
+  /**
+   * Send a prompt to the agent
+   */
+  async sendPrompt(prompt: string): Promise<void> {
+    const params: ACPSessionPrompt['params'] = {
+      sessionId: this.sessionId,
+      prompt,
+    };
+
+    this.sendRequest('session/prompt', params);
+    // Note: Response comes via session/update notifications
+  }
+
+  /**
+   * Cancel the session
+   */
+  async cancelSession(reason?: string): Promise<void> {
+    const params: ACPSessionCancel['params'] = {
+      sessionId: this.sessionId,
+      reason,
+    };
+
+    this.sendRequest('session/cancel', params);
+  }
+
+  /**
+   * Close the ACP client
+   */
+  close(): void {
+    this.removeAllListeners();
+    if (this.process.stdin) {
+      this.process.stdin.end();
+    }
+  }
+}
+
+/**
+ * Create an ACP client for a Gemini CLI process
+ */
+export function createACPClient(process: ChildProcess, sessionId: string): ACPClient {
+  return new ACPClient({ process, sessionId });
+}
