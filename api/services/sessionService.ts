@@ -148,40 +148,39 @@ function setupACPClientHandlers(sessionId: string, acpClient: ACPClient): void {
  */
 async function handleSessionUpdate(
   sessionId: string,
-  update: { type: string; content?: string; partial?: boolean; [key: string]: unknown }
+  params: {
+    sessionId: string;
+    update: {
+      sessionUpdate: string;
+      content?: { type: string; text: string };
+      [key: string]: unknown;
+    };
+  }
 ): Promise<void> {
   // Update activity timestamp
   geminiCliManager.updateActivity(sessionId);
 
-  // Store message based on update type
+  const update = params.update;
+  const updateType = update.sessionUpdate;
+
+  // Only process agent message chunks (ignore thought chunks)
+  if (updateType !== 'agent_message_chunk') {
+    return;
+  }
+
+  // Extract content
   let content: MessageContent;
 
-  if (update.type === 'text') {
+  if (update.content && update.content.type === 'text') {
     content = {
       type: 'text',
-      text: update.content || '',
-      partial: update.partial,
-    };
-  } else if (update.type === 'plan') {
-    content = {
-      type: 'plan',
-      steps: (update as { steps?: unknown }).steps as MessageContent extends { type: 'plan' }
-        ? MessageContent['steps']
-        : never,
-    };
-  } else if (update.type === 'tool') {
-    content = {
-      type: 'tool',
-      tool: (update as { tool?: string }).tool || '',
-      args: (update as { args?: Record<string, unknown> }).args || {},
-      result: (update as { result?: unknown }).result,
-      error: (update as { error?: string }).error,
+      text: update.content.text,
     };
   } else {
-    // Unknown type, store as system message
+    // Fallback for unknown formats
     content = {
       type: 'text',
-      text: JSON.stringify(update),
+      text: JSON.stringify(update.content || update),
     };
   }
 
