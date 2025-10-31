@@ -6,6 +6,7 @@
 import { prisma } from '@/lib/prisma';
 import { geminiCliManager } from './geminiCliManager';
 import { createACPClient, ACPClient } from './acpService';
+import { websocketService } from './websocketService';
 import type {
   CreateSessionRequest,
   CreateSessionResponse,
@@ -184,7 +185,19 @@ async function handleSessionUpdate(
     };
   }
 
-  await storeAgentMessage(sessionId, content);
+  const agentMessage = await storeAgentMessage(sessionId, content);
+
+  // Broadcast agent message via WebSocket
+  websocketService.broadcast({
+    type: 'message.new',
+    payload: {
+      sessionId,
+      messageId: agentMessage.id,
+      role: 'agent',
+      content,
+      timestamp: agentMessage.timestamp.toISOString(),
+    },
+  });
 }
 
 /**
@@ -217,6 +230,18 @@ export async function sendPrompt(
 
   // Store user message
   const userMessage = await storeUserMessage(sessionId, text);
+
+  // Broadcast user message via WebSocket
+  websocketService.broadcast({
+    type: 'message.new',
+    payload: {
+      sessionId,
+      messageId: userMessage.id,
+      role: 'user',
+      content: { type: 'text', text },
+      timestamp: userMessage.timestamp.toISOString(),
+    },
+  });
 
   // Send prompt to agent
   await acpClient.sendPrompt(text);
