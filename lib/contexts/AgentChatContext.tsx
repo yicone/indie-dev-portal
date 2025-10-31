@@ -58,6 +58,39 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         setMessages((prev) => {
           const newMessages = new Map(prev);
           const sessionMessages = newMessages.get(sessionId) || [];
+
+          // Merge consecutive agent messages
+          if (role === 'agent' && sessionMessages.length > 0) {
+            const lastMessage = sessionMessages[sessionMessages.length - 1];
+            const lastMessageTime = lastMessage.timestamp
+              ? new Date(lastMessage.timestamp).getTime()
+              : 0;
+            const currentTime = new Date(timestamp).getTime();
+            const timeDiff = currentTime - lastMessageTime;
+
+            // If last message is also from agent and within 5 seconds, merge them
+            if (lastMessage.role === 'agent' && timeDiff < 5000) {
+              const mergedContent =
+                lastMessage.parsedContent?.type === 'text' && content.type === 'text'
+                  ? {
+                      type: 'text' as const,
+                      text: lastMessage.parsedContent.text + '\n\n' + content.text,
+                    }
+                  : content;
+
+              sessionMessages[sessionMessages.length - 1] = {
+                ...lastMessage,
+                content: JSON.stringify(mergedContent),
+                parsedContent: mergedContent,
+                timestamp: new Date(timestamp),
+              };
+
+              newMessages.set(sessionId, [...sessionMessages]);
+              return newMessages;
+            }
+          }
+
+          // Add as new message
           newMessages.set(sessionId, [
             ...sessionMessages,
             {
@@ -95,6 +128,27 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
   const openPanel = useCallback(() => setIsOpen(true), []);
   const closePanel = useCallback(() => setIsOpen(false), []);
 
+  // Load existing sessions on mount
+  useEffect(() => {
+    const loadSessions = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/sessions');
+        if (response.ok) {
+          const data = await response.json();
+          const sessionsMap = new Map();
+          data.sessions.forEach((session: { id: string; [key: string]: unknown }) => {
+            sessionsMap.set(session.id, session as unknown as AgentSessionData);
+          });
+          setSessions(sessionsMap);
+        }
+      } catch (error) {
+        console.error('[AgentChat] Failed to load sessions:', error);
+      }
+    };
+
+    loadSessions();
+  }, []);
+
   const createSession = useCallback(async (repoId: number) => {
     try {
       const response = await fetch('http://localhost:4000/sessions', {
@@ -108,10 +162,19 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
       }
 
       const session = await response.json();
+
+      // Add to sessions map
+      setSessions((prev) => {
+        const newSessions = new Map(prev);
+        newSessions.set(session.id, session);
+        return newSessions;
+      });
+
       setActiveSessionId(session.id);
       setIsOpen(true);
     } catch (error) {
       console.error('[AgentChat] Failed to create session:', error);
+      setError(error instanceof Error ? error.message : 'Failed to create session');
       throw error;
     }
   }, []);

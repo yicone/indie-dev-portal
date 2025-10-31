@@ -15,10 +15,12 @@ export function AgentChatPanel() {
     isOpen,
     closePanel,
     activeSessionId,
+    sessions,
     messages,
     sendMessage,
     connectionStatus,
     createSession,
+    setActiveSession,
     isTyping,
     error,
     clearError,
@@ -90,39 +92,70 @@ export function AgentChatPanel() {
         </Button>
       </div>
 
-      {/* Project Selector (when no active session) */}
-      {!activeSessionId && repos && repos.length > 0 && (
-        <div className="p-4 border-b">
-          <label className="text-sm font-medium mb-2 block">Select a project:</label>
-          <select
-            className="w-full p-2 rounded-md border bg-background"
-            onChange={async (e) => {
-              const repoId = parseInt(e.target.value);
-              if (repoId) {
-                setCreatingSession(true);
-                try {
-                  await createSession(repoId);
-                } catch (error) {
-                  console.error('Failed to create session:', error);
-                } finally {
-                  setCreatingSession(false);
+      {/* Session Selector */}
+      <div className="p-4 border-b">
+        {sessions.size > 0 ? (
+          <div>
+            <label className="text-sm font-medium mb-2 block">Active Sessions:</label>
+            <select
+              className="w-full p-2 rounded-md border bg-background mb-2"
+              value={activeSessionId || ''}
+              onChange={(e) => setActiveSession(e.target.value || null)}
+            >
+              <option value="">Select a session...</option>
+              {Array.from(sessions.values()).map((session) => {
+                const s = session as unknown as {
+                  id: string;
+                  status: string;
+                  repo?: { name: string };
+                };
+                return (
+                  <option key={s.id} value={s.id}>
+                    {s.repo?.name || `Session ${s.id.slice(0, 8)}`} - {s.status}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        ) : null}
+
+        {/* Create New Session */}
+        {repos && repos.length > 0 && (
+          <div>
+            <label className="text-sm font-medium mb-2 block">
+              {sessions.size > 0 ? 'Or create new:' : 'Select a project:'}
+            </label>
+            <select
+              className="w-full p-2 rounded-md border bg-background"
+              onChange={async (e) => {
+                const repoId = parseInt(e.target.value);
+                if (repoId) {
+                  setCreatingSession(true);
+                  try {
+                    await createSession(repoId);
+                    e.target.value = ''; // Reset selector
+                  } catch (error) {
+                    console.error('Failed to create session:', error);
+                  } finally {
+                    setCreatingSession(false);
+                  }
                 }
-              }
-            }}
-            defaultValue=""
-            disabled={creatingSession}
-          >
-            <option value="">
-              {creatingSession ? 'Creating session...' : 'Choose a repository...'}
-            </option>
-            {repos.map((repo) => (
-              <option key={repo.id} value={repo.id}>
-                {repo.name}
+              }}
+              defaultValue=""
+              disabled={creatingSession}
+            >
+              <option value="">
+                {creatingSession ? 'Creating session...' : 'Choose a repository...'}
               </option>
-            ))}
-          </select>
-        </div>
-      )}
+              {repos.map((repo) => (
+                <option key={repo.id} value={repo.id}>
+                  {repo.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
