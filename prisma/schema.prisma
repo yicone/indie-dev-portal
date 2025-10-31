@@ -8,20 +8,21 @@ datasource db {
 }
 
 model Repo {
-  id               Int      @id @default(autoincrement())
+  id               Int            @id @default(autoincrement())
   name             String
-  slug             String   @unique
+  slug             String         @unique
   description      String?
   repoPath         String
   primaryLanguage  String
   frameworks       String
-  ciStatus         String   @default("pending")
+  ciStatus         String         @default("pending")
   lastOpenedAt     DateTime?
   notes            String?
-  stars            Int      @default(0)
-  updatedAt        DateTime @updatedAt
-  createdAt        DateTime @default(now())
+  stars            Int            @default(0)
+  updatedAt        DateTime       @updatedAt
+  createdAt        DateTime       @default(now())
   commits          Commit[]
+  agentSessions    AgentSession[]
 }
 
 model Commit {
@@ -35,4 +36,30 @@ model Commit {
 
   @@index([repoId])
   @@index([committedAt])
+}
+
+model AgentSession {
+  id        String         @id @default(uuid())
+  repoId    Int
+  repo      Repo           @relation(fields: [repoId], references: [id], onDelete: Cascade)
+  status    String         // 'active', 'completed', 'cancelled', 'error'
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  messages  AgentMessage[]
+
+  @@index([repoId])
+  @@index([status])
+  @@index([updatedAt])
+}
+
+model AgentMessage {
+  id        String       @id @default(uuid())
+  sessionId String
+  session   AgentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String       // 'user', 'agent', 'system'
+  content   String       // JSON-serialized message content
+  timestamp DateTime     @default(now())
+
+  @@index([sessionId])
+  @@index([timestamp])
 }
