@@ -12,6 +12,8 @@ import { EmptyState } from '@/components/dashboard/EmptyState';
 import { ErrorState } from '@/components/dashboard/ErrorState';
 import { SkeletonGrid } from '@/components/dashboard/SkeletonGrid';
 import { calculateCommitFrequency, parseLastOpened } from '@/components/dashboard/utils';
+import { AgentFloatingButton } from '@/components/agent/AgentFloatingButton';
+import { AgentChatPanel } from '@/components/agent/AgentChatPanel';
 
 const PAGE_SIZE = 6;
 
@@ -130,6 +132,10 @@ export default function DashboardPage() {
           />
         )}
       </div>
+
+      {/* Agent Chat UI */}
+      <AgentFloatingButton />
+      <AgentChatPanel />
     </main>
   );
 }

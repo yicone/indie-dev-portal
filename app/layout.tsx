@@ -4,6 +4,7 @@ import './globals.css';
 
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { QueryProvider } from '@/components/providers/QueryProvider';
+import { AgentChatProvider } from '@/lib/contexts/AgentChatContext';
 
 const jetBrainsMono = JetBrains_Mono({
   subsets: ['latin'],
@@ -21,7 +22,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={`${jetBrainsMono.variable} font-mono`}>
         <ThemeProvider>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <AgentChatProvider>{children}</AgentChatProvider>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>
