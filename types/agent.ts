@@ -60,7 +60,12 @@ export interface AgentSessionData extends AgentSession {
 /**
  * Agent message data
  */
-export interface AgentMessageData extends AgentMessage {
+export interface AgentMessageData {
+  id: string;
+  sessionId: string;
+  role: string;
+  content: string;
+  timestamp: Date;
   parsedContent: MessageContent;
 }
 

@@ -73,34 +73,35 @@ export function AgentChatPanel() {
             <p className="text-sm">Ask me anything about your project</p>
           </div>
         ) : (
-          sessionMessages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
+          sessionMessages.map((msg) => {
+            const messageId = msg.id || 'unknown';
+            const messageRole = msg.role || 'system';
+            const content =
+              msg.parsedContent?.type === 'text'
+                ? msg.parsedContent.text
+                : JSON.stringify(msg.parsedContent || {});
+
+            return (
               <div
-                className={`max-w-[80%] rounded-lg p-3 ${
-                  msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
-                }`}
+                key={messageId}
+                className={`flex ${messageRole === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                {msg.role === 'agent' ? (
-                  <div className="prose prose-sm dark:prose-invert max-w-none">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {msg.parsedContent.type === 'text'
-                        ? msg.parsedContent.text
-                        : JSON.stringify(msg.parsedContent)}
-                    </ReactMarkdown>
-                  </div>
-                ) : (
-                  <p className="text-sm whitespace-pre-wrap">
-                    {msg.parsedContent.type === 'text'
-                      ? msg.parsedContent.text
-                      : JSON.stringify(msg.parsedContent)}
-                  </p>
-                )}
+                <div
+                  className={`max-w-[80%] rounded-lg p-3 ${
+                    messageRole === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
+                  }`}
+                >
+                  {messageRole === 'agent' ? (
+                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    <p className="text-sm whitespace-pre-wrap">{content}</p>
+                  )}
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 
