@@ -455,13 +455,19 @@ export function AgentChatPanel() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={canSendMessage ? 'Ask me anything...' : 'Session is not active'}
+            placeholder={
+              isCreatingSession
+                ? 'Creating session...'
+                : canSendMessage
+                  ? 'Ask me anything...'
+                  : 'Session is not active'
+            }
             className="min-h-[60px] max-h-[120px]"
-            disabled={!canSendMessage || sending}
+            disabled={isCreatingSession || !canSendMessage || sending}
           />
           <Button
             onClick={handleSend}
-            disabled={!input.trim() || !canSendMessage || sending}
+            disabled={isCreatingSession || !input.trim() || !canSendMessage || sending}
             size="icon"
             className="h-[60px] w-[60px]"
           >
