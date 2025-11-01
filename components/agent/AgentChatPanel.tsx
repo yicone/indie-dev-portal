@@ -301,28 +301,28 @@ export function AgentChatPanel() {
                 className={`flex ${messageRole === 'user' ? 'justify-end' : 'justify-start'} group`}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 relative ${
+                  className={`max-w-[80%] rounded-lg p-3 relative break-words ${
                     messageRole === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
                   }`}
                 >
                   <div>
                     {messageRole === 'agent' ? (
-                      <div className="prose prose-sm dark:prose-invert max-w-none">
+                      <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-hidden">
                         <ReactMarkdown
                           remarkPlugins={[remarkGfm]}
                           components={{
                             p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
                             ul: ({ children }) => (
-                              <ul className="mb-4 last:mb-0 space-y-2 list-disc list-inside">
+                              <ul className="mb-4 last:mb-0 space-y-1 list-disc pl-6">
                                 {children}
                               </ul>
                             ),
                             ol: ({ children }) => (
-                              <ol className="mb-4 last:mb-0 space-y-2 list-decimal list-inside">
+                              <ol className="mb-4 last:mb-0 space-y-1 list-decimal pl-6">
                                 {children}
                               </ol>
                             ),
-                            li: ({ children }) => <li className="ml-4">{children}</li>,
+                            li: ({ children }) => <li className="break-words">{children}</li>,
                             code: ({ className, children, ...props }: any) => {
                               const match = /language-(\w+)/.exec(className || '');
                               const language = match ? match[1] : '';

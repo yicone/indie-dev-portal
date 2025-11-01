@@ -172,12 +172,14 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
 
       const session = await response.json();
 
-      // Add to sessions map
-      setSessions((prev) => {
-        const newSessions = new Map(prev);
-        newSessions.set(session.id, session);
-        return newSessions;
-      });
+      // Reload sessions to get complete data including repo info
+      const sessionsResponse = await fetch('http://localhost:4000/sessions');
+      if (sessionsResponse.ok) {
+        const sessionsData: AgentSessionData[] = await sessionsResponse.json();
+        const sessionsMap = new Map<string, AgentSessionData>();
+        sessionsData.forEach((s) => sessionsMap.set(s.id, s));
+        setSessions(sessionsMap);
+      }
 
       setActiveSessionId(session.id);
       setIsOpen(true);
