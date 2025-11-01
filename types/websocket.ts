@@ -12,6 +12,9 @@ export type WSMessageType =
   | 'session.status'
   | 'message.new'
   | 'message.update'
+  | 'message.start' // NEW: Start streaming a message
+  | 'message.chunk' // NEW: Send content chunk
+  | 'message.end' // NEW: Complete message with full content
   | 'error'
   | 'ping'
   | 'pong';
@@ -64,6 +67,7 @@ export interface WSMessageNew extends WSMessage {
 
 /**
  * Message update (for streaming)
+ * @deprecated Use message.start/chunk/end instead
  */
 export interface WSMessageUpdate extends WSMessage {
   type: 'message.update';
@@ -72,6 +76,46 @@ export interface WSMessageUpdate extends WSMessage {
     messageId: string;
     content: MessageContent;
     complete: boolean;
+  };
+}
+
+/**
+ * Message streaming start
+ * Signals the beginning of a new message stream
+ */
+export interface WSMessageStart extends WSMessage {
+  type: 'message.start';
+  payload: {
+    sessionId: string;
+    messageId: string;
+    role: 'agent';
+    timestamp: string;
+  };
+}
+
+/**
+ * Message streaming chunk
+ * Delivers incremental content for an ongoing message
+ */
+export interface WSMessageChunk extends WSMessage {
+  type: 'message.chunk';
+  payload: {
+    messageId: string;
+    content: MessageContent; // Incremental content
+  };
+}
+
+/**
+ * Message streaming end
+ * Completes the message with full content and stores to database
+ */
+export interface WSMessageEnd extends WSMessage {
+  type: 'message.end';
+  payload: {
+    messageId: string;
+    content: MessageContent; // Complete content
+    isComplete: true;
+    timestamp: string;
   };
 }
 
@@ -110,7 +154,10 @@ export type WSServerMessage =
   | WSSessionCreated
   | WSSessionStatus
   | WSMessageNew
-  | WSMessageUpdate
+  | WSMessageUpdate // Deprecated, kept for backward compatibility
+  | WSMessageStart // NEW: Streaming protocol
+  | WSMessageChunk // NEW: Streaming protocol
+  | WSMessageEnd // NEW: Streaming protocol
   | WSError
   | WSPong;
 
