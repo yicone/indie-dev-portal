@@ -216,7 +216,14 @@ export function AgentChatPanel() {
         <div className="bg-destructive/10 border-b border-destructive/20 p-3 animate-in slide-in-from-top">
           <div className="flex items-center gap-2">
             <AlertCircle className="h-4 w-4 text-destructive flex-shrink-0" />
-            <p className="text-sm text-destructive flex-1">{error}</p>
+            <div className="flex-1">
+              <p className="text-sm text-destructive">{error}</p>
+              {error.includes('Too many requests') && (
+                <p className="text-xs text-destructive/70 mt-1">
+                  Please wait 30 seconds before trying again
+                </p>
+              )}
+            </div>
             <Button
               variant="ghost"
               size="sm"
