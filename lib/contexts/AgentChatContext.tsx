@@ -225,11 +225,22 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
       // Reload sessions to get complete data including repo info
       const sessionsResponse = await fetch('http://localhost:4000/sessions');
       if (sessionsResponse.ok) {
-        const sessionsData: AgentSessionData[] = await sessionsResponse.json();
+        const data = await sessionsResponse.json();
         const sessionsMap = new Map<string, AgentSessionData>();
-        sessionsData.forEach((s) => sessionsMap.set(s.id, s));
+
+        // Handle both array and { sessions: [] } formats
+        const sessionsArray = Array.isArray(data) ? data : data.sessions || [];
+        sessionsArray.forEach((s: AgentSessionData) => sessionsMap.set(s.id, s));
+
         setSessions(sessionsMap);
       }
+
+      // Initialize empty messages for new session
+      setMessages((prev) => {
+        const newMessages = new Map(prev);
+        newMessages.set(session.id, []);
+        return newMessages;
+      });
 
       setActiveSessionId(session.id);
       setIsOpen(true);
