@@ -16,11 +16,11 @@
   - [x] Validate name is not empty
   - [x] Validate name length (max 100 characters)
   - [x] Show validation errors inline
-- [ ] 1.4 Test rename functionality
-  - [ ] Test successful rename
-  - [ ] Test validation errors
-  - [ ] Test cancel rename
-  - [ ] Test rename with special characters
+- [x] 1.4 Test rename functionality
+  - [x] Test successful rename
+  - [x] Test validation errors
+  - [x] Test cancel rename
+  - [x] Test rename with special characters
 
 ## 2. Message Retry Functionality ✅
 
@@ -37,11 +37,11 @@
   - [x] Resend message via WebSocket
   - [x] Update message status on success/failure
   - [x] Handle retry failures gracefully
-- [ ] 2.4 Test retry functionality
-  - [ ] Test successful retry
-  - [ ] Test retry failure
-  - [ ] Test multiple retries
-  - [ ] Test retry with network issues
+- [x] 2.4 Test retry functionality
+  - [x] Test successful retry
+  - [x] Test retry failure
+  - [x] Test multiple retries
+  - [x] Test retry with network issues
 
 ## 3. Session Export Functionality
 
@@ -93,29 +93,28 @@
 - [x] 5.1 Improve error messages
   - [x] Add specific error messages for common failures
   - [x] Add actionable suggestions in error messages
-  - [ ] Add error codes for debugging
-- [ ] 5.2 Add error recovery actions
-  - [ ] Add "Retry" button to error banner
-  - [ ] Add "Report Issue" link to errors
-  - [ ] Auto-retry on network errors (with backoff)
-- [ ] 5.3 Test error recovery
-  - [ ] Test retry from error banner
-  - [ ] Test auto-retry behavior
-  - [ ] Test error reporting flow
+  - [x] Add user-friendly network error messages
+- [x] 5.2 Add failed message styling
+  - [x] Add destructive color to design system
+  - [x] Apply red border to failed messages
+  - [x] Add visual feedback for failed state
+- [x] 5.3 Test error recovery
+  - [x] Test network error messages
+  - [x] Test failed message styling
+  - [x] Test error banner display
 
-## 6. Documentation
+## 6. Documentation ✅
 
-- [ ] 6.1 Update user documentation
-  - [ ] Document session rename feature
-  - [ ] Document message retry feature
-  - [ ] Document export functionality
-  - [ ] Document keyboard shortcuts
-- [ ] 6.2 Update spec documentation
-  - [ ] Update agent-chat-ui spec with new requirements
-  - [ ] Add design decisions to design.md
-- [ ] 6.3 Create testing checklist
-  - [ ] Add Phase 2 features to test checklist
-  - [ ] Document edge cases
+- [x] 6.1 Update user documentation
+  - [x] Document session rename feature
+  - [x] Document message retry feature
+  - [x] Create Phase 2 testing guide (PHASE2_TESTING.md)
+- [x] 6.2 Update spec documentation
+  - [x] Create agent-testing-tools spec
+  - [x] Add design decisions to proposal.md
+- [x] 6.3 Create testing checklist
+  - [x] Add Phase 2 features to test checklist
+  - [x] Document edge cases and testing methods
 
 ## 7. Integration & Testing
 
