@@ -118,9 +118,18 @@ The system SHALL provide UI for creating, switching, and managing agent sessions
 #### Scenario: Session status display
 
 - **WHEN** viewing the session dropdown
-- **THEN** each session shows its status (active, suspended, archived)
+- **THEN** each session displays the repository name (if available)
+- **AND** falls back to "Session [id-prefix]" if no repository name exists
+- **AND** shows session status after the name (e.g., "repo-name - active")
 - **AND** archived sessions show "(archived)" label when "Show Archived" is enabled
 - **AND** sessions are filtered based on "Show Archived" toggle state
+
+#### Scenario: Display active repository context
+
+- **WHEN** a session is active
+- **THEN** the panel header displays the current repository name
+- **AND** provides clear visual context for the current conversation
+- **AND** helps users identify which repository they are working with
 
 #### Scenario: Archive session button
 
@@ -165,6 +174,14 @@ The system SHALL display chat messages with role-based styling, timestamps, and 
 - **THEN** the copy button fades in with smooth opacity transition
 - **AND** the button is positioned in the bottom-right of the message
 - **AND** the button has proper z-index to appear above content
+
+#### Scenario: Message spacing and layout
+
+- **WHEN** messages are displayed in the chat area
+- **THEN** each message has consistent vertical spacing (minimum 1rem between messages)
+- **AND** message content has adequate padding for comfortable reading
+- **AND** the overall layout provides a comfortable reading experience
+- **AND** messages do not appear cramped or cluttered
 
 ### Requirement: Empty State Display
 
