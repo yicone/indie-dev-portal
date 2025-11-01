@@ -171,3 +171,42 @@
 **Estimated Effort**: 2-3 days  
 **Priority**: Medium  
 **Dependencies**: None
+
+---
+
+## Archive Notes (Added 2025-11-02)
+
+### What Was Completed
+
+**MVP Features** (Archived 2025-11-01):
+
+- ✅ Session Rename Functionality
+- ✅ Message Retry Functionality
+- ✅ Error Recovery UX
+- ✅ Documentation
+- ✅ Unit Testing (8/11 tests passing)
+
+### What Was Deferred
+
+**Moved to Phase 2.5** (`improve-agent-chat-ui-phase2.5`):
+
+- Session Export Functionality (Section 3)
+- Keyboard Shortcuts (Section 4)
+
+**Still Pending** (Section 9):
+
+- Code review
+- Final testing
+- Validation & cleanup
+
+### Rationale
+
+Phase 2 MVP was successfully deployed with core functionality:
+
+- Users can rename sessions
+- Users can retry failed messages
+- Error handling is improved
+
+Advanced features (export, keyboard shortcuts) were moved to Phase 2.5 to allow faster delivery of core functionality.
+
+Final validation and cleanup tasks remain to be completed as part of overall project cleanup.
