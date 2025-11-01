@@ -30,7 +30,6 @@ export function AgentChatPanel() {
   } = useAgentChat();
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
-  const [creatingSession, setCreatingSession] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
   const [archivingSession, setArchivingSession] = useState<string | null>(null);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
@@ -244,22 +243,15 @@ export function AgentChatPanel() {
               onChange={async (e) => {
                 const repoId = parseInt(e.target.value);
                 if (repoId) {
-                  setCreatingSession(true);
-                  try {
-                    await createSession(repoId);
-                    e.target.value = ''; // Reset selector
-                  } catch (error) {
-                    console.error('Failed to create session:', error);
-                  } finally {
-                    setCreatingSession(false);
-                  }
+                  await createSession(repoId);
+                  e.target.value = ''; // Reset selector
                 }
               }}
               defaultValue=""
-              disabled={creatingSession}
+              disabled={isCreatingSession}
             >
               <option value="">
-                {creatingSession ? 'Creating session...' : 'Choose a repository...'}
+                {isCreatingSession ? 'Creating session...' : 'Choose a repository...'}
               </option>
               {repos.map((repo) => (
                 <option key={repo.id} value={repo.id}>

@@ -220,7 +220,14 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create session');
+        // Handle specific error codes
+        if (response.status === 429) {
+          throw new Error('Too many requests. Please wait a moment and try again.');
+        } else if (response.status === 500) {
+          throw new Error('Server error. Please try again later.');
+        } else {
+          throw new Error(`Failed to create session (${response.status})`);
+        }
       }
 
       const session = await response.json();
@@ -256,8 +263,10 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         .catch((err) => console.error('[AgentChat] Failed to reload sessions:', err));
     } catch (error) {
       console.error('[AgentChat] Failed to create session:', error);
-      setError(error instanceof Error ? error.message : 'Failed to create session');
-      throw error;
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to create session. Please try again.';
+      setError(errorMessage);
+      // Don't re-throw, let the UI handle the error display
     } finally {
       setIsCreatingSession(false);
     }
