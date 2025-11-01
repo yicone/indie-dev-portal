@@ -73,7 +73,46 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
             };
             newMessages.set(sessionId, updatedMessages);
           } else {
-            // Add as new message
+            // Smart merge: combine consecutive agent messages within time window
+            const MERGE_WINDOW_MS = 2000; // 2 second window
+            const shouldMerge =
+              role === 'agent' && sessionMessages.length > 0 && content.type === 'text';
+
+            if (shouldMerge) {
+              const lastMessage = sessionMessages[sessionMessages.length - 1];
+              const lastTime = lastMessage.timestamp
+                ? new Date(lastMessage.timestamp).getTime()
+                : 0;
+              const currentTime = new Date(timestamp).getTime();
+              const timeDiff = currentTime - lastTime;
+
+              // Merge if: 1) last is also agent 2) within time window 3) both are text
+              if (
+                lastMessage.role === 'agent' &&
+                timeDiff < MERGE_WINDOW_MS &&
+                lastMessage.parsedContent?.type === 'text'
+              ) {
+                // Merge content with newline separator
+                const mergedContent = {
+                  type: 'text' as const,
+                  text: lastMessage.parsedContent.text + '\n' + content.text,
+                };
+
+                // Update last message
+                const updatedMessages = [...sessionMessages];
+                updatedMessages[updatedMessages.length - 1] = {
+                  ...lastMessage,
+                  content: JSON.stringify(mergedContent),
+                  parsedContent: mergedContent,
+                  timestamp: new Date(timestamp),
+                };
+
+                newMessages.set(sessionId, updatedMessages);
+                return newMessages;
+              }
+            }
+
+            // Add as new message (no merge)
             newMessages.set(sessionId, [
               ...sessionMessages,
               {
@@ -226,7 +265,9 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
   // Enhanced setActiveSession that loads messages
   const handleSetActiveSession = useCallback(
     (sessionId: string | null) => {
+      console.log('[AgentChat] Setting active session:', sessionId);
       setActiveSessionId(sessionId);
+      setError(null); // Clear any previous errors
       if (sessionId) {
         loadSessionMessages(sessionId);
       }
