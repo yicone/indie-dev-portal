@@ -64,7 +64,7 @@ The system SHALL provide a text input for composing and sending messages.
 
 ### Requirement: Session Management UI
 
-The system SHALL provide UI for creating and switching between agent sessions.
+The system SHALL provide UI for creating, switching, and managing agent sessions with different states.
 
 #### Scenario: Create new session
 
@@ -77,7 +77,22 @@ The system SHALL provide UI for creating and switching between agent sessions.
 
 - **WHEN** user selects a different session from the dropdown
 - **THEN** the chat displays that session's messages
-- **AND** input is enabled for the selected session
+- **AND** input is enabled if session is active
+- **AND** input is disabled if session is suspended or completed
+
+#### Scenario: View suspended session
+
+- **WHEN** user selects a suspended session
+- **THEN** the chat displays historical messages in read-only mode
+- **AND** shows "Session suspended - may be resumable" message
+- **AND** input is disabled
+
+#### Scenario: Filter sessions by status
+
+- **WHEN** session list is displayed
+- **THEN** shows active and completed sessions by default
+- **AND** hides error and cancelled sessions
+- **AND** suspended sessions are shown with resume indicator
 
 ### Requirement: Connection Status Indicator
 
