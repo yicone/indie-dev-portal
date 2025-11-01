@@ -95,6 +95,38 @@ The system SHALL provide syntax highlighting for code blocks to improve code rea
 - **AND** uses consistent font size (0.875rem)
 - **AND** maintains copy button functionality
 
+### Requirement: Empty State Display
+
+The system SHALL provide informative empty states with icons for different session conditions.
+
+#### Scenario: No active session
+
+- **WHEN** no session is selected
+- **THEN** displays "No active session" message
+- **AND** shows instruction to select or create a session
+
+#### Scenario: Archived session empty state
+
+- **WHEN** an archived session is selected
+- **THEN** displays Archive icon (centered, 8x8, 50% opacity)
+- **AND** shows "Archived Session" title
+- **AND** shows descriptive message about viewing history only
+- **AND** uses consistent spacing (space-y-2)
+
+#### Scenario: Suspended session empty state
+
+- **WHEN** a suspended session is selected
+- **THEN** displays AlertCircle icon (centered, 8x8, 50% opacity)
+- **AND** shows "Session is suspended" title
+- **AND** shows descriptive message about resumption
+- **AND** uses consistent spacing (space-y-2)
+
+#### Scenario: Empty conversation
+
+- **WHEN** an active session has no messages
+- **THEN** displays "Start a conversation" message
+- **AND** shows instruction to ask questions
+
 ## MODIFIED Requirements
 
 ### Requirement: Session Management UI
@@ -182,35 +214,3 @@ The system SHALL display chat messages with role-based styling, timestamps, and 
 - **AND** message content has adequate padding for comfortable reading
 - **AND** the overall layout provides a comfortable reading experience
 - **AND** messages do not appear cramped or cluttered
-
-### Requirement: Empty State Display
-
-The system SHALL provide informative empty states with icons for different session conditions.
-
-#### Scenario: No active session
-
-- **WHEN** no session is selected
-- **THEN** displays "No active session" message
-- **AND** shows instruction to select or create a session
-
-#### Scenario: Archived session empty state
-
-- **WHEN** an archived session is selected
-- **THEN** displays Archive icon (centered, 8x8, 50% opacity)
-- **AND** shows "Archived Session" title
-- **AND** shows descriptive message about viewing history only
-- **AND** uses consistent spacing (space-y-2)
-
-#### Scenario: Suspended session empty state
-
-- **WHEN** a suspended session is selected
-- **THEN** displays AlertCircle icon (centered, 8x8, 50% opacity)
-- **AND** shows "Session is suspended" title
-- **AND** shows descriptive message about resumption
-- **AND** uses consistent spacing (space-y-2)
-
-#### Scenario: Empty conversation
-
-- **WHEN** an active session has no messages
-- **THEN** displays "Start a conversation" message
-- **AND** shows instruction to ask questions
