@@ -46,8 +46,9 @@ cd api && pnpm dev
 
 - ✅ Red border on failed message
 - ✅ Retry button appears
-- ✅ **Timestamp updates to NEW time** ← Key test
+- ✅ **Timestamp KEEPS original time** (message was sent at that time)
 - ✅ Message resends successfully
+- ✅ Status changes from "Failed" to normal
 
 ### Method B: DevTools (Quick)
 
@@ -108,7 +109,7 @@ Complete flow:
 5. Send → "Test" (fails)
 6. Reconnect network
 7. Retry → Success
-8. Verify NEW timestamp
+8. Verify timestamp UNCHANGED (keeps original)
 9. Archive session
 ```
 
@@ -130,7 +131,7 @@ Complete flow:
 - [ ] Red border on failed message
 - [ ] Retry button appears
 - [ ] Retry resends message
-- [ ] **Timestamp updates to NEW time**
+- [ ] **Timestamp KEEPS original time**
 - [ ] Success updates status
 - [ ] Multiple retries work
 
