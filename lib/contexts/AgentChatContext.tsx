@@ -221,19 +221,14 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
       }
 
       const session = await response.json();
+      console.log('[AgentChat] Session created:', session);
 
-      // Reload sessions to get complete data including repo info
-      const sessionsResponse = await fetch('http://localhost:4000/sessions');
-      if (sessionsResponse.ok) {
-        const data = await sessionsResponse.json();
-        const sessionsMap = new Map<string, AgentSessionData>();
-
-        // Handle both array and { sessions: [] } formats
-        const sessionsArray = Array.isArray(data) ? data : data.sessions || [];
-        sessionsArray.forEach((s: AgentSessionData) => sessionsMap.set(s.id, s));
-
-        setSessions(sessionsMap);
-      }
+      // Add new session to sessions map immediately
+      setSessions((prev) => {
+        const newSessions = new Map(prev);
+        newSessions.set(session.id, session as unknown as AgentSessionData);
+        return newSessions;
+      });
 
       // Initialize empty messages for new session
       setMessages((prev) => {
@@ -242,8 +237,20 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         return newMessages;
       });
 
+      // Set as active session
       setActiveSessionId(session.id);
       setIsOpen(true);
+
+      // Reload sessions in background to get complete data (don't block on this)
+      fetch('http://localhost:4000/sessions')
+        .then((res) => res.json())
+        .then((data) => {
+          const sessionsArray = Array.isArray(data) ? data : data.sessions || [];
+          const sessionsMap = new Map<string, AgentSessionData>();
+          sessionsArray.forEach((s: AgentSessionData) => sessionsMap.set(s.id, s));
+          setSessions(sessionsMap);
+        })
+        .catch((err) => console.error('[AgentChat] Failed to reload sessions:', err));
     } catch (error) {
       console.error('[AgentChat] Failed to create session:', error);
       setError(error instanceof Error ? error.message : 'Failed to create session');
