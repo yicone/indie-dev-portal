@@ -401,8 +401,9 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         }
 
         const data = await response.json();
+        const newTimestamp = new Date(); // 保存新时间戳
 
-        // Update message with new timestamp and 'sent' status (B方案: 使用新时间戳)
+        // Update message with new timestamp and 'sent' status (使用新时间戳)
         setMessages((prev) => {
           const newMessages = new Map(prev);
           const sessionMessages = newMessages.get(activeSessionId) || [];
@@ -411,7 +412,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
               ? {
                   ...msg,
                   id: data.messageId || messageId,
-                  timestamp: new Date(), // 使用新时间戳
+                  timestamp: newTimestamp, // 使用重试时的新时间戳，不使用后端返回的
                   status: 'sent' as const,
                 }
               : msg
@@ -444,7 +445,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
 
   const renameSession = useCallback(async (sessionId: string, newName: string) => {
     try {
-      const response = await fetch(`http://localhost:4000/sessions/${sessionId}`, {
+      const response = await fetch(`/api/sessions/${sessionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newName }),
