@@ -74,7 +74,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
             newMessages.set(sessionId, updatedMessages);
           } else {
             // Smart merge: combine consecutive agent messages within time window
-            const MERGE_WINDOW_MS = 2000; // 2 second window
+            const MERGE_WINDOW_MS = 5000; // 5 second window (increased from 2s)
             const shouldMerge =
               role === 'agent' && sessionMessages.length > 0 && content.type === 'text';
 
@@ -86,12 +86,21 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
               const currentTime = new Date(timestamp).getTime();
               const timeDiff = currentTime - lastTime;
 
+              console.log('[AgentChat] Merge check:', {
+                lastRole: lastMessage.role,
+                currentRole: role,
+                timeDiff,
+                window: MERGE_WINDOW_MS,
+                shouldMerge: lastMessage.role === 'agent' && timeDiff < MERGE_WINDOW_MS,
+              });
+
               // Merge if: 1) last is also agent 2) within time window 3) both are text
               if (
                 lastMessage.role === 'agent' &&
                 timeDiff < MERGE_WINDOW_MS &&
                 lastMessage.parsedContent?.type === 'text'
               ) {
+                console.log('[AgentChat] Merging messages');
                 // Merge content with newline separator
                 const mergedContent = {
                   type: 'text' as const,
@@ -109,6 +118,8 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
 
                 newMessages.set(sessionId, updatedMessages);
                 return newMessages;
+              } else {
+                console.log('[AgentChat] Not merging - conditions not met');
               }
             }
 
