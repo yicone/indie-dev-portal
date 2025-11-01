@@ -74,8 +74,8 @@ await prisma.agentSession.updateMany({
 
 **Entry Conditions**:
 
-- User explicitly archives session
-- Old `cancelled` or `completed` sessions migrated to `archived`
+- **User explicitly archives session** (manual action only)
+- Old `cancelled` or `completed` sessions migrated to `archived` (one-time migration)
 
 **Exit Conditions**:
 
@@ -97,16 +97,23 @@ await prisma.agentSession.updateMany({
 
 ```typescript
 // api/services/sessionService.ts:269
+// Only called from user-initiated archive action
 await updateSessionStatus(sessionId, 'archived');
 ```
 
 **Example Scenario**:
 
 1. User has finished working on a feature
-2. User clicks "Archive Session" button
+2. User clicks "Archive Session" button (future feature)
 3. Session status → `archived`
 4. Session disappears from active list
 5. User can view it later in "Show Archived"
+
+**Important**:
+
+- ⚠️ System automatic cleanup (idle timeout) does NOT archive sessions
+- ⚠️ Idle sessions remain `active` - process terminates but session persists
+- ✅ Only explicit user action should archive sessions
 
 ---
 
@@ -261,30 +268,56 @@ Response: { sessionId, status: 'cancelled' }
 
 ## Cleanup Strategy
 
-### Suspended Sessions
+### Idle Process Cleanup (Every 5 minutes)
 
-- Keep for 7 days
-- After 7 days → archive or delete
-- If `supportsResume: true` → keep longer (30 days)
+**What it does**:
 
-### Error Sessions
-
-- Keep for 24 hours for debugging
-- After 24 hours → archive or delete
-
-### Cancelled Sessions
-
-- Keep for 24 hours
-- After 24 hours → delete
+- Terminates idle agent processes (default: 30 minutes idle)
+- **Does NOT change session status**
+- Session remains `active` - can be resumed
 
 **Implementation**:
+
+```typescript
+// api/services/sessionService.ts:386-409
+export async function cleanupIdleSessions(): Promise<void> {
+  const idleTimeoutMinutes = parseInt(process.env.AGENT_SESSION_IDLE_TIMEOUT || '30', 10);
+  const idleSessionIds = geminiCliManager.getIdleSessions(idleTimeoutMs);
+
+  for (const sessionId of idleSessionIds) {
+    // Only terminate process, keep session active
+    await geminiCliManager.terminateProcess(sessionId);
+    // Process will restart on next prompt
+  }
+}
+```
+
+### Old Session Cleanup (Future)
+
+**Suspended Sessions**:
+
+- Keep for 7 days
+- After 7 days → delete
+- If `supportsResume: true` → keep longer (30 days)
+
+**Error Sessions**:
+
+- Keep for 24 hours for debugging
+- After 24 hours → delete
+
+**Archived Sessions**:
+
+- Keep indefinitely (user archived)
+- User can manually delete
+
+**Implementation** (future):
 
 ```typescript
 // Cleanup job (runs daily)
 const threshold = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 await prisma.agentSession.deleteMany({
   where: {
-    status: { in: ['suspended', 'error', 'cancelled'] },
+    status: { in: ['suspended', 'error'] },
     lastActiveAt: { lt: threshold },
   },
 });

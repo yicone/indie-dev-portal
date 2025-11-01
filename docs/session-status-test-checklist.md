@@ -114,7 +114,34 @@ SELECT status FROM AgentSession WHERE id = '<session_id>';
 
 ---
 
-### ✅ Test 5: Archive Session (Future Feature)
+### ✅ Test 5: Idle Cleanup Does NOT Archive
+
+**Steps**:
+
+1. Create an active session
+2. Wait for idle timeout (default: 30 minutes, or set AGENT_SESSION_IDLE_TIMEOUT=1 for testing)
+3. Wait for cleanup to run (every 5 minutes)
+4. Check session status
+
+**Expected**:
+
+- ✅ Process terminated (saves resources)
+- ✅ Session remains 'active' (NOT archived!)
+- ✅ Session still visible in UI
+- ✅ Can send new message (process restarts)
+
+**Verify in DB**:
+
+```sql
+SELECT id, status FROM AgentSession WHERE id = '<session_id>';
+-- Should show: status = 'active' (NOT 'archived')
+```
+
+**Why**: Idle cleanup is system behavior, not user intent. Only user should archive.
+
+---
+
+### ✅ Test 6: Archive Session (Future Feature)
 
 **Manual DB Update** (simulating archive action):
 
@@ -137,7 +164,7 @@ SELECT id, status FROM AgentSession WHERE status = 'archived';
 
 ---
 
-### ✅ Test 6: UI Filtering
+### ✅ Test 7: UI Filtering
 
 **Setup**:
 
@@ -167,7 +194,7 @@ console.log('Visible sessions:', sessions.length); // Should be 2
 
 ---
 
-### ✅ Test 7: Migration Data Integrity
+### ✅ Test 8: Migration Data Integrity
 
 **Verify Migration Applied**:
 
@@ -196,7 +223,7 @@ SELECT id, status FROM AgentSession WHERE status IN ('completed', 'cancelled');
 
 ---
 
-### ✅ Test 8: Badge Count Accuracy
+### ✅ Test 9: Badge Count Accuracy
 
 **Setup**:
 
@@ -216,7 +243,7 @@ GROUP BY status;
 
 ---
 
-### ✅ Test 9: Session Switching
+### ✅ Test 10: Session Switching
 
 **Steps**:
 
@@ -232,7 +259,7 @@ GROUP BY status;
 
 ---
 
-### ✅ Test 10: Concurrent Sessions
+### ✅ Test 11: Concurrent Sessions
 
 **Steps**:
 
@@ -254,12 +281,13 @@ GROUP BY status;
 - [ ] Test 2: Session stays active after messages ✅
 - [ ] Test 3: Server restart → suspended ✅
 - [ ] Test 4: Process exit does NOT change status ✅
-- [ ] Test 5: Archive functionality ✅
-- [ ] Test 6: UI filtering (show/hide) ✅
-- [ ] Test 7: Migration data integrity ✅
-- [ ] Test 8: Badge count accuracy ✅
-- [ ] Test 9: Session switching ✅
-- [ ] Test 10: Concurrent sessions ✅
+- [ ] Test 5: Idle cleanup does NOT archive ✅ **NEW**
+- [ ] Test 6: Archive functionality ✅
+- [ ] Test 7: UI filtering (show/hide) ✅
+- [ ] Test 8: Migration data integrity ✅
+- [ ] Test 9: Badge count accuracy ✅
+- [ ] Test 10: Session switching ✅
+- [ ] Test 11: Concurrent sessions ✅
 
 ---
 

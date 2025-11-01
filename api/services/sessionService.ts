@@ -381,6 +381,7 @@ async function updateSessionStatus(sessionId: string, status: SessionStatus) {
 
 /**
  * Clean up idle sessions
+ * Terminates idle processes but keeps sessions active (user can resume)
  */
 export async function cleanupIdleSessions(): Promise<void> {
   const idleTimeoutMinutes = parseInt(process.env.AGENT_SESSION_IDLE_TIMEOUT || '30', 10);
@@ -389,9 +390,18 @@ export async function cleanupIdleSessions(): Promise<void> {
   const idleSessionIds = geminiCliManager.getIdleSessions(idleTimeoutMs);
 
   for (const sessionId of idleSessionIds) {
-    console.log(`[SessionService] Cleaning up idle session: ${sessionId}`);
+    console.log(`[SessionService] Terminating idle process for session: ${sessionId}`);
     try {
-      await cancelSession(sessionId);
+      // Only terminate the process, don't change session status
+      // Session stays active - process will restart on next prompt
+      await geminiCliManager.terminateProcess(sessionId);
+
+      // Close ACP client if exists
+      const acpClient = acpClients.get(sessionId);
+      if (acpClient) {
+        acpClient.close();
+        acpClients.delete(sessionId);
+      }
     } catch (error) {
       console.error(`[SessionService] Error cleaning up idle session ${sessionId}:`, error);
     }
