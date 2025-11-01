@@ -37,11 +37,12 @@ Recent example: `improve-agent-chat-ui-ux` was implemented without spec first, r
 
 ### Establish Clear Boundaries
 
-Create `.windsurfrules` to define:
+Consolidate all project rules into `AGENTS.md` to define:
 
 - OpenSpec territory: All specifications and requirements
 - docs/ territory: Supplementary documentation only (testing, migration, lessons)
 - Explicit rules to prevent regression
+- Cross-AI-agent portability (works with Windsurf, Cursor, Continue, etc.)
 
 ### Update References
 
@@ -53,10 +54,12 @@ Create `.windsurfrules` to define:
 
 ### Affected Documentation
 
-- **Archived**: 3 old specification documents
+- **Archived**: 3 old specification documents + 1 outdated summary
 - **Removed**: 4 duplicate/conflicting documents
-- **Created**: `.windsurfrules` with clear documentation rules
-- **Updated**: README files and references
+- **Consolidated**: All project rules into `AGENTS.md` (cross-AI-agent portable)
+- **Renamed**: 6 files to enforce naming conventions (SCREAMING_SNAKE_CASE)
+- **Updated**: README files and all references
+- **Deprecated**: FIXES_INDEX.md and fixes/ (marked as historical)
 
 ### Benefits
 

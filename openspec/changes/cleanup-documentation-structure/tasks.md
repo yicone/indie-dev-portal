@@ -48,5 +48,5 @@
 - [x] 6.2 Commit file removals
 - [x] 6.3 Commit .windsurfrules creation
 - [x] 6.4 Commit reference updates
-- [ ] 6.5 Update DOCUMENTATION_MIGRATION_PLAN.md status
-- [ ] 6.6 Archive this OpenSpec change
+- [x] 6.5 Update DOCUMENTATION_MIGRATION_PLAN.md status
+- [x] 6.6 Additional improvements (file naming, fixes deprecation, rules consolidation)
