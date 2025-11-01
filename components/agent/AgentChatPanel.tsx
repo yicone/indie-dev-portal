@@ -311,6 +311,18 @@ export function AgentChatPanel() {
                         <ReactMarkdown
                           remarkPlugins={[remarkGfm]}
                           components={{
+                            p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
+                            ul: ({ children }) => (
+                              <ul className="mb-4 last:mb-0 space-y-2 list-disc list-inside">
+                                {children}
+                              </ul>
+                            ),
+                            ol: ({ children }) => (
+                              <ol className="mb-4 last:mb-0 space-y-2 list-decimal list-inside">
+                                {children}
+                              </ol>
+                            ),
+                            li: ({ children }) => <li className="ml-4">{children}</li>,
                             code: ({ className, children, ...props }: any) => {
                               const match = /language-(\w+)/.exec(className || '');
                               const language = match ? match[1] : '';

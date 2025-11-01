@@ -59,49 +59,34 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
           const newMessages = new Map(prev);
           const sessionMessages = newMessages.get(sessionId) || [];
 
-          // Merge consecutive agent messages
-          if (role === 'agent' && sessionMessages.length > 0) {
-            const lastMessage = sessionMessages[sessionMessages.length - 1];
-            const lastMessageTime = lastMessage.timestamp
-              ? new Date(lastMessage.timestamp).getTime()
-              : 0;
-            const currentTime = new Date(timestamp).getTime();
-            const timeDiff = currentTime - lastMessageTime;
+          // Check if message already exists (by messageId) to handle updates
+          const existingIndex = sessionMessages.findIndex((m) => m.id === messageId);
 
-            // If last message is also from agent and within 5 seconds, merge them
-            if (lastMessage.role === 'agent' && timeDiff < 5000) {
-              const mergedContent =
-                lastMessage.parsedContent?.type === 'text' && content.type === 'text'
-                  ? {
-                      type: 'text' as const,
-                      text: lastMessage.parsedContent.text + '\n\n' + content.text,
-                    }
-                  : content;
-
-              sessionMessages[sessionMessages.length - 1] = {
-                ...lastMessage,
-                content: JSON.stringify(mergedContent),
-                parsedContent: mergedContent,
+          if (existingIndex >= 0) {
+            // Update existing message (for streaming updates)
+            const updatedMessages = [...sessionMessages];
+            updatedMessages[existingIndex] = {
+              ...updatedMessages[existingIndex],
+              content: JSON.stringify(content),
+              parsedContent: content,
+              timestamp: new Date(timestamp),
+            };
+            newMessages.set(sessionId, updatedMessages);
+          } else {
+            // Add as new message
+            newMessages.set(sessionId, [
+              ...sessionMessages,
+              {
+                id: messageId,
+                sessionId,
+                role,
+                content: JSON.stringify(content),
                 timestamp: new Date(timestamp),
-              };
-
-              newMessages.set(sessionId, [...sessionMessages]);
-              return newMessages;
-            }
+                parsedContent: content,
+              } as AgentMessageData,
+            ]);
           }
 
-          // Add as new message
-          newMessages.set(sessionId, [
-            ...sessionMessages,
-            {
-              id: messageId,
-              sessionId,
-              role,
-              content: JSON.stringify(content),
-              timestamp: new Date(timestamp),
-              parsedContent: content,
-            } as AgentMessageData,
-          ]);
           return newMessages;
         });
         break;
