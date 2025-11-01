@@ -332,7 +332,17 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         });
       } catch (error) {
         console.error('[AgentChat] Failed to send message:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Failed to send message';
+
+        // Provide user-friendly error messages
+        let errorMessage = 'Failed to send message';
+        if (error instanceof Error) {
+          if (error.message === 'Failed to fetch' || error.message.includes('fetch')) {
+            errorMessage = 'Network error. Please check your connection and try again.';
+          } else {
+            errorMessage = error.message;
+          }
+        }
+
         setError(errorMessage);
         setIsTyping(false);
 
@@ -421,7 +431,17 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         });
       } catch (error) {
         console.error('[AgentChat] Failed to retry message:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Failed to retry message';
+
+        // Provide user-friendly error messages
+        let errorMessage = 'Failed to retry message';
+        if (error instanceof Error) {
+          if (error.message === 'Failed to fetch' || error.message.includes('fetch')) {
+            errorMessage = 'Network error. Please check your connection and try again.';
+          } else {
+            errorMessage = error.message;
+          }
+        }
+
         setError(errorMessage);
         setIsTyping(false);
 
