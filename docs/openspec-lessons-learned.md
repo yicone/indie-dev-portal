@@ -306,9 +306,50 @@ This bug demonstrated the value of specs:
 
 ---
 
+## Lesson 4: Always Create Spec Before Implementation
+
+### What Happened
+
+**Change**: `improve-agent-chat-ui-ux` (Phase 1 UI/UX improvements)
+
+**Problem**:
+
+- Chose "fast iteration" approach
+- Implemented features directly without creating spec first
+- Created custom documentation instead of OpenSpec format
+- Had to retroactively create spec after implementation
+
+### Correct Workflow
+
+**OpenSpec workflow should always be**:
+
+1. Create proposal.md → 2. Create spec deltas → 3. Validate → 4. Implement → 5. Archive
+
+**What we did**: 4. Implement → 5. Custom docs → 6. Retroactive spec ❌
+
+### Retroactive Fix
+
+Created `openspec/changes/improve-agent-chat-ui-ux/` with:
+
+- proposal.md (why and impact)
+- tasks.md (40 tasks, all [x])
+- specs/agent-chat-ui/spec.md (3 ADDED, 3 MODIFIED, 22 scenarios)
+- Validated with `openspec validate --strict` ✅
+
+### Lesson
+
+**Always follow OpenSpec workflow, even for "fast iteration"**
+
+- Creating spec takes 15-30 minutes
+- Saves hours of retroactive work
+- Provides clear requirements upfront
+
+---
+
 ## Change Log
 
 - 2025-11-01: Initial document created after `add-agent-chat-ui` archive
 - Lesson 1: Tasks.md not updated during development
 - Lesson 2: Bug fixes don't require spec updates
 - Lesson 3: Manual testing catches design violations
+- Lesson 4: Always create spec before implementation
