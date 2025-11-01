@@ -327,6 +327,43 @@ export async function getSession(sessionId: string) {
 }
 
 /**
+ * Update session (e.g., rename)
+ */
+export async function updateSession(sessionId: string, updates: { name?: string }) {
+  const session = await prisma.agentSession.findUnique({
+    where: { id: sessionId },
+  });
+
+  if (!session) {
+    throw new Error(`Session not found: ${sessionId}`);
+  }
+
+  // For now, we only support updating the name
+  // Store custom name in resumeData as JSON
+  const currentResumeData = session.resumeData ? JSON.parse(session.resumeData) : {};
+  const updatedResumeData = {
+    ...currentResumeData,
+    customName: updates.name,
+  };
+
+  const updatedSession = await prisma.agentSession.update({
+    where: { id: sessionId },
+    data: {
+      resumeData: JSON.stringify(updatedResumeData),
+      updatedAt: new Date(),
+    },
+    include: {
+      repo: true,
+      messages: {
+        orderBy: { timestamp: 'asc' },
+      },
+    },
+  });
+
+  return updatedSession;
+}
+
+/**
  * Get messages for a session
  */
 export async function getMessages(sessionId: string, since?: string) {

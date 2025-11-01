@@ -12,6 +12,7 @@ import {
   Copy,
   Check,
   RefreshCw,
+  Edit2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -32,6 +33,7 @@ export function AgentChatPanel() {
     messages,
     sendMessage,
     retryMessage,
+    renameSession,
     connectionStatus,
     createSession,
     setActiveSession,
@@ -46,6 +48,8 @@ export function AgentChatPanel() {
   const [archivingSession, setArchivingSession] = useState<string | null>(null);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const [retryingMessageId, setRetryingMessageId] = useState<string | null>(null);
+  const [renamingSessionId, setRenamingSessionId] = useState<string | null>(null);
+  const [renameInput, setRenameInput] = useState('');
   const [loadingMessages, setLoadingMessages] = useState(false);
   const { data: repos } = useQuery({ queryKey: ['repos'], queryFn: fetchRepos });
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -111,6 +115,48 @@ export function AgentChatPanel() {
     } catch (error) {
       console.error('Failed to copy message:', error);
     }
+  };
+
+  const getSessionDisplayName = (session: any) => {
+    // Try to get custom name from resumeData
+    if (session.resumeData) {
+      try {
+        const resumeData = JSON.parse(session.resumeData);
+        if (resumeData.customName) {
+          return resumeData.customName;
+        }
+      } catch (e) {
+        // Ignore parse errors
+      }
+    }
+    // Fall back to repo name or session ID
+    return session.repo?.name || `Session ${session.id.slice(0, 8)}`;
+  };
+
+  const handleStartRename = (sessionId: string) => {
+    const session = sessions.get(sessionId);
+    if (session) {
+      setRenamingSessionId(sessionId);
+      setRenameInput(getSessionDisplayName(session));
+    }
+  };
+
+  const handleSaveRename = async () => {
+    if (!renamingSessionId || !renameInput.trim()) return;
+
+    try {
+      await renameSession(renamingSessionId, renameInput.trim());
+      setRenamingSessionId(null);
+      setRenameInput('');
+    } catch (error) {
+      console.error('Failed to rename session:', error);
+      // Error is already set in context
+    }
+  };
+
+  const handleCancelRename = () => {
+    setRenamingSessionId(null);
+    setRenameInput('');
   };
 
   const handleSend = async () => {
@@ -188,25 +234,73 @@ export function AgentChatPanel() {
         {sessions.size > 0 ? (
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium">Active Sessions:</label>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowArchived(!showArchived)}
-                className="h-7 text-xs"
-              >
-                {showArchived ? (
-                  <>
-                    <EyeOff className="h-3 w-3 mr-1" />
-                    Hide Archived
-                  </>
-                ) : (
-                  <>
-                    <Eye className="h-3 w-3 mr-1" />
-                    Show Archived
-                  </>
-                )}
-              </Button>
+              {renamingSessionId === activeSessionId ? (
+                <div className="flex items-center gap-1 flex-1">
+                  <input
+                    type="text"
+                    value={renameInput}
+                    onChange={(e) => setRenameInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSaveRename();
+                      if (e.key === 'Escape') handleCancelRename();
+                    }}
+                    className="flex-1 px-2 py-1 text-sm border rounded"
+                    placeholder="Session name"
+                    maxLength={100}
+                    autoFocus
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleSaveRename}
+                    className="h-7 w-7 p-0"
+                  >
+                    <Check className="h-3 w-3" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCancelRename}
+                    className="h-7 w-7 p-0"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center gap-1">
+                    <label className="text-sm font-medium">Active Sessions:</label>
+                    {activeSessionId && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleStartRename(activeSessionId)}
+                        className="h-5 w-5 p-0"
+                      >
+                        <Edit2 className="h-3 w-3" />
+                      </Button>
+                    )}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowArchived(!showArchived)}
+                    className="h-7 text-xs"
+                  >
+                    {showArchived ? (
+                      <>
+                        <EyeOff className="h-3 w-3 mr-1" />
+                        Hide Archived
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="h-3 w-3 mr-1" />
+                        Show Archived
+                      </>
+                    )}
+                  </Button>
+                </>
+              )}
             </div>
             <div className="space-y-2">
               <select
@@ -230,9 +324,10 @@ export function AgentChatPanel() {
                       status: string;
                       repo?: { name: string };
                     };
+                    const displayName = getSessionDisplayName(s);
                     return (
                       <option key={s.id} value={s.id}>
-                        {s.repo?.name || `Session ${s.id.slice(0, 8)}`} - {s.status}
+                        {displayName} - {s.status}
                         {s.status === 'archived' ? ' (archived)' : ''}
                       </option>
                     );

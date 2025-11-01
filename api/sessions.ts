@@ -139,6 +139,40 @@ sessionsRouter.get('/:id/messages', async (req: Request, res: Response) => {
 });
 
 /**
+ * PATCH /api/sessions/:id
+ * Update session (e.g., rename)
+ */
+sessionsRouter.patch('/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    if (!name || typeof name !== 'string') {
+      return res.status(400).json({ error: 'name is required and must be a string' });
+    }
+
+    if (name.trim().length === 0) {
+      return res.status(400).json({ error: 'name cannot be empty' });
+    }
+
+    if (name.length > 100) {
+      return res.status(400).json({ error: 'name must be 100 characters or less' });
+    }
+
+    const session = await sessionService.updateSession(id, { name });
+    res.json(session);
+  } catch (error) {
+    console.error('[SessionsAPI] Error updating session:', error);
+
+    if (error instanceof Error && error.message.includes('not found')) {
+      return res.status(404).json({ error: error.message });
+    }
+
+    res.status(500).json({ error: 'Failed to update session' });
+  }
+});
+
+/**
  * DELETE /api/sessions/:id
  * Cancel a session
  */

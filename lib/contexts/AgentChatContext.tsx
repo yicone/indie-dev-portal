@@ -20,6 +20,7 @@ interface AgentChatContextType {
   createSession: (repoId: number) => Promise<void>;
   sendMessage: (text: string) => Promise<void>;
   retryMessage: (messageId: string) => Promise<void>;
+  renameSession: (sessionId: string, newName: string) => Promise<void>;
   clearError: () => void;
 }
 
@@ -441,6 +442,35 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
     [activeSessionId, messages]
   );
 
+  const renameSession = useCallback(async (sessionId: string, newName: string) => {
+    try {
+      const response = await fetch(`http://localhost:4000/sessions/${sessionId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to rename session');
+      }
+
+      const updatedSession = await response.json();
+
+      // Update session in state
+      setSessions((prev) => {
+        const newSessions = new Map(prev);
+        newSessions.set(sessionId, updatedSession as unknown as AgentSessionData);
+        return newSessions;
+      });
+    } catch (error) {
+      console.error('[AgentChat] Failed to rename session:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to rename session';
+      setError(errorMessage);
+      throw error;
+    }
+  }, []);
+
   const clearError = useCallback(() => {
     setError(null);
   }, []);
@@ -473,6 +503,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
     createSession,
     sendMessage,
     retryMessage,
+    renameSession,
     clearError,
   };
 
