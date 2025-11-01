@@ -1,5 +1,11 @@
 # Agent Session State Machine
 
+## Overview
+
+**4-State Model**: `active`, `suspended`, `archived`, `error`
+
+This model aligns with modern coding agent UX (Cursor, Copilot, Claude Code) where sessions don't "complete" - users can always continue conversations.
+
 ## State Definitions
 
 ### `active`
@@ -13,10 +19,11 @@
 
 **Exit Conditions**:
 
-- Agent process exits normally → `completed`
-- Agent process exits with error → `error`
 - Server shutdown → `suspended`
-- User cancels session → `cancelled`
+- User archives session → `archived`
+- Fatal error (future) → `error`
+
+**Note**: Agent process exit does NOT change session status. Session stays active to allow continuation.
 
 **User Actions**:
 
@@ -61,14 +68,14 @@ await prisma.agentSession.updateMany({
 
 ---
 
-### `completed`
+### `archived`
 
-**Definition**: Session finished successfully. Agent completed all tasks and exited normally.
+**Definition**: Session archived by user. Hidden from UI by default but can be viewed.
 
 **Entry Conditions**:
 
-- Agent process exits with code 0
-- Session was in `active` state
+- User explicitly archives session
+- Old `cancelled` or `completed` sessions migrated to `archived`
 
 **Exit Conditions**:
 
@@ -77,50 +84,29 @@ await prisma.agentSession.updateMany({
 **User Actions**:
 
 - ❌ Cannot send messages
-- ✅ Can view message history
-- ℹ️ Shows "Session is completed"
+- ✅ Can view message history (in "Show Archived" mode)
+- ℹ️ Shows "Session is archived"
+
+**UI Behavior**:
+
+- Hidden from session list by default
+- Not counted in badge
+- Can be shown with "Show Archived" toggle
 
 **Code Reference**:
 
 ```typescript
-// api/services/sessionService.ts:140
-await updateSessionStatus(sessionId, code === 0 ? 'completed' : 'error');
+// api/services/sessionService.ts:269
+await updateSessionStatus(sessionId, 'archived');
 ```
 
 **Example Scenario**:
 
-1. User: "Please update the README"
-2. Agent: Updates README, commits changes
-3. Agent: "Task completed successfully"
-4. Agent process exits with code 0
-5. Session status → `completed`
-
----
-
-### `cancelled`
-
-**Definition**: Session cancelled by user or system. Not resumable.
-
-**Entry Conditions**:
-
-- User explicitly cancels session (future feature)
-- Manual intervention
-
-**Exit Conditions**:
-
-- None (terminal state)
-
-**User Actions**:
-
-- ❌ Cannot send messages
-- ❌ Hidden from UI (filtered out)
-
-**UI Behavior**:
-
-- Not shown in session list
-- Not counted in badge
-
-**Note**: Currently, `cancelled` sessions are migrated to `suspended` for better UX.
+1. User has finished working on a feature
+2. User clicks "Archive Session" button
+3. Session status → `archived`
+4. Session disappears from active list
+5. User can view it later in "Show Archived"
 
 ---
 
@@ -130,9 +116,8 @@ await updateSessionStatus(sessionId, code === 0 ? 'completed' : 'error');
 
 **Entry Conditions**:
 
-- Agent process exits with non-zero code
-- Session was in `active` state
-- Fatal exception during execution
+- Fatal exception during execution (future implementation)
+- Unrecoverable agent error
 
 **Exit Conditions**:
 
@@ -143,20 +128,7 @@ await updateSessionStatus(sessionId, code === 0 ? 'completed' : 'error');
 - ❌ Cannot send messages
 - ❌ Hidden from UI (filtered out)
 
-**Code Reference**:
-
-```typescript
-// api/services/sessionService.ts:140
-await updateSessionStatus(sessionId, code === 0 ? 'completed' : 'error');
-```
-
-**Example Scenario**:
-
-1. User: "Please deploy the app"
-2. Agent: Attempts deployment
-3. Agent: Encounters authentication error
-4. Agent process crashes with code 1
-5. Session status → `error`
+**Note**: Currently, agent process crashes do NOT set error status. Session stays active. Error status is reserved for future fatal errors that truly prevent continuation.
 
 ---
 
@@ -169,26 +141,24 @@ await updateSessionStatus(sessionId, code === 0 ? 'completed' : 'error');
                            │
                            ▼
                     ┌─────────────┐
-              ┌────▶│   active    │◀────┐
-              │     └──────┬──────┘     │
-              │            │            │
-              │            │            │ (future)
-    (future)  │     ┌──────┼──────┐     │ resume
-    resume    │     │      │      │     │
-              │     │      │      │     │
-              │     ▼      ▼      ▼     │
-         ┌────┴────┐  ┌────────┐  ┌────┴────┐
-         │suspended│  │completed│  │cancelled│
-         └─────────┘  └────────┘  └─────────┘
-              ▲                         ▲
-              │                         │
-              │      ┌────────┐         │
-              └──────│ error  │─────────┘
-                     └────────┘
+              ┌────▶│   active    │
+              │     └──────┬──────┘
+              │            │
+              │            │
+    (future)  │     ┌──────┼──────┐
+    resume    │     │      │      │
+              │     │      │      │
+              │     ▼      ▼      ▼
+         ┌────┴────┐  ┌────────┐  ┌────────┐
+         │suspended│  │archived│  │ error  │
+         └─────────┘  └────────┘  └────────┘
 
 Legend:
   ─────▶  Implemented transition
-  ─ ─ ▶  Future transition
+  ─ ─ ▶  Future transition (resume)
+
+Note: Agent process exit does NOT change state
+      Session stays active for continuation
 ```
 
 ---
@@ -199,16 +169,14 @@ Legend:
 
 - ✅ `active`
 - ✅ `suspended`
-- ✅ `completed`
-- ❌ `cancelled`
+- ❌ `archived` (hidden by default, shown with "Show Archived" toggle)
 - ❌ `error`
 
 ### Counted in Badge
 
 - ✅ `active`
 - ✅ `suspended`
-- ✅ `completed`
-- ❌ `cancelled`
+- ❌ `archived`
 - ❌ `error`
 
 ### Input Enabled
@@ -222,7 +190,7 @@ Legend:
 
 ```prisma
 model AgentSession {
-  status String // 'active' | 'suspended' | 'completed' | 'cancelled' | 'error'
+  status String // 'active' | 'suspended' | 'archived' | 'error'
 
   @@index([status])
 }
@@ -231,7 +199,20 @@ model AgentSession {
 **Type Definition**:
 
 ```typescript
-export type SessionStatus = 'active' | 'suspended' | 'completed' | 'cancelled' | 'error';
+export type SessionStatus = 'active' | 'suspended' | 'archived' | 'error';
+```
+
+**Migration**:
+
+```sql
+-- Migrate from 5-state to 4-state model
+UPDATE AgentSession
+SET status = CASE
+  WHEN status = 'completed' THEN 'active'
+  WHEN status = 'cancelled' THEN 'archived'
+  ELSE status
+END
+WHERE status IN ('completed', 'cancelled');
 ```
 
 ---

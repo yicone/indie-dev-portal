@@ -25,7 +25,7 @@ The system SHALL support multiple session states to enable future session resump
 - **WHEN** GET /sessions with optional status filter
 - **THEN** returns sessions matching the filter
 - **AND** includes session metadata (status, repo, timestamps)
-- **AND** excludes error and cancelled sessions by default
+- **AND** excludes error and archived sessions by default
 
 ### Requirement: Session Status Types
 
@@ -45,19 +45,13 @@ The system SHALL support the following session statuses for future extensibility
 - **AND** session data is preserved
 - **AND** may be resumable in future (agent-dependent)
 
-#### Scenario: Completed session
+#### Scenario: Archived session
 
-- **WHEN** agent finishes all tasks
-- **THEN** status is 'completed'
-- **AND** session is read-only
+- **WHEN** user explicitly archives session
+- **THEN** status is 'archived'
+- **AND** session is hidden from UI by default
+- **AND** can be viewed in "Show Archived" mode
 - **AND** cannot accept new messages
-
-#### Scenario: Cancelled session
-
-- **WHEN** user explicitly cancels session
-- **THEN** status is 'cancelled'
-- **AND** session is hidden from UI
-- **AND** cannot be resumed
 
 #### Scenario: Error session
 

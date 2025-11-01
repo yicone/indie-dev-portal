@@ -7,10 +7,10 @@ import { useAgentChat } from '@/lib/contexts/AgentChatContext';
 export function AgentFloatingButton() {
   const { openPanel, sessions } = useAgentChat();
 
-  // Count active, completed, and suspended sessions
+  // Count active and suspended sessions (exclude archived and error)
   const activeSessionCount = Array.from(sessions.values()).filter((session) => {
     const s = session as unknown as { status: string };
-    return s.status === 'active' || s.status === 'completed' || s.status === 'suspended';
+    return s.status === 'active' || s.status === 'suspended';
   }).length;
 
   return (

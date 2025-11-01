@@ -42,7 +42,7 @@ model AgentSession {
   id              String         @id @default(uuid())
   repoId          Int
   repo            Repo           @relation(fields: [repoId], references: [id], onDelete: Cascade)
-  status          String         // 'active', 'suspended', 'completed', 'cancelled', 'error'
+  status          String         // 'active', 'suspended', 'archived', 'error'
   agentType       String         @default("gemini-cli") // 'gemini-cli', 'codex-cli', 'claude-code'
   agentVersion    String         @default("0.11.3")
   supportsResume  Boolean        @default(false) // Agent capability flag

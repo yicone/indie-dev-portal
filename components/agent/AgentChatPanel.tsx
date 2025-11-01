@@ -111,10 +111,8 @@ export function AgentChatPanel() {
               {Array.from(sessions.values())
                 .filter((session) => {
                   const s = session as unknown as { status: string };
-                  // Show active, completed, and suspended sessions
-                  return (
-                    s.status === 'active' || s.status === 'completed' || s.status === 'suspended'
-                  );
+                  // Show active and suspended sessions (hide archived and error)
+                  return s.status === 'active' || s.status === 'suspended';
                 })
                 .map((session) => {
                   const s = session as unknown as {

@@ -14,11 +14,10 @@ type Repo = Awaited<ReturnType<typeof prisma.repo.findUnique>>;
  *
  * - active: Session is currently running and accepting messages
  * - suspended: Session paused (e.g., server restart), may be resumable
- * - completed: Session finished successfully, read-only
- * - cancelled: Session cancelled by user, hidden from UI
+ * - archived: Session archived by user, hidden from UI by default
  * - error: Session encountered fatal error, hidden from UI
  */
-export type SessionStatus = 'active' | 'suspended' | 'completed' | 'cancelled' | 'error';
+export type SessionStatus = 'active' | 'suspended' | 'archived' | 'error';
 
 /**
  * Message role enum

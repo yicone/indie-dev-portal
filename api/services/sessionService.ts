@@ -132,13 +132,15 @@ function setupACPClientHandlers(sessionId: string, acpClient: ACPClient): void {
       console.log(`[SessionService] Process exited for session ${sessionId}, code: ${code}`);
       acpClients.delete(sessionId);
 
-      // Update status if not already completed/cancelled
-      const session = await prisma.agentSession.findUnique({
-        where: { id: sessionId },
-      });
-      if (session && session.status === 'active') {
-        await updateSessionStatus(sessionId, code === 0 ? 'completed' : 'error');
+      // Log error if process crashed, but keep session active
+      // Session stays active to allow continuation
+      if (code !== 0) {
+        console.error(
+          `[SessionService] Process crashed for session ${sessionId}, exit code: ${code}`
+        );
+        // TODO: Store error in message history for debugging
       }
+      // Session remains active - process will restart on next prompt
     }
   });
 }
@@ -266,7 +268,7 @@ export async function cancelSession(sessionId: string): Promise<void> {
   }
 
   await geminiCliManager.terminateProcess(sessionId);
-  await updateSessionStatus(sessionId, 'cancelled');
+  await updateSessionStatus(sessionId, 'archived');
 }
 
 /**
