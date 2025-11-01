@@ -11,8 +11,14 @@ type Repo = Awaited<ReturnType<typeof prisma.repo.findUnique>>;
 
 /**
  * Session status enum
+ *
+ * - active: Session is currently running and accepting messages
+ * - suspended: Session paused (e.g., server restart), may be resumable
+ * - completed: Session finished successfully, read-only
+ * - cancelled: Session cancelled by user, hidden from UI
+ * - error: Session encountered fatal error, hidden from UI
  */
-export type SessionStatus = 'active' | 'completed' | 'cancelled' | 'error';
+export type SessionStatus = 'active' | 'suspended' | 'completed' | 'cancelled' | 'error';
 
 /**
  * Message role enum
@@ -55,7 +61,7 @@ export interface PlanStep {
 export interface AgentSessionData {
   id: string;
   repoId: number;
-  status: string;
+  status: SessionStatus;
   agentType: string;
   agentVersion: string;
   supportsResume: boolean;
