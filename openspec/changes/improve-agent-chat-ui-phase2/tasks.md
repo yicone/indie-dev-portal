@@ -1,0 +1,157 @@
+# Implementation Tasks - Agent Chat UI Phase 2
+
+## 1. Session Rename Functionality
+
+- [ ] 1.1 Add rename UI to session dropdown
+  - [ ] Add edit icon button next to active session name
+  - [ ] Implement inline editing mode
+  - [ ] Add save/cancel buttons for rename
+- [ ] 1.2 Implement rename logic in AgentChatContext
+  - [ ] Add `renameSession(sessionId, newName)` method
+  - [ ] Update session name in state
+  - [ ] Call backend API to persist rename
+- [ ] 1.3 Add validation
+  - [ ] Validate name is not empty
+  - [ ] Validate name length (max 100 characters)
+  - [ ] Show validation errors inline
+- [ ] 1.4 Test rename functionality
+  - [ ] Test successful rename
+  - [ ] Test validation errors
+  - [ ] Test cancel rename
+  - [ ] Test rename with special characters
+
+## 2. Message Retry Functionality
+
+- [ ] 2.1 Track failed messages
+  - [ ] Add `status` field to message type ('sending', 'sent', 'failed')
+  - [ ] Update message status on send failure
+  - [ ] Display failed status in UI
+- [ ] 2.2 Add retry UI
+  - [ ] Add retry button to failed messages
+  - [ ] Show retry icon (RefreshCw)
+  - [ ] Add loading state during retry
+- [ ] 2.3 Implement retry logic
+  - [ ] Add `retryMessage(messageId)` method to context
+  - [ ] Resend message via WebSocket
+  - [ ] Update message status on success/failure
+  - [ ] Handle retry failures gracefully
+- [ ] 2.4 Test retry functionality
+  - [ ] Test successful retry
+  - [ ] Test retry failure
+  - [ ] Test multiple retries
+  - [ ] Test retry with network issues
+
+## 3. Session Export Functionality
+
+- [ ] 3.1 Create export utility
+  - [ ] Create `lib/utils/sessionExport.ts`
+  - [ ] Implement `exportToJSON(session, messages)` function
+  - [ ] Implement `exportToMarkdown(session, messages)` function
+- [ ] 3.2 Add export UI
+  - [ ] Add export button to session dropdown
+  - [ ] Add export format selector (JSON/Markdown)
+  - [ ] Show export progress indicator
+- [ ] 3.3 Implement export logic
+  - [ ] Add `exportSession(sessionId, format)` method to context
+  - [ ] Fetch all messages for session
+  - [ ] Generate export file
+  - [ ] Trigger browser download
+- [ ] 3.4 Test export functionality
+  - [ ] Test JSON export format
+  - [ ] Test Markdown export format
+  - [ ] Test export with empty session
+  - [ ] Test export with large session (100+ messages)
+  - [ ] Verify exported content is valid
+
+## 4. Keyboard Shortcuts
+
+- [ ] 4.1 Define keyboard shortcuts
+  - [ ] Cmd/Ctrl+K: Focus search/session selector
+  - [ ] Cmd/Ctrl+N: Create new session
+  - [ ] Cmd/Ctrl+E: Export current session
+  - [ ] Cmd/Ctrl+R: Rename current session
+  - [ ] Esc: Close panel
+- [ ] 4.2 Implement keyboard handler
+  - [ ] Add global keyboard event listener
+  - [ ] Handle modifier keys (Cmd/Ctrl)
+  - [ ] Prevent conflicts with browser shortcuts
+  - [ ] Add visual feedback for shortcuts
+- [ ] 4.3 Add keyboard shortcuts help
+  - [ ] Add "?" button to show shortcuts
+  - [ ] Create shortcuts modal/popover
+  - [ ] List all available shortcuts
+- [ ] 4.4 Test keyboard shortcuts
+  - [ ] Test on macOS (Cmd)
+  - [ ] Test on Windows/Linux (Ctrl)
+  - [ ] Test shortcut conflicts
+  - [ ] Test accessibility with keyboard navigation
+
+## 5. Error Recovery UX
+
+- [ ] 5.1 Improve error messages
+  - [ ] Add specific error messages for common failures
+  - [ ] Add actionable suggestions in error messages
+  - [ ] Add error codes for debugging
+- [ ] 5.2 Add error recovery actions
+  - [ ] Add "Retry" button to error banner
+  - [ ] Add "Report Issue" link to errors
+  - [ ] Auto-retry on network errors (with backoff)
+- [ ] 5.3 Test error recovery
+  - [ ] Test retry from error banner
+  - [ ] Test auto-retry behavior
+  - [ ] Test error reporting flow
+
+## 6. Documentation
+
+- [ ] 6.1 Update user documentation
+  - [ ] Document session rename feature
+  - [ ] Document message retry feature
+  - [ ] Document export functionality
+  - [ ] Document keyboard shortcuts
+- [ ] 6.2 Update spec documentation
+  - [ ] Update agent-chat-ui spec with new requirements
+  - [ ] Add design decisions to design.md
+- [ ] 6.3 Create testing checklist
+  - [ ] Add Phase 2 features to test checklist
+  - [ ] Document edge cases
+
+## 7. Integration & Testing
+
+- [ ] 7.1 Integration testing
+  - [ ] Test rename + export workflow
+  - [ ] Test retry + keyboard shortcuts
+  - [ ] Test all features with archived sessions
+  - [ ] Test all features with suspended sessions
+- [ ] 7.2 Performance testing
+  - [ ] Test export with large sessions
+  - [ ] Test keyboard shortcuts responsiveness
+  - [ ] Profile memory usage
+- [ ] 7.3 Accessibility testing
+  - [ ] Test keyboard navigation for all new features
+  - [ ] Test screen reader announcements
+  - [ ] Test focus management
+- [ ] 7.4 Cross-browser testing
+  - [ ] Test on Chrome
+  - [ ] Test on Firefox
+  - [ ] Test on Safari
+  - [ ] Test on Edge
+
+## 8. Validation & Cleanup
+
+- [ ] 8.1 Code review
+  - [ ] Review TypeScript types
+  - [ ] Review error handling
+  - [ ] Review accessibility
+- [ ] 8.2 Final testing
+  - [ ] Run full test suite
+  - [ ] Manual testing of all features
+  - [ ] Regression testing of Phase 1 features
+- [ ] 8.3 Update tasks.md
+  - [ ] Mark all tasks as complete
+  - [ ] Validate with `openspec validate --strict`
+
+---
+
+**Estimated Effort**: 2-3 days  
+**Priority**: Medium  
+**Dependencies**: None
