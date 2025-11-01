@@ -9,6 +9,7 @@ import { sessionsRouter } from './sessions';
 import { geminiCliManager } from './services/geminiCliManager';
 import * as sessionService from './services/sessionService';
 import { websocketService } from './services/websocketService';
+import { logSimulatorStatus } from './testing/agentSimulator';
 
 const app = express();
 
@@ -69,6 +70,9 @@ process.on('SIGINT', shutdown);
 
 const httpServer = app.listen(port, () => {
   console.log(`API server listening on http://localhost:${port}`);
+
+  // Log simulator status
+  logSimulatorStatus();
 
   // Initialize WebSocket server
   websocketService.initialize(httpServer);

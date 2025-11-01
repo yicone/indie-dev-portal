@@ -56,15 +56,23 @@
   - [x] Add testing scenarios
   - [x] Document common use cases
 
-## 6. Validation (Manual Testing Required)
+## 6. Integration ✅
 
-- [ ] 6.1 Test error scenarios
+- [x] 6.1 Integrate with API routes
+  - [x] Add simulator to POST /api/sessions
+  - [x] Add simulator to POST /api/sessions/:id/prompt
+  - [x] Handle simulated errors in error handlers
+- [x] 6.2 Add startup logging
+  - [x] Log simulator status on server start
+  - [x] Show configuration in console
+
+## 7. Validation (Manual Testing Required)
+
+- [ ] 7.1 Test error scenarios
   - [ ] Test 429 simulation
   - [ ] Test 500 simulation
   - [ ] Test network failure
-- [ ] 6.2 Test with Phase 2 features
+- [ ] 7.2 Test with Phase 2 features
   - [ ] Test message retry flow
   - [ ] Test error recovery flow
   - [ ] Test session creation errors
-
-**Note**: Integration with actual API routes pending

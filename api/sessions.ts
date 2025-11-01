@@ -4,6 +4,7 @@
 
 import { Router, Request, Response } from 'express';
 import * as sessionService from './services/sessionService';
+import { getSimulatorConfig, applySimulator } from './testing/agentSimulator';
 import type {
   CreateSessionRequest,
   SendPromptRequest,
@@ -25,7 +26,12 @@ sessionsRouter.post('/', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'repoId is required' });
     }
 
-    const session = await sessionService.createSession(request);
+    // Apply test simulator if enabled
+    const config = getSimulatorConfig();
+    const session = await applySimulator(config, async () => {
+      return await sessionService.createSession(request);
+    });
+
     res.status(201).json(session);
   } catch (error) {
     console.error('[SessionsAPI] Error creating session:', error);
@@ -42,6 +48,21 @@ sessionsRouter.post('/', async (req: Request, res: Response) => {
       }
       if (error.message.includes('outside workspace root')) {
         return res.status(403).json({ error: error.message });
+      }
+      // Handle simulated errors
+      if (error.message.includes('Simulated')) {
+        if (error.message.includes('429')) {
+          return res.status(429).json({
+            error: 'Too Many Requests (Test Mode)',
+            retryAfter: 60,
+          });
+        }
+        if (error.message.includes('500')) {
+          return res.status(500).json({ error: 'Internal Server Error (Test Mode)' });
+        }
+        if (error.message.includes('Network')) {
+          return res.status(503).json({ error: 'Service Unavailable (Test Mode)' });
+        }
       }
     }
 
@@ -103,7 +124,12 @@ sessionsRouter.post('/:id/prompt', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'text is required' });
     }
 
-    const result = await sessionService.sendPrompt(id, request);
+    // Apply test simulator if enabled
+    const config = getSimulatorConfig();
+    const result = await applySimulator(config, async () => {
+      return await sessionService.sendPrompt(id, request);
+    });
+
     res.status(202).json(result);
   } catch (error) {
     console.error('[SessionsAPI] Error sending prompt:', error);
@@ -114,6 +140,21 @@ sessionsRouter.post('/:id/prompt', async (req: Request, res: Response) => {
       }
       if (error.message.includes('not active')) {
         return res.status(409).json({ error: error.message });
+      }
+      // Handle simulated errors
+      if (error.message.includes('Simulated')) {
+        if (error.message.includes('429')) {
+          return res.status(429).json({
+            error: 'Too Many Requests (Test Mode)',
+            retryAfter: 60,
+          });
+        }
+        if (error.message.includes('500')) {
+          return res.status(500).json({ error: 'Internal Server Error (Test Mode)' });
+        }
+        if (error.message.includes('Network')) {
+          return res.status(503).json({ error: 'Service Unavailable (Test Mode)' });
+        }
       }
     }
 
