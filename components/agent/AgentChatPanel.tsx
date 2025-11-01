@@ -36,6 +36,8 @@ export function AgentChatPanel() {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const { data: repos } = useQuery({ queryKey: ['repos'], queryFn: fetchRepos });
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const prevCreatingRef = useRef(false);
+  const prevSessionIdRef = useRef<string | null>(null);
 
   // Auto-scroll to bottom when new messages arrive or error appears
   useEffect(() => {
@@ -56,13 +58,22 @@ export function AgentChatPanel() {
     }
   }, [activeSessionId, messages]);
 
-  // Clear error when session is successfully created
+  // Clear error when session is successfully created (not when creation fails)
   useEffect(() => {
-    if (activeSessionId && !isCreatingSession && error) {
-      // Session was successfully created, clear any previous errors
+    const wasCreating = prevCreatingRef.current;
+    const prevSessionId = prevSessionIdRef.current;
+    const justFinishedCreating = wasCreating && !isCreatingSession;
+    const sessionChanged = activeSessionId !== prevSessionId;
+
+    if (justFinishedCreating && sessionChanged && activeSessionId && error) {
+      // Successfully created a NEW session, clear the error
       clearError();
     }
-  }, [activeSessionId, isCreatingSession, error, clearError]);
+
+    // Update refs for next render
+    prevCreatingRef.current = isCreatingSession;
+    prevSessionIdRef.current = activeSessionId;
+  }, [isCreatingSession, activeSessionId, error, clearError]);
 
   if (!isOpen) return null;
 
