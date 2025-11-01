@@ -1,7 +1,18 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { X, Send, AlertCircle, Loader2, Archive, Eye, EyeOff, Copy, Check } from 'lucide-react';
+import {
+  X,
+  Send,
+  AlertCircle,
+  Loader2,
+  Archive,
+  Eye,
+  EyeOff,
+  Copy,
+  Check,
+  RefreshCw,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useAgentChat } from '@/lib/contexts/AgentChatContext';
@@ -20,6 +31,7 @@ export function AgentChatPanel() {
     sessions,
     messages,
     sendMessage,
+    retryMessage,
     connectionStatus,
     createSession,
     setActiveSession,
@@ -33,6 +45,7 @@ export function AgentChatPanel() {
   const [showArchived, setShowArchived] = useState(false);
   const [archivingSession, setArchivingSession] = useState<string | null>(null);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [retryingMessageId, setRetryingMessageId] = useState<string | null>(null);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const { data: repos } = useQuery({ queryKey: ['repos'], queryFn: fetchRepos });
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -328,6 +341,9 @@ export function AgentChatPanel() {
           sessionMessages.map((msg) => {
             const messageId = msg.id || 'unknown';
             const messageRole = msg.role || 'system';
+            const messageStatus = msg.status;
+            const isFailed = messageStatus === 'failed';
+            const isSending = messageStatus === 'sending';
             const content =
               msg.parsedContent?.type === 'text'
                 ? msg.parsedContent.text
@@ -341,7 +357,7 @@ export function AgentChatPanel() {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 relative break-words ${
                     messageRole === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
-                  }`}
+                  } ${isFailed ? 'opacity-60 border-2 border-destructive' : ''}`}
                 >
                   <div>
                     <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-hidden">
@@ -404,21 +420,61 @@ export function AgentChatPanel() {
                       </ReactMarkdown>
                     </div>
                     <div className="flex items-center justify-between mt-1 gap-2">
-                      <p className="text-xs opacity-60">
-                        {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
-                      </p>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => handleCopyMessage(content, messageId)}
-                      >
-                        {copiedMessageId === messageId ? (
-                          <Check className="h-3 w-3" />
-                        ) : (
-                          <Copy className="h-3 w-3" />
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs opacity-60">
+                          {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
+                        </p>
+                        {isFailed && (
+                          <div className="flex items-center gap-1 text-destructive">
+                            <AlertCircle className="h-3 w-3" />
+                            <span className="text-xs">Failed</span>
+                          </div>
                         )}
-                      </Button>
+                        {isSending && (
+                          <div className="flex items-center gap-1">
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                            <span className="text-xs opacity-60">Sending...</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {isFailed && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive"
+                            onClick={async () => {
+                              setRetryingMessageId(messageId);
+                              try {
+                                await retryMessage(messageId);
+                              } catch (error) {
+                                console.error('Retry failed:', error);
+                              } finally {
+                                setRetryingMessageId(null);
+                              }
+                            }}
+                            disabled={retryingMessageId === messageId}
+                          >
+                            {retryingMessageId === messageId ? (
+                              <Loader2 className="h-3 w-3 animate-spin" />
+                            ) : (
+                              <RefreshCw className="h-3 w-3" />
+                            )}
+                          </Button>
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => handleCopyMessage(content, messageId)}
+                        >
+                          {copiedMessageId === messageId ? (
+                            <Check className="h-3 w-3" />
+                          ) : (
+                            <Copy className="h-3 w-3" />
+                          )}
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>

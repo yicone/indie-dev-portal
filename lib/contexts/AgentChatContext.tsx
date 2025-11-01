@@ -19,6 +19,7 @@ interface AgentChatContextType {
   setActiveSession: (sessionId: string | null) => void;
   createSession: (repoId: number) => Promise<void>;
   sendMessage: (text: string) => Promise<void>;
+  retryMessage: (messageId: string) => Promise<void>;
   clearError: () => void;
 }
 
@@ -278,6 +279,28 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         throw new Error('No active session');
       }
 
+      // Generate temporary message ID
+      const tempMessageId = `temp-${Date.now()}`;
+
+      // Add optimistic user message with 'sending' status
+      setMessages((prev) => {
+        const newMessages = new Map(prev);
+        const sessionMessages = newMessages.get(activeSessionId) || [];
+        newMessages.set(activeSessionId, [
+          ...sessionMessages,
+          {
+            id: tempMessageId,
+            sessionId: activeSessionId,
+            role: 'user',
+            content: JSON.stringify({ type: 'text', text }),
+            timestamp: new Date(),
+            parsedContent: { type: 'text', text },
+            status: 'sending',
+          },
+        ]);
+        return newMessages;
+      });
+
       try {
         setError(null);
         setIsTyping(true);
@@ -291,14 +314,131 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         if (!response.ok) {
           throw new Error('Failed to send message');
         }
+
+        const data = await response.json();
+
+        // Update message status to 'sent' and replace temp ID with real ID
+        setMessages((prev) => {
+          const newMessages = new Map(prev);
+          const sessionMessages = newMessages.get(activeSessionId) || [];
+          const updatedMessages = sessionMessages.map((msg) =>
+            msg.id === tempMessageId
+              ? { ...msg, id: data.messageId || tempMessageId, status: 'sent' as const }
+              : msg
+          );
+          newMessages.set(activeSessionId, updatedMessages);
+          return newMessages;
+        });
       } catch (error) {
         console.error('[AgentChat] Failed to send message:', error);
-        setError(error instanceof Error ? error.message : 'Failed to send message');
+        const errorMessage = error instanceof Error ? error.message : 'Failed to send message';
+        setError(errorMessage);
         setIsTyping(false);
+
+        // Update message status to 'failed'
+        setMessages((prev) => {
+          const newMessages = new Map(prev);
+          const sessionMessages = newMessages.get(activeSessionId) || [];
+          const updatedMessages = sessionMessages.map((msg) =>
+            msg.id === tempMessageId ? { ...msg, status: 'failed' as const } : msg
+          );
+          newMessages.set(activeSessionId, updatedMessages);
+          return newMessages;
+        });
+
         throw error;
       }
     },
     [activeSessionId]
+  );
+
+  const retryMessage = useCallback(
+    async (messageId: string) => {
+      if (!activeSessionId) {
+        throw new Error('No active session');
+      }
+
+      // Find the failed message
+      const sessionMessages = messages.get(activeSessionId) || [];
+      const failedMessage = sessionMessages.find((msg) => msg.id === messageId);
+
+      if (!failedMessage || failedMessage.status !== 'failed') {
+        throw new Error('Message not found or not in failed state');
+      }
+
+      // Extract text from message content
+      const text =
+        failedMessage.parsedContent.type === 'text' ? failedMessage.parsedContent.text : '';
+
+      if (!text) {
+        throw new Error('Cannot retry non-text message');
+      }
+
+      // Update message status to 'sending'
+      setMessages((prev) => {
+        const newMessages = new Map(prev);
+        const sessionMessages = newMessages.get(activeSessionId) || [];
+        const updatedMessages = sessionMessages.map((msg) =>
+          msg.id === messageId ? { ...msg, status: 'sending' as const } : msg
+        );
+        newMessages.set(activeSessionId, updatedMessages);
+        return newMessages;
+      });
+
+      try {
+        setError(null);
+        setIsTyping(true);
+
+        const response = await fetch(`http://localhost:4000/sessions/${activeSessionId}/prompt`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to send message');
+        }
+
+        const data = await response.json();
+
+        // Update message with new timestamp and 'sent' status (B方案: 使用新时间戳)
+        setMessages((prev) => {
+          const newMessages = new Map(prev);
+          const sessionMessages = newMessages.get(activeSessionId) || [];
+          const updatedMessages = sessionMessages.map((msg) =>
+            msg.id === messageId
+              ? {
+                  ...msg,
+                  id: data.messageId || messageId,
+                  timestamp: new Date(), // 使用新时间戳
+                  status: 'sent' as const,
+                }
+              : msg
+          );
+          newMessages.set(activeSessionId, updatedMessages);
+          return newMessages;
+        });
+      } catch (error) {
+        console.error('[AgentChat] Failed to retry message:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Failed to retry message';
+        setError(errorMessage);
+        setIsTyping(false);
+
+        // Update message status back to 'failed'
+        setMessages((prev) => {
+          const newMessages = new Map(prev);
+          const sessionMessages = newMessages.get(activeSessionId) || [];
+          const updatedMessages = sessionMessages.map((msg) =>
+            msg.id === messageId ? { ...msg, status: 'failed' as const } : msg
+          );
+          newMessages.set(activeSessionId, updatedMessages);
+          return newMessages;
+        });
+
+        throw error;
+      }
+    },
+    [activeSessionId, messages]
   );
 
   const clearError = useCallback(() => {
@@ -332,6 +472,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
     setActiveSession: handleSetActiveSession,
     createSession,
     sendMessage,
+    retryMessage,
     clearError,
   };
 

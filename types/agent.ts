@@ -73,6 +73,11 @@ export interface AgentSessionData {
 }
 
 /**
+ * Message status for UI tracking (not persisted to database)
+ */
+export type MessageStatus = 'sending' | 'sent' | 'failed';
+
+/**
  * Agent message data
  */
 export interface AgentMessageData {
@@ -82,6 +87,7 @@ export interface AgentMessageData {
   content: string;
   timestamp: Date;
   parsedContent: MessageContent;
+  status?: MessageStatus; // Optional, defaults to 'sent' if undefined
 }
 
 /**
