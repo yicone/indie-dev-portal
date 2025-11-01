@@ -51,7 +51,7 @@
 - [x] 5.1 Write usage guide
   - [x] Document environment variables
   - [x] Document configuration
-  - [x] Provide examples (<workspace_root>/docs/AGENT_TESTING_TOOLS_USAGE_GUIDE.md)
+  - [x] Provide examples (docs/testing/agent-testing-tools-usage-guide.md)
 - [x] 5.2 Update development docs
   - [x] Add testing scenarios
   - [x] Document common use cases
