@@ -8,7 +8,7 @@ Choose your starting point based on your role:
 
 - **👤 For Users**: Start with [QUICKSTART.md](QUICKSTART.md)
 - **🤖 For AI Agents**: Start with [../AGENTS.md](../AGENTS.md) → [../openspec/AGENTS.md](../openspec/AGENTS.md)
-- **👨‍💻 For Contributors**: Start with [../openspec/project.md](../openspec/project.md) and [../.windsurfrules](../.windsurfrules)
+- **👨‍💻 For Contributors**: Start with [../openspec/project.md](../openspec/project.md) and [../AGENTS.md](../AGENTS.md)
 - **🔧 For Developers**: Start with [../openspec/AGENTS.md](../openspec/AGENTS.md)
 
 ## 📐 Documentation Structure
@@ -81,8 +81,8 @@ Current fixes:
 **Old specification system** (moved to `openspec/`):
 
 - `FUNCTIONAL_SPEC.md` - Now in `openspec/project.md` and `openspec/specs/`
-- `DOCUMENTATION_MANAGEMENT.md` - Now in `.windsurfrules` and `openspec/AGENTS.md`
-- `NAMING_CONVENTIONS.md` - Now in `.windsurfrules`
+- `DOCUMENTATION_MANAGEMENT.md` - Now in `AGENTS.md` and `openspec/AGENTS.md`
+- `NAMING_CONVENTIONS.md` - Now in `AGENTS.md`
 
 **Other archived files**:
 
@@ -101,7 +101,7 @@ Current fixes:
 - **Known Issues**: [ROADMAP.md](ROADMAP.md#known-limitations)
 - **Bug Fixes**: [FIXES_INDEX.md](FIXES_INDEX.md)
 - **OpenSpec Workflow**: [../openspec/AGENTS.md](../openspec/AGENTS.md)
-- **Project Rules**: [../.windsurfrules](../.windsurfrules)
+- **Project Rules**: [../AGENTS.md](../AGENTS.md)
 - **Version History**: [../CHANGELOG.md](../CHANGELOG.md)
 
 ### By Audience
@@ -120,7 +120,7 @@ Current fixes:
 
 **Contributors**:
 
-1. [../.windsurfrules](../.windsurfrules) - Project rules and conventions
+1. [../AGENTS.md](../AGENTS.md) - Project rules and conventions
 2. [../openspec/AGENTS.md](../openspec/AGENTS.md) - Spec-driven workflow
 3. [openspec-lessons-learned.md](openspec-lessons-learned.md) - Best practices
 
@@ -128,7 +128,7 @@ Current fixes:
 
 1. [../AGENTS.md](../AGENTS.md) - Entry point
 2. [../openspec/AGENTS.md](../openspec/AGENTS.md) - OpenSpec instructions
-3. [../.windsurfrules](../.windsurfrules) - Project-specific rules
+3. [../AGENTS.md](../AGENTS.md) - Project-specific rules
 
 ## 📝 Documentation Principles
 
@@ -138,14 +138,14 @@ This project follows OpenSpec for spec-driven development:
 2. **Supplementary in docs/**: Testing guides, migration docs, lessons learned
 3. **Single Source of Truth (SSOT)**: Each piece of information exists in one authoritative location
 4. **Clear Entry Points**: Different audiences have clear starting points
-5. **Consistent Naming**: Follows conventions in [../.windsurfrules](../.windsurfrules)
+5. **Consistent Naming**: Follows conventions in [../AGENTS.md](../AGENTS.md)
 
 ## 🔄 Keeping Documentation Updated
 
 When making changes:
 
 1. **Specifications**: Always use OpenSpec workflow (see [../openspec/AGENTS.md](../openspec/AGENTS.md))
-2. **Supplementary docs**: Update in `docs/` following [../.windsurfrules](../.windsurfrules)
+2. **Supplementary docs**: Update in `docs/` following [../AGENTS.md](../AGENTS.md)
 3. **Update cross-references**: Check for links to the changed content
 4. **Update this index**: If adding/removing files, update this page
 

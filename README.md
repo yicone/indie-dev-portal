@@ -133,7 +133,7 @@ This project was built with AI pair programming using Windsurf Cascade.
 
 - **AI Agents**: See [AGENTS.md](AGENTS.md) for OpenSpec workflow entry point
 - **OpenSpec Process**: Follow [OpenSpec Workflow](openspec/AGENTS.md) for spec-driven development
-- **Project Rules**: Review [.windsurfrules](.windsurfrules) for project conventions
+- **Project Rules**: Review [AGENTS.md](AGENTS.md) for project conventions
 - **Code Style**: Run `pnpm lint` and `pnpm format:write` before committing
 
 **Documentation Standards**:

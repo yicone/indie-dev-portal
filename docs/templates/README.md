@@ -75,7 +75,7 @@ Templates are designed to be customized:
 
 - Review templates quarterly
 - Update based on lessons learned
-- Keep synchronized with `.windsurfrules` and `openspec/AGENTS.md`
+- Keep synchronized with `AGENTS.md` and `openspec/AGENTS.md`
 - Test templates on new projects
 
 ---

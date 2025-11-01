@@ -57,7 +57,7 @@ Open <http://localhost:[PORT]> to view the application.
 ### For Contributors
 
 - **[Documentation Index](docs/README.md)** - All documentation files
-- **[Project Rules](.windsurfrules)** - Project conventions and standards
+- **[Project Rules](AGENTS.md)** - Project conventions and standards
 - **[Fixes Index](docs/FIXES_INDEX.md)** - Bug fixes and improvements
 
 ## 🛠️ Tech Stack
@@ -132,7 +132,7 @@ This project was built with AI pair programming using Windsurf Cascade.
 
 - **AI Agents**: See [AGENTS.md](AGENTS.md) for OpenSpec workflow entry point
 - **OpenSpec Process**: Follow [OpenSpec Workflow](openspec/AGENTS.md) for spec-driven development
-- **Project Rules**: Review [.windsurfrules](.windsurfrules) for project conventions
+- **Project Rules**: Review [AGENTS.md](AGENTS.md) for project conventions
 - **Code Style**: Run `[lint-command]` and `[format-command]` before committing
 
 **Documentation Standards**:

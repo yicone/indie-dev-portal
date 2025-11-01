@@ -1,5 +1,15 @@
 # Documentation Migration Plan
 
+> **Status**: ✅ **Completed** (2025-11-01)
+>
+> Migration completed. See:
+>
+> - OpenSpec change: `cleanup-documentation-structure`
+> - Commit: `24a9d09` - docs: complete documentation cleanup and update references
+> - All rules now in `AGENTS.md` (portable across AI agents)
+
+---
+
 ## Problem Statement
 
 The project has two conflicting documentation management approaches:

@@ -1,5 +1,13 @@
 # Fixes Index
 
+> **Note**: This is a historical record of fixes before OpenSpec adoption (2025-10-26).
+>
+> **For new fixes**:
+>
+> - Bug fixes (restoring intended behavior) → Fix directly, document in commit message
+> - Changes involving specifications → Create OpenSpec change proposal
+> - Need detailed documentation → Include in OpenSpec change's `proposal.md`
+
 Quick reference for all fixes and improvements. For detailed documentation, see individual files in `fixes/`.
 
 ## 📍 For AI Agents
@@ -114,4 +122,4 @@ This approach minimizes tool calls while maintaining detailed documentation.
 
 1. Create detailed doc in `docs/fixes/YYYY-MM-DD-<description>.md`
 2. Add summary entry above using this template
-3. See `.windsurfrules` for naming standards
+3. See `AGENTS.md` for naming standards
