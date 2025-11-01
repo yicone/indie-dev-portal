@@ -106,25 +106,39 @@ This document tracks UI/UX improvements for the Agent Chat Panel based on user f
 
 **Code**: `components/agent/AgentChatPanel.tsx`
 
+#### 6. Syntax Highlighting ✅
+
+**Problem**: Code blocks didn't have syntax highlighting, making code hard to read.
+
+**Solution**:
+
+- Installed `react-syntax-highlighter` with VS Code Dark Plus theme
+- Auto-detect language from markdown code fence
+- Support common languages (JS, TS, Python, Go, etc.)
+- Maintain copy button functionality
+- Custom styling for better integration
+
+**UI Changes**:
+
+- Syntax-highlighted code blocks
+- Better spacing and rounded corners
+- Consistent font size
+- Smooth hover transitions
+
+**Code**: `components/agent/AgentChatPanel.tsx`
+
+**Dependencies**:
+
+- `react-syntax-highlighter@16.1.0`
+- `@types/react-syntax-highlighter@15.5.13`
+
 ---
 
 ## Pending Improvements
 
 ### Phase 2: Enhanced Message Display
 
-#### 1. Syntax Highlighting (High Priority)
-
-**Problem**: Code blocks don't have syntax highlighting.
-
-**Solution**:
-
-- Install `react-syntax-highlighter` or `prism-react-renderer`
-- Add language-specific highlighting
-- Support common languages (JS, TS, Python, etc.)
-
-**Estimated Effort**: 2-3 hours
-
-#### 2. Message Retry (Medium Priority)
+#### 1. Message Retry (Medium Priority)
 
 **Problem**: Failed messages can't be retried.
 
@@ -341,3 +355,4 @@ This document tracks UI/UX improvements for the Agent Chat Panel based on user f
   - Message copy functionality
   - Improved empty states
   - Better code block rendering
+  - Syntax highlighting for code blocks
