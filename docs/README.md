@@ -47,12 +47,12 @@ Choose your starting point based on your role:
 
 ### Developer Documentation
 
-| File                                                               | Description                         | Audience              |
-| ------------------------------------------------------------------ | ----------------------------------- | --------------------- |
-| [openspec-lessons-learned.md](openspec-lessons-learned.md)         | OpenSpec best practices and lessons | AI agents, Developers |
-| [AGENT_CHAT_UI_TESTING_GUIDE.md](AGENT_CHAT_UI_TESTING_GUIDE.md)   | Testing guide for Agent Chat UI     | Developers            |
-| [FIXES_INDEX.md](FIXES_INDEX.md)                                   | Bug fixes and improvements index    | AI agents, Developers |
-| [DOCUMENTATION_MIGRATION_PLAN.md](DOCUMENTATION_MIGRATION_PLAN.md) | Documentation cleanup plan          | Contributors          |
+| File                                                               | Description                           | Audience              |
+| ------------------------------------------------------------------ | ------------------------------------- | --------------------- |
+| [OPENSPEC_LESSONS_LEARNED.md](OPENSPEC_LESSONS_LEARNED.md)         | OpenSpec best practices and lessons   | AI agents, Developers |
+| [AGENT_CHAT_UI_TESTING_GUIDE.md](AGENT_CHAT_UI_TESTING_GUIDE.md)   | Testing guide for Agent Chat UI       | Developers            |
+| [FIXES_INDEX.md](FIXES_INDEX.md)                                   | Historical fixes index (pre-OpenSpec) | AI agents, Developers |
+| [DOCUMENTATION_MIGRATION_PLAN.md](DOCUMENTATION_MIGRATION_PLAN.md) | Documentation cleanup plan            | Contributors          |
 
 ### Project Documentation
 
@@ -61,13 +61,16 @@ Choose your starting point based on your role:
 | [../README.md](../README.md)       | Project overview and navigation hub | Everyone |
 | [../CHANGELOG.md](../CHANGELOG.md) | Version history and changes         | Everyone |
 
-### Fix Documentation
+### Fix Documentation (Historical)
 
-| Directory        | Description                | Audience              |
-| ---------------- | -------------------------- | --------------------- |
-| [fixes/](fixes/) | Detailed fix documentation | AI agents, Developers |
+> **Note**: This is historical documentation from before OpenSpec adoption (2025-10-26).
+> New fixes should use OpenSpec change proposals or commit messages.
 
-Current fixes:
+| Directory        | Description                             | Audience              |
+| ---------------- | --------------------------------------- | --------------------- |
+| [fixes/](fixes/) | Historical fix documentation (archived) | AI agents, Developers |
+
+Historical fixes:
 
 - [2025-10-26-last-committed-branch-display.md](fixes/2025-10-26-last-committed-branch-display.md) - Last Committed & Branch Display fixes
 
@@ -122,7 +125,7 @@ Current fixes:
 
 1. [../AGENTS.md](../AGENTS.md) - Project rules and conventions
 2. [../openspec/AGENTS.md](../openspec/AGENTS.md) - Spec-driven workflow
-3. [openspec-lessons-learned.md](openspec-lessons-learned.md) - Best practices
+3. [OPENSPEC_LESSONS_LEARNED.md](OPENSPEC_LESSONS_LEARNED.md) - Best practices
 
 **AI Agents**:
 

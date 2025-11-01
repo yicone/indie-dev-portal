@@ -77,9 +77,9 @@ How to avoid this issue in the future:
 
 - [ ] Fix implemented
 - [ ] Tests added/updated
-- [ ] Documentation updated
+- [ ] Documentation updated (in OpenSpec change proposal.md if applicable)
 - [ ] CHANGELOG.md updated
-- [ ] FIXES_INDEX.md updated
+- [ ] OpenSpec change archived (if applicable)
 - [ ] Code reviewed
 - [ ] Deployed to production
 

@@ -58,8 +58,8 @@ Open <http://localhost:3000> to view the dashboard.
 ### For Contributors
 
 - **[Documentation Index](docs/README.md)** - All supplementary documentation
-- **[OpenSpec Lessons](docs/openspec-lessons-learned.md)** - Best practices and lessons learned
-- **[Fixes Index](docs/FIXES_INDEX.md)** - Bug fixes and improvements
+- **[OpenSpec Lessons](docs/OPENSPEC_LESSONS_LEARNED.md)** - Best practices and lessons learned
+- **[Historical Fixes](docs/FIXES_INDEX.md)** - Pre-OpenSpec fix records (archived)
 
 ## 🛠️ Tech Stack
 
@@ -143,7 +143,7 @@ This project was built with AI pair programming using Windsurf Cascade.
 - **SSOT Principle**: Every piece of information has one authoritative source
 - **Entry Points**: Start with `AGENTS.md`, `openspec/project.md`, or `docs/README.md`
 
-[OpenSpec lessons learned →](docs/openspec-lessons-learned.md)
+[OpenSpec lessons learned →](docs/OPENSPEC_LESSONS_LEARNED.md)
 
 ## 📄 License
 

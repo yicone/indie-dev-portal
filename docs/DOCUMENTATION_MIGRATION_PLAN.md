@@ -45,10 +45,10 @@ This causes:
 
 **Process Documents**:
 
-- `docs/openspec-lessons-learned.md` ✅ - Lessons learned
-- `docs/session-status-test-checklist.md` ✅ - Testing checklist
-- `docs/agent-session-states.md` ✅ - State documentation
-- `docs/database-migration-guide.md` ✅ - Migration guide
+- `docs/OPENSPEC_LESSONS_LEARNED.md` ✅ - Lessons learned
+- `docs/SESSION_STATUS_TEST_CHECKLIST.md` ✅ - Testing checklist
+- `docs/AGENT_SESSION_STATES.md` ✅ - State documentation
+- `docs/DATABASE_MIGRATION_GUIDE.md` ✅ - Migration guide
 
 **Meta Documents**:
 

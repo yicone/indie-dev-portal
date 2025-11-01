@@ -62,7 +62,7 @@ Use `.windsurfrules` at project root
 
 - **OpenSpec Workflow**: See `openspec/AGENTS.md`
 - **Documentation Migration Plan**: See `docs/DOCUMENTATION_MIGRATION_PLAN.md`
-- **Lessons Learned**: See `docs/openspec-lessons-learned.md`
+- **Lessons Learned**: See `docs/OPENSPEC_LESSONS_LEARNED.md`
 
 ## Historical Note
 

@@ -58,7 +58,7 @@ Open <http://localhost:[PORT]> to view the application.
 
 - **[Documentation Index](docs/README.md)** - All documentation files
 - **[Project Rules](AGENTS.md)** - Project conventions and standards
-- **[Fixes Index](docs/FIXES_INDEX.md)** - Bug fixes and improvements
+- **[OpenSpec Changes](openspec/changes/)** - Feature changes and improvements
 
 ## 🛠️ Tech Stack
 
@@ -142,7 +142,7 @@ This project was built with AI pair programming using Windsurf Cascade.
 - **SSOT Principle**: Every piece of information has one authoritative source
 - **Entry Points**: Start with `AGENTS.md`, `openspec/project.md`, or `docs/README.md`
 
-[OpenSpec lessons learned →](docs/openspec-lessons-learned.md)
+[OpenSpec lessons learned →](docs/OPENSPEC_LESSONS_LEARNED.md)
 
 ## 📄 License
 

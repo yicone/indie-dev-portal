@@ -164,4 +164,4 @@ spec(openspec): add improve-agent-chat-ui-ux change
 
 - **OpenSpec Workflow**: `openspec/AGENTS.md`
 - **Project Conventions**: `openspec/project.md`
-- **Lessons Learned**: `docs/openspec-lessons-learned.md`
+- **Lessons Learned**: `docs/OPENSPEC_LESSONS_LEARNED.md`
