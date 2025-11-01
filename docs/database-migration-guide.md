@@ -139,6 +139,29 @@ npx prisma migrate dev
 tsx scripts/migrate-<description>.ts
 ```
 
+## Editing Applied Migrations
+
+**⚠️ IMPORTANT**: Only edit migrations that haven't been applied elsewhere!
+
+### If You Must Edit an Applied Migration
+
+**After editing the migration SQL file**:
+
+```bash
+# Update the checksum in database
+./scripts/fix-migration-checksum.sh <migration_name>
+
+# Or manually:
+NEW_CHECKSUM=$(cat prisma/migrations/<migration_name>/migration.sql | openssl dgst -sha256 -hex | cut -d' ' -f2)
+sqlite3 prisma/dev.db "UPDATE _prisma_migrations SET checksum = '$NEW_CHECKSUM' WHERE migration_name = '<migration_name>';"
+```
+
+**Why?**
+
+- Prisma stores a checksum of each migration file
+- If file changes, checksum won't match
+- Production deployments will fail with checksum mismatch
+
 ## Deleting Migrations
 
 **⚠️ IMPORTANT**: Never delete applied migrations in production!
@@ -160,6 +183,52 @@ npx prisma migrate status
 
 - ❌ Don't delete
 - ✅ Create a new migration to revert changes
+
+## Rolling Back Migrations
+
+**Prisma does NOT support automatic rollback** ❌
+
+### Why No Rollback?
+
+- **Data safety**: Rollback can cause data loss
+- **Complexity**: Auto-generating rollback SQL is hard
+- **Production practice**: Forward-fix instead of rollback
+
+### How to "Rollback"
+
+**Method 1: Create Revert Migration** (Recommended)
+
+```bash
+# Create new migration to undo changes
+npx prisma migrate dev --name revert_add_field --create-only
+
+# Edit migration.sql to reverse changes
+# Example: If you added a field, drop it
+ALTER TABLE "AgentSession" DROP COLUMN "fieldName";
+
+# Apply
+npx prisma migrate dev
+```
+
+**Method 2: Mark as Rolled Back** (Development only)
+
+```bash
+# 1. Mark migration as rolled back
+npx prisma migrate resolve --rolled-back <migration_name>
+
+# 2. Manually run rollback SQL
+sqlite3 prisma/dev.db < rollback.sql
+
+# 3. Verify
+npx prisma migrate status
+```
+
+**Method 3: Reset Database** (Development only, loses all data!)
+
+```bash
+# Nuclear option: reset everything
+npx prisma migrate reset
+```
 
 ## Common Patterns
 
