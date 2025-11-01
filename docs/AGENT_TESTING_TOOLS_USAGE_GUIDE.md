@@ -21,16 +21,29 @@ AGENT_TEST_DELAY=0
 # Success rate percentage (0-100)
 # 100 = always succeed, 0 = always fail
 AGENT_TEST_SUCCESS_RATE=100
+
+# Fine-grained control (optional)
+# Override AGENT_TEST_MODE for specific endpoints
+AGENT_TEST_CREATE_SESSION=false  # Enable/disable for session creation
+AGENT_TEST_SEND_PROMPT=true      # Enable/disable for sending prompts
 ```
 
 ## Usage Examples
 
-### Test Message Retry with Network Errors
+### Test Message Retry with Network Errors (Recommended)
+
+**Problem**: If you enable network errors globally, you can't create sessions.
+
+**Solution**: Use fine-grained control to only test message sending:
 
 ```bash
 # .env
 AGENT_TEST_MODE=true
 AGENT_TEST_ERROR=network
+# Disable for session creation
+AGENT_TEST_CREATE_SESSION=false
+# Enable for sending prompts
+AGENT_TEST_SEND_PROMPT=true
 ```
 
 Restart backend:
@@ -39,7 +52,11 @@ Restart backend:
 cd api && pnpm dev
 ```
 
-Now all agent requests will fail with network errors, allowing you to test the retry functionality.
+Now:
+
+- Session creation works normally
+- Sending messages fails with network errors
+- You can test the retry functionality
 
 ### Test Rate Limiting (429)
 

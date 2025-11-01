@@ -10,6 +10,9 @@ export interface SimulatorConfig {
   errorType: 'none' | '429' | '500' | 'network';
   delay: number; // milliseconds
   successRate: number; // 0-100
+  // Fine-grained control
+  createSessionEnabled?: boolean; // Override for session creation
+  sendPromptEnabled?: boolean; // Override for sending prompts
 }
 
 /**
@@ -21,11 +24,24 @@ export function getSimulatorConfig(): SimulatorConfig {
   const delay = parseInt(process.env.AGENT_TEST_DELAY || '0', 10);
   const successRate = parseInt(process.env.AGENT_TEST_SUCCESS_RATE || '100', 10);
 
+  // Fine-grained control
+  const createSessionEnabled =
+    process.env.AGENT_TEST_CREATE_SESSION !== undefined
+      ? process.env.AGENT_TEST_CREATE_SESSION === 'true'
+      : undefined;
+
+  const sendPromptEnabled =
+    process.env.AGENT_TEST_SEND_PROMPT !== undefined
+      ? process.env.AGENT_TEST_SEND_PROMPT === 'true'
+      : undefined;
+
   return {
     enabled,
     errorType,
     delay: Math.min(Math.max(delay, 0), 10000), // Clamp 0-10000ms
     successRate: Math.min(Math.max(successRate, 0), 100), // Clamp 0-100
+    createSessionEnabled,
+    sendPromptEnabled,
   };
 }
 
@@ -93,9 +109,19 @@ export function getSimulatedError(config: SimulatorConfig): {
  */
 export async function applySimulator<T>(
   config: SimulatorConfig,
-  handler: () => Promise<T>
+  handler: () => Promise<T>,
+  endpoint?: 'createSession' | 'sendPrompt'
 ): Promise<T> {
-  if (!config.enabled) {
+  // Check if simulator is enabled for this specific endpoint
+  let effectiveEnabled = config.enabled;
+
+  if (endpoint === 'createSession' && config.createSessionEnabled !== undefined) {
+    effectiveEnabled = config.createSessionEnabled;
+  } else if (endpoint === 'sendPrompt' && config.sendPromptEnabled !== undefined) {
+    effectiveEnabled = config.sendPromptEnabled;
+  }
+
+  if (!effectiveEnabled) {
     return handler();
   }
 

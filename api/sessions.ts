@@ -28,9 +28,13 @@ sessionsRouter.post('/', async (req: Request, res: Response) => {
 
     // Apply test simulator if enabled
     const config = getSimulatorConfig();
-    const session = await applySimulator(config, async () => {
-      return await sessionService.createSession(request);
-    });
+    const session = await applySimulator(
+      config,
+      async () => {
+        return await sessionService.createSession(request);
+      },
+      'createSession'
+    );
 
     res.status(201).json(session);
   } catch (error) {
@@ -126,9 +130,13 @@ sessionsRouter.post('/:id/prompt', async (req: Request, res: Response) => {
 
     // Apply test simulator if enabled
     const config = getSimulatorConfig();
-    const result = await applySimulator(config, async () => {
-      return await sessionService.sendPrompt(id, request);
-    });
+    const result = await applySimulator(
+      config,
+      async () => {
+        return await sessionService.sendPrompt(id, request);
+      },
+      'sendPrompt'
+    );
 
     res.status(202).json(result);
   } catch (error) {
