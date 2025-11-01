@@ -277,18 +277,23 @@ sqlite3 prisma/dev.db "SELECT * FROM AgentSession LIMIT 5;"
 
 ## Examples from This Project
 
-### Example 1: Add Resume Support (Schema Only)
+### Example 1: Add Resume Support (Schema + Data)
 
 **Migration**: `20251101024852_add_session_resume_support`
 
-**Approach**: Schema only, data migration in script
+**Approach**: Schema + Data in SQL
 
-**Files**:
+**SQL**:
 
-- `migration.sql`: Schema changes
-- `scripts/migrate-cancelled-to-suspended.ts`: Data migration
+```sql
+-- After data copy
+UPDATE "new_AgentSession"
+SET status = 'suspended',
+    lastActiveAt = CURRENT_TIMESTAMP
+WHERE status = 'cancelled';
+```
 
-**Reason**: Initial implementation, separate script for flexibility
+**Reason**: Simple transformation (cancelled → suspended), fits in SQL
 
 ### Example 2: Simplify States (Schema + Data)
 

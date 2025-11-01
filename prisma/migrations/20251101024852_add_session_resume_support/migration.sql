@@ -15,6 +15,15 @@ CREATE TABLE "new_AgentSession" (
     CONSTRAINT "AgentSession_repoId_fkey" FOREIGN KEY ("repoId") REFERENCES "Repo" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 INSERT INTO "new_AgentSession" ("createdAt", "id", "repoId", "status", "updatedAt") SELECT "createdAt", "id", "repoId", "status", "updatedAt" FROM "AgentSession";
+
+-- Data migration: Convert 'cancelled' sessions to 'suspended'
+-- Rationale: Prepare for future session resumption support
+-- Old 'cancelled' sessions from server shutdown should be 'suspended' (may be resumable)
+UPDATE "new_AgentSession" 
+SET status = 'suspended', 
+    lastActiveAt = CURRENT_TIMESTAMP
+WHERE status = 'cancelled';
+
 DROP TABLE "AgentSession";
 ALTER TABLE "new_AgentSession" RENAME TO "AgentSession";
 CREATE INDEX "AgentSession_repoId_idx" ON "AgentSession"("repoId");
