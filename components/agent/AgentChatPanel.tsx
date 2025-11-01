@@ -37,10 +37,10 @@ export function AgentChatPanel() {
   const { data: repos } = useQuery({ queryKey: ['repos'], queryFn: fetchRepos });
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when new messages arrive
+  // Auto-scroll to bottom when new messages arrive or error appears
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+  }, [messages, isTyping, error]);
 
   // Handle session change - clear loading state when messages are loaded
   useEffect(() => {
@@ -55,6 +55,14 @@ export function AgentChatPanel() {
       setLoadingMessages(false);
     }
   }, [activeSessionId, messages]);
+
+  // Clear error when session is successfully created
+  useEffect(() => {
+    if (activeSessionId && !isCreatingSession && error) {
+      // Session was successfully created, clear any previous errors
+      clearError();
+    }
+  }, [activeSessionId, isCreatingSession, error, clearError]);
 
   if (!isOpen) return null;
 
