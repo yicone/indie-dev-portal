@@ -459,7 +459,7 @@ export function AgentChatPanel() {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 relative break-words ${
                     messageRole === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
-                  } ${isFailed ? 'opacity-60 border-2 border-destructive' : ''}`}
+                  } ${isFailed ? 'opacity-70 border-2 border-red-500' : ''}`}
                 >
                   <div>
                     <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-hidden">

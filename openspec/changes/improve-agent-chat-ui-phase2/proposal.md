@@ -68,10 +68,14 @@ None (uses existing libraries)
 - Keyboard shortcuts work for common actions
 - All features have proper error handling
 
+## Design Decisions
+
+1. **Session rename**: Inline editing (decided - implemented)
+2. **Retry timestamp**: Preserve original timestamp (decided - message was originally sent at that time)
+3. **Export content**: Include all messages including system messages (decided)
+4. **Keyboard shortcuts**: Focus on most common actions (Cmd+K, Cmd+N, Cmd+E, Cmd+R, Esc)
+
 ## Open Questions
 
-1. Should session rename be inline or modal-based?
-2. Should retry preserve original message timestamp or use new timestamp?
-3. What keyboard shortcuts are most valuable to users?
-4. Should export include system messages or only user/agent messages?
-5. Should we add batch export (multiple sessions at once)?
+1. Should we add batch export (multiple sessions at once)?
+2. Should keyboard shortcuts override browser defaults or work alongside them?
