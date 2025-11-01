@@ -36,13 +36,11 @@ export function AgentChatPanel() {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const { data: repos } = useQuery({ queryKey: ['repos'], queryFn: fetchRepos });
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const prevCreatingRef = useRef(false);
-  const prevSessionIdRef = useRef<string | null>(null);
 
-  // Auto-scroll to bottom when new messages arrive or error appears
+  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping, error]);
+  }, [messages, isTyping]);
 
   // Handle session change - clear loading state when messages are loaded
   useEffect(() => {
@@ -57,23 +55,6 @@ export function AgentChatPanel() {
       setLoadingMessages(false);
     }
   }, [activeSessionId, messages]);
-
-  // Clear error when session is successfully created (not when creation fails)
-  useEffect(() => {
-    const wasCreating = prevCreatingRef.current;
-    const prevSessionId = prevSessionIdRef.current;
-    const justFinishedCreating = wasCreating && !isCreatingSession;
-    const sessionChanged = activeSessionId !== prevSessionId;
-
-    if (justFinishedCreating && sessionChanged && activeSessionId && error) {
-      // Successfully created a NEW session, clear the error
-      clearError();
-    }
-
-    // Update refs for next render
-    prevCreatingRef.current = isCreatingSession;
-    prevSessionIdRef.current = activeSessionId;
-  }, [isCreatingSession, activeSessionId, error, clearError]);
 
   if (!isOpen) return null;
 
@@ -170,6 +151,24 @@ export function AgentChatPanel() {
           <X className="h-4 w-4" />
         </Button>
       </div>
+
+      {/* Error Banner - Fixed at top */}
+      {error && (
+        <div className="bg-destructive/10 border-b border-destructive/20 p-3 animate-in slide-in-from-top">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 text-destructive flex-shrink-0" />
+            <p className="text-sm text-destructive flex-1">{error}</p>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearError}
+              className="h-6 w-6 p-0 hover:bg-destructive/20"
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Session Selector */}
       <div className="p-4 border-b space-y-3">
@@ -434,24 +433,6 @@ export function AgentChatPanel() {
             <div className="bg-muted rounded-lg p-3 flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
               <span className="text-sm text-muted-foreground">Agent is typing...</span>
-            </div>
-          </div>
-        )}
-
-        {/* Error Display */}
-        {error && (
-          <div className="flex justify-center">
-            <div className="bg-destructive/10 text-destructive rounded-lg p-3 flex items-center gap-2 max-w-[80%]">
-              <AlertCircle className="h-4 w-4 flex-shrink-0" />
-              <p className="text-sm">{error}</p>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearError}
-                className="ml-auto h-6 w-6 p-0"
-              >
-                <X className="h-3 w-3" />
-              </Button>
             </div>
           </div>
         )}
