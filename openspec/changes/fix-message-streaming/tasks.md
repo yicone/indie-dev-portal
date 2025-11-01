@@ -1,12 +1,12 @@
 # Implementation Tasks
 
-## 1. 设计和规范
+## 1. 设计和规范 ✅
 
-- [ ] 1.1 定义 WebSocket streaming 消息协议
-- [ ] 1.2 定义消息状态机（start → chunk → end）
-- [ ] 1.3 设计后端 streaming 状态管理
-- [ ] 1.4 设计前端 streaming 事件处理
-- [ ] 1.5 定义错误处理策略
+- [x] 1.1 定义 WebSocket streaming 消息协议
+- [x] 1.2 定义消息状态机（start → chunk → end）
+- [x] 1.3 设计后端 streaming 状态管理
+- [x] 1.4 设计前端 streaming 事件处理
+- [x] 1.5 定义错误处理策略
 
 ## 2. 后端实现
 
