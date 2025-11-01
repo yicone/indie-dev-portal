@@ -47,12 +47,15 @@ Choose your starting point based on your role:
 
 ### Developer Documentation
 
-| File                                                               | Description                           | Audience              |
-| ------------------------------------------------------------------ | ------------------------------------- | --------------------- |
-| [OPENSPEC_LESSONS_LEARNED.md](OPENSPEC_LESSONS_LEARNED.md)         | OpenSpec best practices and lessons   | AI agents, Developers |
-| [AGENT_CHAT_UI_TESTING_GUIDE.md](AGENT_CHAT_UI_TESTING_GUIDE.md)   | Testing guide for Agent Chat UI       | Developers            |
-| [FIXES_INDEX.md](FIXES_INDEX.md)                                   | Historical fixes index (pre-OpenSpec) | AI agents, Developers |
-| [DOCUMENTATION_MIGRATION_PLAN.md](DOCUMENTATION_MIGRATION_PLAN.md) | Documentation cleanup plan            | Contributors          |
+| File                                                                                                             | Description                           | Audience              |
+| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------- | --------------------- |
+| [OPENSPEC_LESSONS_LEARNED.md](OPENSPEC_LESSONS_LEARNED.md)                                                       | OpenSpec best practices and lessons   | AI agents, Developers |
+| [testing/agent-chat-ui-testing-guide.md](testing/agent-chat-ui-testing-guide.md)                                 | Testing guide for Agent Chat UI       | Developers            |
+| [testing/session-status-test-checklist.md](testing/session-status-test-checklist.md)                             | Testing guide for Agent Chat UI       | Developers            |
+| [testing/agent-chat-ui-error-handling-test-checklist.md](testing/agent-chat-ui-error-handling-test-checklist.md) | Testing guide for Agent Chat UI       | Developers            |
+| [testing/phase2-mvp-testing-guide.md](testing/phase2-mvp-testing-guide.md)                                       | Testing guide for Agent Chat UI       | Developers            |
+| [FIXES_INDEX.md](FIXES_INDEX.md)                                                                                 | Historical fixes index (pre-OpenSpec) | AI agents, Developers |
+| [DOCUMENTATION_MIGRATION_PLAN.md](DOCUMENTATION_MIGRATION_PLAN.md)                                               | Documentation cleanup plan            | Contributors          |
 
 ### Project Documentation
 

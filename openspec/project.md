@@ -76,6 +76,39 @@ Personal Developer Dashboard that surfaces local repos, recent commits, and quic
 3. **Audience-Oriented**: Organize by user type (Users/Developers/Contributors)
 4. **Progressive Disclosure**: Brief summaries + links to details
 
+### Documentation Territory
+
+**OpenSpec Territory** (Specifications & Requirements):
+
+- `openspec/specs/<capability>/spec.md` - Current truth (what IS built)
+- `openspec/specs/<capability>/design.md` - Technical patterns and decisions
+- `openspec/changes/<id>/` - Proposals (what SHOULD change)
+- `openspec/changes/archive/YYYY-MM-DD-<id>/` - Completed changes
+
+**docs/ Territory** (Supplementary Documentation ONLY):
+
+- `docs/QUICKSTART.md`, `docs/ROADMAP.md` - Top-level guides (SCREAMING_SNAKE_CASE)
+- `docs/testing/` - Testing guides and checklists (kebab-case)
+- `docs/summaries/YYYY-MM-DD-summary.md` - Work summaries (kebab-case, dated)
+- `docs/archive/` - Outdated documentation
+
+**Forbidden**:
+
+- ❌ Never create specification documents in `docs/`
+- ❌ Never duplicate requirements from OpenSpec in `docs/`
+- ❌ Never create feature proposals in `docs/`
+
+**Testing Documentation Rules**:
+
+- **Change-specific tests** → `openspec/changes/<id>/TESTING.md` or `openspec/changes/archive/YYYY-MM-DD-<id>/TESTING.md`
+- **General testing guides** → `docs/testing/<topic>-testing-guide.md`
+- **Test checklists** → `docs/testing/<feature>-test-checklist.md`
+
+**Lifecycle Management**:
+
+- `docs/summaries/` - Keep for 1 month, then archive or delete
+- `docs/archive/` - Review annually, delete if no longer relevant
+
 ## External Dependencies
 
 <!-- [Document key external services, APIs, or systems] -->

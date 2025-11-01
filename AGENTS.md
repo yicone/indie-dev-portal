@@ -31,7 +31,7 @@ Keep this managed block so 'openspec update' can refresh the instructions.
 **In docs/ directory**:
 
 - Use `SCREAMING_SNAKE_CASE.md` for top-level docs (e.g., `QUICKSTART.md`, `ROADMAP.md`)
-- Use `kebab-case.md` for subdirectory docs (e.g., `docs/fixes/2025-10-26-fix-name.md`)
+- Use `kebab-case.md` for subdirectory docs (e.g., `testing/agent-chat-ui-testing-guide.md`)
 - Use descriptive names that indicate purpose
 
 **In openspec/ directory**:
