@@ -31,6 +31,8 @@ const config: Config = {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+        destructive: 'hsl(var(--destructive))',
+        'destructive-foreground': 'hsl(var(--destructive-foreground))',
         blue: 'hsl(var(--blue))',
         lavender: 'hsl(var(--lavender))',
         sky: 'hsl(var(--sky))',

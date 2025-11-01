@@ -29,6 +29,8 @@
   --peach: 21 87% 74%;
   --maroon: 2 65% 76%;
   --red: 353 74% 72%;
+  --destructive: 353 74% 72%;
+  --destructive-foreground: 0 0% 100%;
   --mauve: 263 82% 80%;
   --pink: 316 73% 85%;
   --surface0: 223 24% 88%;
@@ -71,6 +73,8 @@
   --peach: 21 87% 68%;
   --maroon: 2 65% 68%;
   --red: 353 74% 68%;
+  --destructive: 353 74% 68%;
+  --destructive-foreground: 0 0% 100%;
   --mauve: 263 82% 74%;
   --pink: 316 73% 80%;
   --surface0: 231 24% 26%;
