@@ -16,15 +16,16 @@ export interface SimulatorConfig {
 }
 
 /**
- * Get simulator configuration from environment variables
+ * Get simulator configuration from environment variables and runtime overrides
  */
-export function getSimulatorConfig(): SimulatorConfig {
+export function getSimulatorConfig(runtimeOverride?: Partial<SimulatorConfig>): SimulatorConfig {
+  // Start with environment variables
   const enabled = process.env.AGENT_TEST_MODE === 'true';
   const errorType = (process.env.AGENT_TEST_ERROR || 'none') as SimulatorConfig['errorType'];
   const delay = parseInt(process.env.AGENT_TEST_DELAY || '0', 10);
   const successRate = parseInt(process.env.AGENT_TEST_SUCCESS_RATE || '100', 10);
 
-  // Fine-grained control
+  // Fine-grained control from env
   const createSessionEnabled =
     process.env.AGENT_TEST_CREATE_SESSION !== undefined
       ? process.env.AGENT_TEST_CREATE_SESSION === 'true'
@@ -35,7 +36,8 @@ export function getSimulatorConfig(): SimulatorConfig {
       ? process.env.AGENT_TEST_SEND_PROMPT === 'true'
       : undefined;
 
-  return {
+  // Base config from environment
+  const baseConfig = {
     enabled,
     errorType,
     delay: Math.min(Math.max(delay, 0), 10000), // Clamp 0-10000ms
@@ -43,6 +45,25 @@ export function getSimulatorConfig(): SimulatorConfig {
     createSessionEnabled,
     sendPromptEnabled,
   };
+
+  // Apply runtime overrides if provided
+  if (runtimeOverride) {
+    return {
+      ...baseConfig,
+      ...runtimeOverride,
+      // Clamp runtime values too
+      delay:
+        runtimeOverride.delay !== undefined
+          ? Math.min(Math.max(runtimeOverride.delay, 0), 10000)
+          : baseConfig.delay,
+      successRate:
+        runtimeOverride.successRate !== undefined
+          ? Math.min(Math.max(runtimeOverride.successRate, 0), 100)
+          : baseConfig.successRate,
+    };
+  }
+
+  return baseConfig;
 }
 
 /**

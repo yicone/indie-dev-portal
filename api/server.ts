@@ -6,6 +6,7 @@ import { reposRouter } from './repos';
 import { commitsRouter } from './commits';
 import { contributionsRouter } from './contributions';
 import { sessionsRouter } from './sessions';
+import { testControlRouter } from './testing/testControl';
 import { geminiCliManager } from './services/geminiCliManager';
 import * as sessionService from './services/sessionService';
 import { websocketService } from './services/websocketService';
@@ -24,6 +25,7 @@ app.use('/repos', reposRouter);
 app.use('/commits', commitsRouter);
 app.use('/contributions', contributionsRouter);
 app.use('/sessions', sessionsRouter);
+app.use('/test-control', testControlRouter);
 
 const port = Number(process.env.API_PORT ?? 4000);
 

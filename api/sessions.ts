@@ -5,6 +5,7 @@
 import { Router, Request, Response } from 'express';
 import * as sessionService from './services/sessionService';
 import { getSimulatorConfig, applySimulator } from './testing/agentSimulator';
+import { getRuntimeConfig } from './testing/testControl';
 import type {
   CreateSessionRequest,
   SendPromptRequest,
@@ -26,8 +27,8 @@ sessionsRouter.post('/', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'repoId is required' });
     }
 
-    // Apply test simulator if enabled
-    const config = getSimulatorConfig();
+    // Apply test simulator if enabled (with runtime config)
+    const config = getSimulatorConfig(getRuntimeConfig());
     const session = await applySimulator(
       config,
       async () => {
@@ -128,8 +129,8 @@ sessionsRouter.post('/:id/prompt', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'text is required' });
     }
 
-    // Apply test simulator if enabled
-    const config = getSimulatorConfig();
+    // Apply test simulator if enabled (with runtime config)
+    const config = getSimulatorConfig(getRuntimeConfig());
     const result = await applySimulator(
       config,
       async () => {

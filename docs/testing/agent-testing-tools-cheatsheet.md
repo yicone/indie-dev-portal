@@ -2,7 +2,25 @@
 
 Quick reference for common testing scenarios.
 
-## 🎯 Most Common: Test Message Retry
+## 🚀 Recommended: Use API (No Restart!)
+
+```bash
+# Enable network errors for messages only
+curl -X POST http://localhost:4000/test-control \
+  -H "Content-Type: application/json" \
+  -d '{"enabled":true,"errorType":"network","createSessionEnabled":false,"sendPromptEnabled":true}'
+
+# Disable when done
+curl -X POST http://localhost:4000/test-control \
+  -H "Content-Type: application/json" \
+  -d '{"enabled":false}'
+```
+
+**Advantages**: No restart needed! Sessions stay active!
+
+---
+
+## 💡 Alternative: Use .env (Requires Restart)
 
 ```bash
 # .env
