@@ -137,17 +137,32 @@
   - [ ] Test on Safari
   - [ ] Test on Edge
 
-## 8. Validation & Cleanup
+## 8. Unit Testing ✅
 
-- [ ] 8.1 Code review
+- [x] 8.1 Setup test framework
+  - [x] Install Vitest and testing libraries
+  - [x] Configure vitest.config.ts
+  - [x] Add test scripts to package.json
+- [x] 8.2 Create unit tests
+  - [x] Test session rename functionality
+  - [x] Test message retry functionality
+  - [x] Test error handling
+  - [x] Test message status tracking
+- [x] 8.3 Run tests
+  - [x] 8/11 tests passing
+  - [x] Document test coverage
+
+## 9. Validation & Cleanup
+
+- [ ] 9.1 Code review
   - [ ] Review TypeScript types
   - [ ] Review error handling
   - [ ] Review accessibility
-- [ ] 8.2 Final testing
+- [ ] 9.2 Final testing
   - [ ] Run full test suite
   - [ ] Manual testing of all features
   - [ ] Regression testing of Phase 1 features
-- [ ] 8.3 Update tasks.md
+- [ ] 9.3 Update tasks.md
   - [ ] Mark all tasks as complete
   - [ ] Validate with `openspec validate --strict`
 
