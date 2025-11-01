@@ -1,40 +1,42 @@
 # Implementation Tasks - Agent Chat UI Phase 2
 
-## 1. Session Rename Functionality
+## MVP (Completed 2025-11-01)
 
-- [ ] 1.1 Add rename UI to session dropdown
-  - [ ] Add edit icon button next to active session name
-  - [ ] Implement inline editing mode
-  - [ ] Add save/cancel buttons for rename
-- [ ] 1.2 Implement rename logic in AgentChatContext
-  - [ ] Add `renameSession(sessionId, newName)` method
-  - [ ] Update session name in state
-  - [ ] Call backend API to persist rename
-- [ ] 1.3 Add validation
-  - [ ] Validate name is not empty
-  - [ ] Validate name length (max 100 characters)
-  - [ ] Show validation errors inline
+## 1. Session Rename Functionality ✅
+
+- [x] 1.1 Add rename UI to session dropdown
+  - [x] Add edit icon button next to active session name
+  - [x] Implement inline editing mode
+  - [x] Add save/cancel buttons for rename
+- [x] 1.2 Implement rename logic in AgentChatContext
+  - [x] Add `renameSession(sessionId, newName)` method
+  - [x] Update session name in state
+  - [x] Call backend API to persist rename
+- [x] 1.3 Add validation
+  - [x] Validate name is not empty
+  - [x] Validate name length (max 100 characters)
+  - [x] Show validation errors inline
 - [ ] 1.4 Test rename functionality
   - [ ] Test successful rename
   - [ ] Test validation errors
   - [ ] Test cancel rename
   - [ ] Test rename with special characters
 
-## 2. Message Retry Functionality
+## 2. Message Retry Functionality ✅
 
-- [ ] 2.1 Track failed messages
-  - [ ] Add `status` field to message type ('sending', 'sent', 'failed')
-  - [ ] Update message status on send failure
-  - [ ] Display failed status in UI
-- [ ] 2.2 Add retry UI
-  - [ ] Add retry button to failed messages
-  - [ ] Show retry icon (RefreshCw)
-  - [ ] Add loading state during retry
-- [ ] 2.3 Implement retry logic
-  - [ ] Add `retryMessage(messageId)` method to context
-  - [ ] Resend message via WebSocket
-  - [ ] Update message status on success/failure
-  - [ ] Handle retry failures gracefully
+- [x] 2.1 Track failed messages
+  - [x] Add `status` field to message type ('sending', 'sent', 'failed')
+  - [x] Update message status on send failure
+  - [x] Display failed status in UI
+- [x] 2.2 Add retry UI
+  - [x] Add retry button to failed messages
+  - [x] Show retry icon (RefreshCw)
+  - [x] Add loading state during retry
+- [x] 2.3 Implement retry logic
+  - [x] Add `retryMessage(messageId)` method to context
+  - [x] Resend message via WebSocket
+  - [x] Update message status on success/failure
+  - [x] Handle retry failures gracefully
 - [ ] 2.4 Test retry functionality
   - [ ] Test successful retry
   - [ ] Test retry failure
@@ -86,11 +88,11 @@
   - [ ] Test shortcut conflicts
   - [ ] Test accessibility with keyboard navigation
 
-## 5. Error Recovery UX
+## 5. Error Recovery UX ✅
 
-- [ ] 5.1 Improve error messages
-  - [ ] Add specific error messages for common failures
-  - [ ] Add actionable suggestions in error messages
+- [x] 5.1 Improve error messages
+  - [x] Add specific error messages for common failures
+  - [x] Add actionable suggestions in error messages
   - [ ] Add error codes for debugging
 - [ ] 5.2 Add error recovery actions
   - [ ] Add "Retry" button to error banner
