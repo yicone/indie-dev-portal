@@ -111,8 +111,10 @@ export function AgentChatPanel() {
               {Array.from(sessions.values())
                 .filter((session) => {
                   const s = session as unknown as { status: string };
-                  // Only show active and completed sessions
-                  return s.status === 'active' || s.status === 'completed';
+                  // Show active, completed, and suspended sessions
+                  return (
+                    s.status === 'active' || s.status === 'completed' || s.status === 'suspended'
+                  );
                 })
                 .map((session) => {
                   const s = session as unknown as {
@@ -178,7 +180,11 @@ export function AgentChatPanel() {
         ) : !canSendMessage ? (
           <div className="text-center text-muted-foreground py-8">
             <p>Session is {currentSessionStatus}</p>
-            <p className="text-sm">You can view messages but cannot send new ones</p>
+            <p className="text-sm">
+              {currentSessionStatus === 'suspended'
+                ? 'Session suspended - may be resumable when agent supports it'
+                : 'You can view messages but cannot send new ones'}
+            </p>
           </div>
         ) : sessionMessages.length === 0 ? (
           <div className="text-center text-muted-foreground py-8">

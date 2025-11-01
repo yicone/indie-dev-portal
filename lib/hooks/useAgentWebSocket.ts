@@ -18,9 +18,9 @@ export function useAgentWebSocket({
 }: UseAgentWebSocketOptions) {
   const [status, setStatus] = useState<ConnectionStatus>('disconnected');
   const wsRef = useRef<WebSocket | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectAttemptsRef = useRef(0);
-  const pingIntervalRef = useRef<NodeJS.Timeout>();
+  const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const connect = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {

@@ -52,7 +52,17 @@ export interface PlanStep {
 /**
  * Agent session data with relations
  */
-export interface AgentSessionData extends AgentSession {
+export interface AgentSessionData {
+  id: string;
+  repoId: number;
+  status: string;
+  agentType: string;
+  agentVersion: string;
+  supportsResume: boolean;
+  resumeData: string | null;
+  lastActiveAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
   repo: Repo;
   messages: AgentMessageData[];
 }

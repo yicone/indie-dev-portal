@@ -416,10 +416,13 @@ export async function shutdownAllSessions(): Promise<void> {
   // Terminate all Gemini CLI processes
   await geminiCliManager.terminateAllProcesses();
 
-  // Update all active sessions to cancelled
+  // Update all active sessions to suspended (may be resumable in future)
   await prisma.agentSession.updateMany({
     where: { status: 'active' },
-    data: { status: 'cancelled' },
+    data: {
+      status: 'suspended',
+      lastActiveAt: new Date(),
+    },
   });
 
   console.log('[SessionService] All sessions shut down');
