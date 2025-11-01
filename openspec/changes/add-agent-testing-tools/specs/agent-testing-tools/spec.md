@@ -81,27 +81,47 @@ The system SHALL provide mock responses for agent interactions.
 - **AND** can simulate streaming responses
 - **AND** can simulate partial failures
 
-### Requirement: Test Control Interface
+### Requirement: Test Control API
 
-The system SHALL provide a UI for controlling test scenarios (development only).
+The system SHALL provide an API for controlling test scenarios dynamically (development only).
 
-#### Scenario: Access test control panel
+#### Scenario: Get current test configuration
 
-- **WHEN** in development mode with test mode enabled
-- **THEN** test control panel is accessible
-- **AND** panel shows current test configuration
-- **AND** panel can be toggled with keyboard shortcut
+- **WHEN** GET request to /test-control endpoint
+- **THEN** returns current runtime and environment configuration
+- **AND** shows all test mode settings
+- **AND** only available in development mode
 
-#### Scenario: Configure error simulation
+#### Scenario: Update test configuration dynamically
 
-- **WHEN** using test control panel
-- **THEN** user can select error type (429, 500, network)
-- **AND** user can set error probability (0-100%)
-- **AND** changes apply immediately
-
-#### Scenario: Configure response timing
-
-- **WHEN** using test control panel
-- **THEN** user can set response delay (slider 0-10s)
-- **AND** user can enable random delay
+- **WHEN** POST request to /test-control with configuration
+- **THEN** updates runtime configuration immediately
+- **AND** no server restart required
 - **AND** changes apply to next request
+- **AND** active sessions remain unaffected
+
+#### Scenario: Reset to environment variables
+
+- **WHEN** DELETE request to /test-control
+- **THEN** clears runtime configuration
+- **AND** falls back to environment variables
+- **AND** confirms reset in response
+
+### Requirement: Fine-Grained Endpoint Control
+
+The system SHALL allow selective test mode activation per endpoint.
+
+#### Scenario: Enable test mode for specific endpoints
+
+- **WHEN** fine-grained control is configured
+- **THEN** test mode can be enabled for session creation only
+- **OR** test mode can be enabled for message sending only
+- **AND** other endpoints use normal behavior
+
+#### Scenario: Test message retry without session suspension
+
+- **WHEN** test mode enabled for sendPrompt only
+- **THEN** session creation works normally
+- **AND** message sending simulates errors
+- **AND** sessions remain active for retry testing
+- **AND** no server restart needed to toggle modes

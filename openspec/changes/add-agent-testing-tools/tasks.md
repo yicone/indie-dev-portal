@@ -66,13 +66,50 @@
   - [x] Log simulator status on server start
   - [x] Show configuration in console
 
-## 7. Validation (Manual Testing Required)
+## 7. Test Control API ✅
 
-- [ ] 7.1 Test error scenarios
-  - [ ] Test 429 simulation
-  - [ ] Test 500 simulation
-  - [ ] Test network failure
-- [ ] 7.2 Test with Phase 2 features
-  - [ ] Test message retry flow
-  - [ ] Test error recovery flow
-  - [ ] Test session creation errors
+- [x] 7.1 Create Test Control API
+  - [x] Create `api/testing/testControl.ts`
+  - [x] Implement GET /test-control (get config)
+  - [x] Implement POST /test-control (update config)
+  - [x] Implement DELETE /test-control (reset config)
+- [x] 7.2 Add runtime configuration
+  - [x] Support runtime config overrides
+  - [x] Integrate with simulator
+  - [x] Register router in server
+
+## 8. Fine-Grained Control ✅
+
+- [x] 8.1 Add endpoint-specific control
+  - [x] Add createSessionEnabled flag
+  - [x] Add sendPromptEnabled flag
+  - [x] Update environment variables
+- [x] 8.2 Fix control logic
+  - [x] Global enabled takes precedence
+  - [x] Fine-grained only works when enabled=true
+  - [x] Clear fine-grained on disable
+
+## 9. Documentation ✅
+
+- [x] 9.1 Create comprehensive guides
+  - [x] Quick test guide with scenarios
+  - [x] No-restart guide (API usage)
+  - [x] Cheatsheet for quick reference
+- [x] 9.2 Update existing docs
+  - [x] Update usage guide with API method
+  - [x] Update .env.example
+
+## 10. Validation ✅
+
+- [x] 10.1 Test error scenarios
+  - [x] Test 429 simulation
+  - [x] Test 500 simulation
+  - [x] Test network failure
+- [x] 10.2 Test with Phase 2 features
+  - [x] Test message retry flow
+  - [x] Test error recovery flow
+  - [x] Test session creation errors
+- [x] 10.3 Test API control
+  - [x] Test dynamic configuration
+  - [x] Test no-restart workflow
+  - [x] Test fine-grained control
