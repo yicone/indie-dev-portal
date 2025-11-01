@@ -33,6 +33,7 @@ export function AgentChatPanel() {
   const [showArchived, setShowArchived] = useState(false);
   const [archivingSession, setArchivingSession] = useState<string | null>(null);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [loadingMessages, setLoadingMessages] = useState(false);
   const { data: repos } = useQuery({ queryKey: ['repos'], queryFn: fetchRepos });
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -40,6 +41,20 @@ export function AgentChatPanel() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
+
+  // Handle session change - clear loading state when messages are loaded
+  useEffect(() => {
+    if (activeSessionId) {
+      const sessionMessages = messages.get(activeSessionId);
+      if (sessionMessages !== undefined) {
+        setLoadingMessages(false);
+      } else {
+        setLoadingMessages(true);
+      }
+    } else {
+      setLoadingMessages(false);
+    }
+  }, [activeSessionId, messages]);
 
   if (!isOpen) return null;
 
@@ -257,7 +272,13 @@ export function AgentChatPanel() {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {!activeSessionId ? (
+        {loadingMessages ? (
+          <div className="text-center text-muted-foreground py-8 space-y-2">
+            <Loader2 className="h-8 w-8 mx-auto animate-spin" />
+            <p className="font-medium">Loading messages...</p>
+            <p className="text-sm">Please wait</p>
+          </div>
+        ) : !activeSessionId ? (
           <div className="text-center text-muted-foreground py-8">
             <p>No active session</p>
             <p className="text-sm">Select a session or create a new one</p>
