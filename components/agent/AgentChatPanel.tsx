@@ -306,71 +306,65 @@ export function AgentChatPanel() {
                   }`}
                 >
                   <div>
-                    {messageRole === 'agent' ? (
-                      <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-hidden">
-                        <ReactMarkdown
-                          remarkPlugins={[remarkGfm]}
-                          components={{
-                            p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
-                            ul: ({ children }) => (
-                              <ul className="mb-4 last:mb-0 space-y-1 list-disc pl-6">
+                    <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-hidden">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
+                          ul: ({ children }) => (
+                            <ul className="mb-4 last:mb-0 space-y-1 list-disc pl-6">{children}</ul>
+                          ),
+                          ol: ({ children }) => (
+                            <ol className="mb-4 last:mb-0 space-y-1 list-decimal pl-6">
+                              {children}
+                            </ol>
+                          ),
+                          li: ({ children }) => <li className="break-words">{children}</li>,
+                          code: ({ className, children, ...props }: any) => {
+                            const match = /language-(\w+)/.exec(className || '');
+                            const language = match ? match[1] : '';
+                            const isInline = !className || !language;
+                            const codeString = String(children).replace(/\n$/, '');
+                            return isInline ? (
+                              <code className={className} {...props}>
                                 {children}
-                              </ul>
-                            ),
-                            ol: ({ children }) => (
-                              <ol className="mb-4 last:mb-0 space-y-1 list-decimal pl-6">
-                                {children}
-                              </ol>
-                            ),
-                            li: ({ children }) => <li className="break-words">{children}</li>,
-                            code: ({ className, children, ...props }: any) => {
-                              const match = /language-(\w+)/.exec(className || '');
-                              const language = match ? match[1] : '';
-                              const isInline = !className || !language;
-                              const codeString = String(children).replace(/\n$/, '');
-                              return isInline ? (
-                                <code className={className} {...props}>
-                                  {children}
-                                </code>
-                              ) : (
-                                <div className="relative group/code my-4">
-                                  <SyntaxHighlighter
-                                    style={vscDarkPlus}
-                                    language={language}
-                                    PreTag="div"
-                                    customStyle={{
-                                      margin: 0,
-                                      borderRadius: '0.5rem',
-                                      fontSize: '0.875rem',
-                                    }}
-                                  >
-                                    {codeString}
-                                  </SyntaxHighlighter>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="absolute top-2 right-2 h-7 w-7 p-0 opacity-0 group-hover/code:opacity-100 transition-opacity bg-background/90 hover:bg-background"
-                                    onClick={() =>
-                                      handleCopyMessage(codeString, `${messageId}-code-${language}`)
-                                    }
-                                  >
-                                    {copiedMessageId === `${messageId}-code-${language}` ? (
-                                      <Check className="h-3 w-3" />
-                                    ) : (
-                                      <Copy className="h-3 w-3" />
-                                    )}
-                                  </Button>
-                                </div>
-                              );
-                            },
-                          }}
-                        >
-                          {content}
-                        </ReactMarkdown>
-                      </div>
-                    ) : (
-                      <p className="text-sm whitespace-pre-wrap">{content}</p>
-                    )}
+                              </code>
+                            ) : (
+                              <div className="relative group/code my-4">
+                                <SyntaxHighlighter
+                                  style={vscDarkPlus}
+                                  language={language}
+                                  PreTag="div"
+                                  customStyle={{
+                                    margin: 0,
+                                    borderRadius: '0.5rem',
+                                    fontSize: '0.875rem',
+                                  }}
+                                >
+                                  {codeString}
+                                </SyntaxHighlighter>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="absolute top-2 right-2 h-7 w-7 p-0 opacity-0 group-hover/code:opacity-100 transition-opacity bg-background/90 hover:bg-background"
+                                  onClick={() =>
+                                    handleCopyMessage(codeString, `${messageId}-code-${language}`)
+                                  }
+                                >
+                                  {copiedMessageId === `${messageId}-code-${language}` ? (
+                                    <Check className="h-3 w-3" />
+                                  ) : (
+                                    <Copy className="h-3 w-3" />
+                                  )}
+                                </Button>
+                              </div>
+                            );
+                          },
+                        }}
+                      >
+                        {content}
+                      </ReactMarkdown>
+                    </div>
                     <div className="flex items-center justify-between mt-1 gap-2">
                       <p className="text-xs opacity-60">
                         {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
