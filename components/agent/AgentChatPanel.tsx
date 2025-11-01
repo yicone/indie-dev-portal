@@ -9,6 +9,8 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchRepos } from '@/lib/gitUtils';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export function AgentChatPanel() {
   const {
@@ -310,25 +312,37 @@ export function AgentChatPanel() {
                           remarkPlugins={[remarkGfm]}
                           components={{
                             code: ({ className, children, ...props }: any) => {
-                              const isInline = !className || !className.includes('language-');
+                              const match = /language-(\w+)/.exec(className || '');
+                              const language = match ? match[1] : '';
+                              const isInline = !className || !language;
+                              const codeString = String(children).replace(/\n$/, '');
                               return isInline ? (
                                 <code className={className} {...props}>
                                   {children}
                                 </code>
                               ) : (
-                                <div className="relative group/code">
-                                  <pre className={className}>
-                                    <code className={className}>{children}</code>
-                                  </pre>
+                                <div className="relative group/code my-4">
+                                  <SyntaxHighlighter
+                                    style={vscDarkPlus}
+                                    language={language}
+                                    PreTag="div"
+                                    customStyle={{
+                                      margin: 0,
+                                      borderRadius: '0.5rem',
+                                      fontSize: '0.875rem',
+                                    }}
+                                  >
+                                    {codeString}
+                                  </SyntaxHighlighter>
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover/code:opacity-100 transition-opacity bg-background/80 hover:bg-background"
+                                    className="absolute top-2 right-2 h-7 w-7 p-0 opacity-0 group-hover/code:opacity-100 transition-opacity bg-background/90 hover:bg-background"
                                     onClick={() =>
-                                      handleCopyMessage(String(children), `${messageId}-code`)
+                                      handleCopyMessage(codeString, `${messageId}-code-${language}`)
                                     }
                                   >
-                                    {copiedMessageId === `${messageId}-code` ? (
+                                    {copiedMessageId === `${messageId}-code-${language}` ? (
                                       <Check className="h-3 w-3" />
                                     ) : (
                                       <Copy className="h-3 w-3" />
