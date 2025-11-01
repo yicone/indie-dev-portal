@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { X, Send, AlertCircle, Loader2 } from 'lucide-react';
+import { X, Send, AlertCircle, Loader2, Archive, Eye, EyeOff, Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useAgentChat } from '@/lib/contexts/AgentChatContext';
@@ -28,6 +28,9 @@ export function AgentChatPanel() {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [creatingSession, setCreatingSession] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
+  const [archivingSession, setArchivingSession] = useState<string | null>(null);
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const { data: repos } = useQuery({ queryKey: ['repos'], queryFn: fetchRepos });
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -44,6 +47,41 @@ export function AgentChatPanel() {
     ? (currentSession as unknown as { status: string }).status
     : null;
   const canSendMessage = activeSessionId && currentSessionStatus === 'active';
+
+  const handleArchiveSession = async (sessionId: string) => {
+    if (!confirm('Archive this session? You can view it later in "Show Archived".')) return;
+
+    setArchivingSession(sessionId);
+    try {
+      const response = await fetch(`/api/sessions/${sessionId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to archive session');
+      }
+
+      // If we archived the active session, clear it
+      if (sessionId === activeSessionId) {
+        setActiveSession(null);
+      }
+    } catch (error) {
+      console.error('Failed to archive session:', error);
+      alert('Failed to archive session. Please try again.');
+    } finally {
+      setArchivingSession(null);
+    }
+  };
+
+  const handleCopyMessage = async (content: string, messageId: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopiedMessageId(messageId);
+      setTimeout(() => setCopiedMessageId(null), 2000);
+    } catch (error) {
+      console.error('Failed to copy message:', error);
+    }
+  };
 
   const handleSend = async () => {
     if (!input.trim() || sending) return;
@@ -98,35 +136,82 @@ export function AgentChatPanel() {
       </div>
 
       {/* Session Selector */}
-      <div className="p-4 border-b">
+      <div className="p-4 border-b space-y-3">
         {sessions.size > 0 ? (
           <div>
-            <label className="text-sm font-medium mb-2 block">Active Sessions:</label>
-            <select
-              className="w-full p-2 rounded-md border bg-background mb-2"
-              value={activeSessionId || ''}
-              onChange={(e) => setActiveSession(e.target.value || null)}
-            >
-              <option value="">Select a session...</option>
-              {Array.from(sessions.values())
-                .filter((session) => {
-                  const s = session as unknown as { status: string };
-                  // Show active and suspended sessions (hide archived and error)
-                  return s.status === 'active' || s.status === 'suspended';
-                })
-                .map((session) => {
-                  const s = session as unknown as {
-                    id: string;
-                    status: string;
-                    repo?: { name: string };
-                  };
-                  return (
-                    <option key={s.id} value={s.id}>
-                      {s.repo?.name || `Session ${s.id.slice(0, 8)}`} - {s.status}
-                    </option>
-                  );
-                })}
-            </select>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium">Active Sessions:</label>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowArchived(!showArchived)}
+                className="h-7 text-xs"
+              >
+                {showArchived ? (
+                  <>
+                    <EyeOff className="h-3 w-3 mr-1" />
+                    Hide Archived
+                  </>
+                ) : (
+                  <>
+                    <Eye className="h-3 w-3 mr-1" />
+                    Show Archived
+                  </>
+                )}
+              </Button>
+            </div>
+            <div className="space-y-2">
+              <select
+                className="w-full p-2 rounded-md border bg-background"
+                value={activeSessionId || ''}
+                onChange={(e) => setActiveSession(e.target.value || null)}
+              >
+                <option value="">Select a session...</option>
+                {Array.from(sessions.values())
+                  .filter((session) => {
+                    const s = session as unknown as { status: string };
+                    if (showArchived) {
+                      return true; // Show all sessions
+                    }
+                    // Hide archived and error sessions by default
+                    return s.status === 'active' || s.status === 'suspended';
+                  })
+                  .map((session) => {
+                    const s = session as unknown as {
+                      id: string;
+                      status: string;
+                      repo?: { name: string };
+                    };
+                    return (
+                      <option key={s.id} value={s.id}>
+                        {s.repo?.name || `Session ${s.id.slice(0, 8)}`} - {s.status}
+                        {s.status === 'archived' ? ' (archived)' : ''}
+                      </option>
+                    );
+                  })}
+              </select>
+              {activeSessionId && currentSessionStatus !== 'archived' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleArchiveSession(activeSessionId)}
+                  disabled={archivingSession === activeSessionId}
+                  className="w-full h-8 text-xs"
+                >
+                  {archivingSession === activeSessionId ? (
+                    <>
+                      <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                      Archiving...
+                    </>
+                  ) : (
+                    <>
+                      <Archive className="h-3 w-3 mr-1" />
+                      Archive Session
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
           </div>
         ) : null}
 
@@ -175,9 +260,19 @@ export function AgentChatPanel() {
             <p>No active session</p>
             <p className="text-sm">Select a session or create a new one</p>
           </div>
+        ) : currentSessionStatus === 'archived' ? (
+          <div className="text-center text-muted-foreground py-8 space-y-2">
+            <Archive className="h-8 w-8 mx-auto opacity-50" />
+            <p className="font-medium">Archived Session</p>
+            <p className="text-sm">
+              This session has been archived. You can view the conversation history but cannot send
+              new messages.
+            </p>
+          </div>
         ) : !canSendMessage ? (
-          <div className="text-center text-muted-foreground py-8">
-            <p>Session is {currentSessionStatus}</p>
+          <div className="text-center text-muted-foreground py-8 space-y-2">
+            <AlertCircle className="h-8 w-8 mx-auto opacity-50" />
+            <p className="font-medium">Session is {currentSessionStatus}</p>
             <p className="text-sm">
               {currentSessionStatus === 'suspended'
                 ? 'Session suspended - may be resumable when agent supports it'
@@ -201,24 +296,72 @@ export function AgentChatPanel() {
             return (
               <div
                 key={messageId}
-                className={`flex ${messageRole === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${messageRole === 'user' ? 'justify-end' : 'justify-start'} group`}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
+                  className={`max-w-[80%] rounded-lg p-3 relative ${
                     messageRole === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
                   }`}
                 >
                   <div>
                     {messageRole === 'agent' ? (
                       <div className="prose prose-sm dark:prose-invert max-w-none">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            code: ({ className, children, ...props }: any) => {
+                              const isInline = !className || !className.includes('language-');
+                              return isInline ? (
+                                <code className={className} {...props}>
+                                  {children}
+                                </code>
+                              ) : (
+                                <div className="relative group/code">
+                                  <pre className={className}>
+                                    <code className={className}>{children}</code>
+                                  </pre>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover/code:opacity-100 transition-opacity bg-background/80 hover:bg-background"
+                                    onClick={() =>
+                                      handleCopyMessage(String(children), `${messageId}-code`)
+                                    }
+                                  >
+                                    {copiedMessageId === `${messageId}-code` ? (
+                                      <Check className="h-3 w-3" />
+                                    ) : (
+                                      <Copy className="h-3 w-3" />
+                                    )}
+                                  </Button>
+                                </div>
+                              );
+                            },
+                          }}
+                        >
+                          {content}
+                        </ReactMarkdown>
                       </div>
                     ) : (
                       <p className="text-sm whitespace-pre-wrap">{content}</p>
                     )}
-                    <p className="text-xs opacity-60 mt-1">
-                      {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
-                    </p>
+                    <div className="flex items-center justify-between mt-1 gap-2">
+                      <p className="text-xs opacity-60">
+                        {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
+                      </p>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => handleCopyMessage(content, messageId)}
+                      >
+                        {copiedMessageId === messageId ? (
+                          <Check className="h-3 w-3" />
+                        ) : (
+                          <Copy className="h-3 w-3" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
