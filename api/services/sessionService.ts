@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma';
 import { geminiCliManager } from './geminiCliManager';
 import { createACPClient, ACPClient } from './acpService';
 import { websocketService } from './websocketService';
+import streamingStateManager from './streamingStateManager';
 import type {
   CreateSessionRequest,
   CreateSessionResponse,
@@ -18,9 +19,34 @@ import type {
   MessageContent,
 } from '@/types/agent';
 import path from 'path';
+import { randomUUID } from 'crypto';
 
 // Store active ACP clients
 const acpClients = new Map<string, ACPClient>();
+
+// Store active message IDs per session (for streaming)
+const activeMessageIds = new Map<string, string>();
+
+/**
+ * Get active message ID for a session
+ */
+function getActiveMessageId(sessionId: string): string | undefined {
+  return activeMessageIds.get(sessionId);
+}
+
+/**
+ * Set active message ID for a session
+ */
+function setActiveMessageId(sessionId: string, messageId: string): void {
+  activeMessageIds.set(sessionId, messageId);
+}
+
+/**
+ * Clear active message ID for a session
+ */
+function clearActiveMessageId(sessionId: string): void {
+  activeMessageIds.delete(sessionId);
+}
 
 /**
  * Create a new agent session
@@ -147,6 +173,7 @@ function setupACPClientHandlers(sessionId: string, acpClient: ACPClient): void {
 
 /**
  * Handle session update from agent
+ * Implements new streaming protocol: message.start → message.chunk → message.end
  */
 async function handleSessionUpdate(
   sessionId: string,
@@ -186,19 +213,76 @@ async function handleSessionUpdate(
     };
   }
 
-  const agentMessage = await storeAgentMessage(sessionId, content);
+  // NEW STREAMING PROTOCOL
+  // Check if this is the first chunk (start of streaming)
+  const activeMessageId = getActiveMessageId(sessionId);
 
-  // Broadcast agent message via WebSocket
+  if (!activeMessageId) {
+    // First chunk - start streaming
+    const messageId = randomUUID();
+    setActiveMessageId(sessionId, messageId);
+
+    // Initialize streaming state
+    streamingStateManager.startStream(messageId, sessionId);
+
+    // Send message.start
+    websocketService.broadcast({
+      type: 'message.start',
+      payload: {
+        sessionId,
+        messageId,
+        role: 'agent',
+        timestamp: new Date().toISOString(),
+      },
+    });
+
+    console.log(`[SessionService] Started streaming: ${messageId}`);
+  }
+
+  const messageId = getActiveMessageId(sessionId)!;
+
+  // Add chunk to accumulator
+  streamingStateManager.addChunk(messageId, content.text);
+
+  // Send message.chunk
   websocketService.broadcast({
-    type: 'message.new',
+    type: 'message.chunk',
     payload: {
-      sessionId,
-      messageId: agentMessage.id,
-      role: 'agent',
+      messageId,
       content,
-      timestamp: agentMessage.timestamp.toISOString(),
     },
   });
+
+  // Check if this is the last chunk
+  // Gemini CLI sends 'complete: true' or similar in the last update
+  const isComplete = update.complete === true || update.partial === false;
+
+  if (isComplete) {
+    // Complete the streaming
+    const fullContent = streamingStateManager.completeStream(messageId);
+    clearActiveMessageId(sessionId);
+
+    // Store complete message to database
+    const completeContent: MessageContent = {
+      type: 'text',
+      text: fullContent,
+    };
+
+    const agentMessage = await storeAgentMessage(sessionId, completeContent);
+
+    // Send message.end
+    websocketService.broadcast({
+      type: 'message.end',
+      payload: {
+        messageId,
+        content: completeContent,
+        isComplete: true,
+        timestamp: agentMessage.timestamp.toISOString(),
+      },
+    });
+
+    console.log(`[SessionService] Completed streaming: ${messageId}, stored as ${agentMessage.id}`);
+  }
 }
 
 /**
