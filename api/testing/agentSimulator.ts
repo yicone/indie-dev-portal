@@ -134,7 +134,13 @@ export async function applySimulator<T>(
   endpoint?: 'createSession' | 'sendPrompt'
 ): Promise<T> {
   // Check if simulator is enabled for this specific endpoint
-  let effectiveEnabled = config.enabled;
+  // If global enabled is false, always disable (fine-grained control only works when enabled=true)
+  if (!config.enabled) {
+    return handler();
+  }
+
+  // Check fine-grained control (only when global enabled is true)
+  let effectiveEnabled = true;
 
   if (endpoint === 'createSession' && config.createSessionEnabled !== undefined) {
     effectiveEnabled = config.createSessionEnabled;

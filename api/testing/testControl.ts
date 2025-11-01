@@ -54,7 +54,14 @@ testControlRouter.post('/', (req: Request, res: Response) => {
     req.body;
 
   // Update runtime config
-  if (enabled !== undefined) runtimeConfig.enabled = enabled;
+  if (enabled !== undefined) {
+    runtimeConfig.enabled = enabled;
+    // If disabling, clear fine-grained controls to avoid confusion
+    if (enabled === false) {
+      delete runtimeConfig.createSessionEnabled;
+      delete runtimeConfig.sendPromptEnabled;
+    }
+  }
   if (errorType !== undefined) runtimeConfig.errorType = errorType;
   if (delay !== undefined) runtimeConfig.delay = delay;
   if (successRate !== undefined) runtimeConfig.successRate = successRate;
