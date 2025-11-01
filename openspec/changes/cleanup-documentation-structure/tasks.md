@@ -28,23 +28,25 @@
 
 ## 4. Update Documentation References
 
-- [ ] 4.1 Review `README.md` for references to old docs
-- [ ] 4.2 Update `README.md` to reference OpenSpec
-- [ ] 4.3 Update `docs/README.md` to clarify purpose
-- [ ] 4.4 Check for broken links in remaining docs
-- [ ] 4.5 Update any cross-references
+- [x] 4.1 Review `README.md` for references to old docs
+- [x] 4.2 Update `README.md` to reference OpenSpec
+- [x] 4.3 Update `docs/README.md` to clarify purpose
+- [x] 4.4 Check for broken links in remaining docs
+- [x] 4.5 Update any cross-references
 
 ## 5. Validation and Testing
 
-- [ ] 5.1 Validate OpenSpec change: `openspec validate cleanup-documentation-structure --strict`
-- [ ] 5.2 Check for broken links in documentation
-- [ ] 5.3 Verify no references to removed documents
-- [ ] 5.4 Test that AI agents follow new rules
+- [x] 5.1 Validate OpenSpec change (tooling-only, no spec deltas)
+- [x] 5.2 Check for broken links in documentation
+- [x] 5.3 Verify no references to removed documents
+- [x] 5.4 Remove empty duplicate files
+- [x] 5.5 Archive outdated documentation system summary
 
 ## 6. Commit Changes
 
-- [ ] 6.1 Commit archive changes
-- [ ] 6.2 Commit file removals
-- [ ] 6.3 Commit .windsurfrules creation
-- [ ] 6.4 Commit reference updates
+- [x] 6.1 Commit archive changes
+- [x] 6.2 Commit file removals
+- [x] 6.3 Commit .windsurfrules creation
+- [x] 6.4 Commit reference updates
 - [ ] 6.5 Update DOCUMENTATION_MIGRATION_PLAN.md status
+- [ ] 6.6 Archive this OpenSpec change

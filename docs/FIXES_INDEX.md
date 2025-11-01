@@ -114,4 +114,4 @@ This approach minimizes tool calls while maintaining detailed documentation.
 
 1. Create detailed doc in `docs/fixes/YYYY-MM-DD-<description>.md`
 2. Add summary entry above using this template
-3. See `docs/NAMING_CONVENTIONS.md` for naming standards
+3. See `.windsurfrules` for naming standards

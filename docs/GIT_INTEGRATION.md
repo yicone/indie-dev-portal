@@ -307,4 +307,4 @@ const repoInfo = await parseGitRepo('/path/to/repo');
 
 - `lib/gitService.ts` - Git integration implementation
 - `scripts/sync-git-repos.ts` - Sync script
-- `docs/FUNCTIONAL_SPEC.md` - Overall feature documentation
+- `openspec/project.md` - Project conventions and tech stack

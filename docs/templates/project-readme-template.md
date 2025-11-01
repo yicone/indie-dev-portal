@@ -14,7 +14,7 @@
 - 🎨 **Key Feature 4** - Brief description
 - ⚡ **Key Feature 5** - Brief description
 
-[See complete feature list →](docs/FUNCTIONAL_SPEC.md)
+[See complete feature list →](openspec/project.md)
 
 ## 🚀 Quick Start
 
@@ -45,7 +45,7 @@ Open <http://localhost:[PORT]> to view the application.
 ### For Users
 
 - **[Quick Start Guide](docs/QUICKSTART.md)** - Get running in 5 minutes
-- **[Feature Documentation](docs/FUNCTIONAL_SPEC.md)** - Complete feature list
+- **[Project Conventions](openspec/project.md)** - Tech stack and conventions
 - **[[Key Feature] Guide](docs/[FEATURE].md)** - How [feature] works
 
 ### For Developers
@@ -57,7 +57,7 @@ Open <http://localhost:[PORT]> to view the application.
 ### For Contributors
 
 - **[Documentation Index](docs/README.md)** - All documentation files
-- **[Naming Conventions](docs/NAMING_CONVENTIONS.md)** - Documentation standards
+- **[Project Rules](.windsurfrules)** - Project conventions and standards
 - **[Fixes Index](docs/FIXES_INDEX.md)** - Bug fixes and improvements
 
 ## 🛠️ Tech Stack
@@ -130,17 +130,19 @@ This project was built with AI pair programming using Windsurf Cascade.
 
 **For Contributors**:
 
-- **AI Agents**: See [AGENTS.md](AGENTS.md) for collaboration workflow
-- **Documentation**: Follow [Documentation Management Guide](docs/DOCUMENTATION_MANAGEMENT.md)
+- **AI Agents**: See [AGENTS.md](AGENTS.md) for OpenSpec workflow entry point
+- **OpenSpec Process**: Follow [OpenSpec Workflow](openspec/AGENTS.md) for spec-driven development
+- **Project Rules**: Review [.windsurfrules](.windsurfrules) for project conventions
 - **Code Style**: Run `[lint-command]` and `[format-command]` before committing
 
 **Documentation Standards**:
 
+- **Specifications**: All specs in `openspec/specs/` and `openspec/changes/`
+- **Supplementary Docs**: Testing guides, migration docs in `docs/`
 - **SSOT Principle**: Every piece of information has one authoritative source
-- **Hybrid Approach**: Index files for quick access, detailed files for depth
-- **Entry Points**: Start with `docs/FIXES_INDEX.md`, `README.md`, or `AGENTS.md`
+- **Entry Points**: Start with `AGENTS.md`, `openspec/project.md`, or `docs/README.md`
 
-[Complete documentation guide →](docs/DOCUMENTATION_MANAGEMENT.md)
+[OpenSpec lessons learned →](docs/openspec-lessons-learned.md)
 
 ## 📄 License
 

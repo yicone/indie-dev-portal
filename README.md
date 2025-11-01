@@ -14,7 +14,7 @@ A modern, AI-first developer dashboard that surfaces your local git repositories
 - 🎨 **Modern UI** - Light/Dark themes with smooth animations
 - ⚡ **Fast & Local** - SQLite database, no cloud dependencies
 
-[See complete feature list →](docs/FUNCTIONAL_SPEC.md)
+[See complete feature list →](openspec/project.md)
 
 ## 🚀 Quick Start
 
@@ -45,19 +45,20 @@ Open <http://localhost:3000> to view the dashboard.
 ### For Users
 
 - **[Quick Start Guide](docs/QUICKSTART.md)** - Get running in 5 minutes
-- **[Feature Documentation](docs/FUNCTIONAL_SPEC.md)** - Complete feature list
 - **[Git Integration Guide](docs/GIT_INTEGRATION.md)** - How repository scanning works
+- **[Roadmap & Limitations](docs/ROADMAP.md)** - Future plans and current limitations
 
 ### For Developers
 
-- **[Agent Collaboration](AGENTS.md)** - AI agent workflow and documentation standards
-- **[Roadmap & Limitations](docs/ROADMAP.md)** - Future plans and current limitations
+- **[Project Conventions](openspec/project.md)** - Tech stack, data inputs, and development workflow
+- **[OpenSpec Workflow](openspec/AGENTS.md)** - Spec-driven development process
+- **[Agent Collaboration](AGENTS.md)** - AI agent entry point
 - **[Changelog](CHANGELOG.md)** - Version history
 
 ### For Contributors
 
-- **[Documentation Index](docs/README.md)** - All documentation files
-- **[Naming Conventions](docs/NAMING_CONVENTIONS.md)** - Documentation standards
+- **[Documentation Index](docs/README.md)** - All supplementary documentation
+- **[OpenSpec Lessons](docs/openspec-lessons-learned.md)** - Best practices and lessons learned
 - **[Fixes Index](docs/FIXES_INDEX.md)** - Bug fixes and improvements
 
 ## 🛠️ Tech Stack
@@ -130,17 +131,19 @@ This project was built with AI pair programming using Windsurf Cascade.
 
 **For Contributors**:
 
-- **AI Agents**: See [AGENTS.md](AGENTS.md) for collaboration workflow
-- **Documentation**: Follow [Documentation Management Guide](docs/DOCUMENTATION_MANAGEMENT.md)
+- **AI Agents**: See [AGENTS.md](AGENTS.md) for OpenSpec workflow entry point
+- **OpenSpec Process**: Follow [OpenSpec Workflow](openspec/AGENTS.md) for spec-driven development
+- **Project Rules**: Review [.windsurfrules](.windsurfrules) for project conventions
 - **Code Style**: Run `pnpm lint` and `pnpm format:write` before committing
 
 **Documentation Standards**:
 
+- **Specifications**: All specs in `openspec/specs/` and `openspec/changes/`
+- **Supplementary Docs**: Testing guides, migration docs in `docs/`
 - **SSOT Principle**: Every piece of information has one authoritative source
-- **Hybrid Approach**: Index files for quick access, detailed files for depth
-- **Entry Points**: Start with `docs/FIXES_INDEX.md`, `README.md`, or `AGENTS.md`
+- **Entry Points**: Start with `AGENTS.md`, `openspec/project.md`, or `docs/README.md`
 
-[Complete documentation guide →](docs/DOCUMENTATION_MANAGEMENT.md)
+[OpenSpec lessons learned →](docs/openspec-lessons-learned.md)
 
 ## 📄 License
 

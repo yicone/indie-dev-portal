@@ -1,15 +1,39 @@
-# Documentation Index
+# Supplementary Documentation
 
-Complete index of all documentation files for the Personal Developer Dashboard project.
+This directory contains **supplementary documentation only**. All specifications and requirements are managed in the `openspec/` directory.
 
 ## 📍 Entry Points
 
 Choose your starting point based on your role:
 
 - **👤 For Users**: Start with [QUICKSTART.md](QUICKSTART.md)
-- **🤖 For AI Agents**: Start with [FIXES_INDEX.md](FIXES_INDEX.md) or [DOCUMENTATION_MANAGEMENT.md](DOCUMENTATION_MANAGEMENT.md)
-- **👨‍💻 For Contributors**: Start with [DOCUMENTATION_SYSTEM_SUMMARY.md](DOCUMENTATION_SYSTEM_SUMMARY.md) (quick overview) or [DOCUMENTATION_MANAGEMENT.md](DOCUMENTATION_MANAGEMENT.md) (complete guide)
-- **🔧 For Developers**: Start with [../AGENTS.md](../AGENTS.md)
+- **🤖 For AI Agents**: Start with [../AGENTS.md](../AGENTS.md) → [../openspec/AGENTS.md](../openspec/AGENTS.md)
+- **👨‍💻 For Contributors**: Start with [../openspec/project.md](../openspec/project.md) and [../.windsurfrules](../.windsurfrules)
+- **🔧 For Developers**: Start with [../openspec/AGENTS.md](../openspec/AGENTS.md)
+
+## 📐 Documentation Structure
+
+### Specifications (openspec/)
+
+**All specifications and requirements live here:**
+
+- `openspec/specs/` - Current specifications (what IS built)
+- `openspec/changes/` - Change proposals (what SHOULD change)
+- `openspec/project.md` - Project conventions and tech stack
+- `openspec/AGENTS.md` - OpenSpec workflow instructions
+
+### Supplementary Docs (docs/)
+
+**This directory contains:**
+
+- Testing guides and checklists
+- Migration guides
+- Lessons learned
+- Quick start guides
+- Roadmaps
+- Templates
+
+**Never create specification documents here!**
 
 ## 📚 All Documentation Files
 
@@ -18,19 +42,17 @@ Choose your starting point based on your role:
 | File                                     | Description                        | Audience          |
 | ---------------------------------------- | ---------------------------------- | ----------------- |
 | [QUICKSTART.md](QUICKSTART.md)           | Get up and running in 5 minutes    | New users         |
-| [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) | Complete feature documentation     | All users         |
 | [GIT_INTEGRATION.md](GIT_INTEGRATION.md) | How git repository scanning works  | Users, Developers |
 | [ROADMAP.md](ROADMAP.md)                 | Future plans and known limitations | All users         |
 
 ### Developer Documentation
 
-| File                                                               | Description                                 | Audience                    |
-| ------------------------------------------------------------------ | ------------------------------------------- | --------------------------- |
-| [../AGENTS.md](../AGENTS.md)                                       | AI agent collaboration guide                | AI agents, Developers       |
-| [DOCUMENTATION_MANAGEMENT.md](DOCUMENTATION_MANAGEMENT.md)         | **Complete documentation management guide** | **AI agents, Contributors** |
-| [DOCUMENTATION_SYSTEM_SUMMARY.md](DOCUMENTATION_SYSTEM_SUMMARY.md) | Quick reference for documentation system    | All users                   |
-| [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md)                     | Documentation standards                     | Contributors, AI agents     |
-| [FIXES_INDEX.md](FIXES_INDEX.md)                                   | Bug fixes and improvements index            | AI agents, Developers       |
+| File                                                               | Description                         | Audience              |
+| ------------------------------------------------------------------ | ----------------------------------- | --------------------- |
+| [openspec-lessons-learned.md](openspec-lessons-learned.md)         | OpenSpec best practices and lessons | AI agents, Developers |
+| [AGENT_CHAT_UI_TESTING_GUIDE.md](AGENT_CHAT_UI_TESTING_GUIDE.md)   | Testing guide for Agent Chat UI     | Developers            |
+| [FIXES_INDEX.md](FIXES_INDEX.md)                                   | Bug fixes and improvements index    | AI agents, Developers |
+| [DOCUMENTATION_MIGRATION_PLAN.md](DOCUMENTATION_MIGRATION_PLAN.md) | Documentation cleanup plan          | Contributors          |
 
 ### Project Documentation
 
@@ -51,30 +73,35 @@ Current fixes:
 
 ### Archived Documentation
 
-| Directory            | Description              | Note                      |
-| -------------------- | ------------------------ | ------------------------- |
-| [archive/](archive/) | Deprecated documentation | Historical reference only |
+| Directory                                          | Description                 | Note                      |
+| -------------------------------------------------- | --------------------------- | ------------------------- |
+| [archive/old-doc-system/](archive/old-doc-system/) | Old specification documents | Moved to OpenSpec         |
+| [archive/](archive/)                               | Other deprecated docs       | Historical reference only |
 
-Archived files:
+**Old specification system** (moved to `openspec/`):
 
-- [PROJECT_STATUS.md](archive/PROJECT_STATUS.md) - Superseded by CHANGELOG.md and ROADMAP.md
-- [IMPLEMENTATION_SUMMARY.md](archive/IMPLEMENTATION_SUMMARY.md) - Superseded by GIT_INTEGRATION.md
-- [GIT_INTEGRATION_SUMMARY.md](archive/GIT_INTEGRATION_SUMMARY.md) - Superseded by GIT_INTEGRATION.md
-- [DOCUMENTATION_RESTRUCTURE_PLAN.md](archive/DOCUMENTATION_RESTRUCTURE_PLAN.md) - Restructure completed
-- [RESTRUCTURE_PROGRESS.md](archive/RESTRUCTURE_PROGRESS.md) - Restructure completed
+- `FUNCTIONAL_SPEC.md` - Now in `openspec/project.md` and `openspec/specs/`
+- `DOCUMENTATION_MANAGEMENT.md` - Now in `.windsurfrules` and `openspec/AGENTS.md`
+- `NAMING_CONVENTIONS.md` - Now in `.windsurfrules`
+
+**Other archived files**:
+
+- `PROJECT_STATUS.md` - Superseded by CHANGELOG.md and ROADMAP.md
+- `IMPLEMENTATION_SUMMARY.md` - Superseded by GIT_INTEGRATION.md
+- `GIT_INTEGRATION_SUMMARY.md` - Superseded by GIT_INTEGRATION.md
 
 ## 🔍 Finding Information
 
 ### By Topic
 
 - **Setup & Installation**: [QUICKSTART.md](QUICKSTART.md)
-- **Features**: [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md)
+- **Project Conventions**: [../openspec/project.md](../openspec/project.md)
 - **Git Integration**: [GIT_INTEGRATION.md](GIT_INTEGRATION.md)
 - **Future Plans**: [ROADMAP.md](ROADMAP.md)
 - **Known Issues**: [ROADMAP.md](ROADMAP.md#known-limitations)
 - **Bug Fixes**: [FIXES_INDEX.md](FIXES_INDEX.md)
-- **Documentation Standards**: [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md)
-- **Documentation System**: [DOCUMENTATION_SYSTEM_SUMMARY.md](DOCUMENTATION_SYSTEM_SUMMARY.md)
+- **OpenSpec Workflow**: [../openspec/AGENTS.md](../openspec/AGENTS.md)
+- **Project Rules**: [../.windsurfrules](../.windsurfrules)
 - **Version History**: [../CHANGELOG.md](../CHANGELOG.md)
 
 ### By Audience
@@ -83,57 +110,56 @@ Archived files:
 
 1. [../README.md](../README.md) - Project overview
 2. [QUICKSTART.md](QUICKSTART.md) - Get started
-3. [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) - Learn features
+3. [../openspec/project.md](../openspec/project.md) - Tech stack and conventions
 
 **Developers**:
 
-1. [../AGENTS.md](../AGENTS.md) - Collaboration workflow
+1. [../openspec/AGENTS.md](../openspec/AGENTS.md) - OpenSpec workflow
 2. [GIT_INTEGRATION.md](GIT_INTEGRATION.md) - Technical details
 3. [FIXES_INDEX.md](FIXES_INDEX.md) - Recent changes
 
 **Contributors**:
 
-1. [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md) - Standards
-2. [../AGENTS.md](../AGENTS.md) - Workflow
-3. [FIXES_INDEX.md](FIXES_INDEX.md) - How to document fixes
+1. [../.windsurfrules](../.windsurfrules) - Project rules and conventions
+2. [../openspec/AGENTS.md](../openspec/AGENTS.md) - Spec-driven workflow
+3. [openspec-lessons-learned.md](openspec-lessons-learned.md) - Best practices
 
 **AI Agents**:
 
-1. [FIXES_INDEX.md](FIXES_INDEX.md) - Entry point for fixes
-2. [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md) - Documentation structure
-3. [../AGENTS.md](../AGENTS.md) - Collaboration patterns
+1. [../AGENTS.md](../AGENTS.md) - Entry point
+2. [../openspec/AGENTS.md](../openspec/AGENTS.md) - OpenSpec instructions
+3. [../.windsurfrules](../.windsurfrules) - Project-specific rules
 
 ## 📝 Documentation Principles
 
-This documentation follows these principles:
+This project follows OpenSpec for spec-driven development:
 
-1. **Single Source of Truth (SSOT)**: Each piece of information exists in one authoritative location
-2. **Clear Entry Points**: Different audiences have clear starting points
-3. **Cross-References**: Documents link to each other rather than duplicating content
-4. **Hybrid Approach**: Index files + detailed files for optimal AI agent retrieval
-5. **Consistent Naming**: Follows conventions in [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md)
+1. **Specifications in OpenSpec**: All requirements and specs in `openspec/`
+2. **Supplementary in docs/**: Testing guides, migration docs, lessons learned
+3. **Single Source of Truth (SSOT)**: Each piece of information exists in one authoritative location
+4. **Clear Entry Points**: Different audiences have clear starting points
+5. **Consistent Naming**: Follows conventions in [../.windsurfrules](../.windsurfrules)
 
 ## 🔄 Keeping Documentation Updated
 
 When making changes:
 
-1. **Update the authority**: Find the Single Source of Truth for the information
-2. **Update cross-references**: Check for links to the changed content
-3. **Follow conventions**: Use patterns from [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md)
+1. **Specifications**: Always use OpenSpec workflow (see [../openspec/AGENTS.md](../openspec/AGENTS.md))
+2. **Supplementary docs**: Update in `docs/` following [../.windsurfrules](../.windsurfrules)
+3. **Update cross-references**: Check for links to the changed content
 4. **Update this index**: If adding/removing files, update this page
 
-See [../AGENTS.md](../AGENTS.md#documentation-workflow) for detailed workflow.
+See [../openspec/AGENTS.md](../openspec/AGENTS.md) for detailed workflow.
 
 ## 📊 Documentation Statistics
 
-- **Total Files**: 12 active + 5 archived
-- **Root Directory**: 3 files (README, AGENTS, CHANGELOG)
-- **docs/ Directory**: 9 files
-- **Archived**: 5 files
-- **Last Major Update**: October 26, 2025
+- **Specifications**: `openspec/specs/` and `openspec/changes/`
+- **Supplementary Docs**: 7 active files in `docs/`
+- **Archived**: Old specification system in `docs/archive/old-doc-system/`
+- **Last Major Update**: November 1, 2025 (Documentation cleanup)
 
 ---
 
 **Maintained by**: Project maintainers  
-**Last Updated**: October 26, 2025  
-**Questions?**: Open an issue or check [../AGENTS.md](../AGENTS.md)
+**Last Updated**: November 1, 2025  
+**Questions?**: See [../AGENTS.md](../AGENTS.md) or [../openspec/AGENTS.md](../openspec/AGENTS.md)
