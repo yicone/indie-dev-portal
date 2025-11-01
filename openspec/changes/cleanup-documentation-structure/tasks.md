@@ -17,15 +17,14 @@
 - [x] 2.5 Remove `docs/AGENT_CHAT_UI_PHASE1_SUMMARY.md` (should be in OpenSpec)
 - [x] 2.6 Keep `docs/AGENT_CHAT_UI_TESTING_GUIDE.md` (valid supplementary doc)
 
-## 3. Create Project-Specific Rules File
+## 3. Create Project-Specific Rules Files
 
-- [x] 3.1 Create `.windsurfrules` template in project root
-- [x] 3.2 Add documentation management rules
-- [x] 3.3 Define OpenSpec territory (specs and requirements)
-- [x] 3.4 Define docs/ territory (supplementary only)
-- [x] 3.5 Add explicit prevention rules
-- [x] 3.6 Reference OpenSpec workflow
-- [ ] 3.7 User to copy WINDSURFRULES_TEMPLATE.md to .windsurfrules
+- [x] 3.1 Create `.windsurf/rules/` directory
+- [x] 3.2 Create `project-conventions.md` (naming, commits, code style)
+- [x] 3.3 Create `testing-requirements.md` (testing checklist)
+- [x] 3.4 Create `ai-agent-behavior.md` (AI workflow guidance)
+- [x] 3.5 Remove deprecated `.windsurfrules` file
+- [x] 3.6 Remove `WINDSURFRULES_TEMPLATE.md`
 
 ## 4. Update Documentation References
 
