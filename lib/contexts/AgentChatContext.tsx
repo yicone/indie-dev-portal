@@ -12,6 +12,7 @@ interface AgentChatContextType {
   messages: Map<string, AgentMessageData[]>;
   connectionStatus: ConnectionStatus;
   isTyping: boolean;
+  isCreatingSession: boolean;
   error: string | null;
   openPanel: () => void;
   closePanel: () => void;
@@ -29,6 +30,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
   const [sessions, setSessions] = useState<Map<string, AgentSessionData>>(new Map());
   const [messages, setMessages] = useState<Map<string, AgentMessageData[]>>(new Map());
   const [isTyping, setIsTyping] = useState(false);
+  const [isCreatingSession, setIsCreatingSession] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const wsUrl =
@@ -209,6 +211,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const createSession = useCallback(async (repoId: number) => {
+    setIsCreatingSession(true);
     try {
       const response = await fetch('http://localhost:4000/sessions', {
         method: 'POST',
@@ -255,6 +258,8 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
       console.error('[AgentChat] Failed to create session:', error);
       setError(error instanceof Error ? error.message : 'Failed to create session');
       throw error;
+    } finally {
+      setIsCreatingSession(false);
     }
   }, []);
 
@@ -311,6 +316,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
     messages,
     connectionStatus,
     isTyping,
+    isCreatingSession,
     error,
     openPanel,
     closePanel,

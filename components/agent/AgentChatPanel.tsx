@@ -24,6 +24,7 @@ export function AgentChatPanel() {
     createSession,
     setActiveSession,
     isTyping,
+    isCreatingSession,
     error,
     clearError,
   } = useAgentChat();
@@ -272,7 +273,13 @@ export function AgentChatPanel() {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {loadingMessages ? (
+        {isCreatingSession ? (
+          <div className="text-center text-muted-foreground py-8 space-y-2">
+            <Loader2 className="h-8 w-8 mx-auto animate-spin" />
+            <p className="font-medium">Creating session...</p>
+            <p className="text-sm">Please wait</p>
+          </div>
+        ) : loadingMessages ? (
           <div className="text-center text-muted-foreground py-8 space-y-2">
             <Loader2 className="h-8 w-8 mx-auto animate-spin" />
             <p className="font-medium">Loading messages...</p>
