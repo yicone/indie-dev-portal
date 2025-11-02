@@ -118,8 +118,52 @@ export class ACPClient extends EventEmitter {
   private handleNotification(message: ACPMessage): void {
     if (message.method === 'session/update') {
       this.emit('session-update', message.params as ACPSessionUpdate['params']);
+    } else if (message.method === 'session/request_permission') {
+      // Auto-approve permission requests (development mode)
+      this.handlePermissionRequest(message);
     } else {
       this.emit('notification', message);
+    }
+  }
+
+  /**
+   * Handle permission request from agent
+   * Auto-approves all requests in development mode
+   */
+  private handlePermissionRequest(message: ACPMessage): void {
+    const params = message.params as {
+      sessionId: string;
+      options: Array<{ optionId: string; name: string; kind: string }>;
+      toolCall: { toolCallId: string; title: string; status: string };
+    };
+
+    console.log(
+      `[ACPClient] Auto-approving permission request for session ${this.sessionId}:`,
+      params.toolCall.title
+    );
+
+    // Find the "allow_once" option
+    const allowOption = params.options.find((opt) => opt.kind === 'allow_once');
+
+    if (!allowOption) {
+      console.error('[ACPClient] No allow_once option found in permission request');
+      return;
+    }
+
+    // Send permission response
+    const response: ACPMessage = {
+      jsonrpc: '2.0',
+      id: message.id,
+      result: {
+        optionId: allowOption.optionId,
+      },
+    };
+
+    const responseJson = JSON.stringify(response) + '\n';
+    console.log(`[ACPClient] Sending permission response:`, responseJson.trim());
+
+    if (this.process.stdin) {
+      this.process.stdin.write(responseJson);
     }
   }
 
