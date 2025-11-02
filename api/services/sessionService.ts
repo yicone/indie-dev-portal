@@ -555,14 +555,30 @@ async function storeUserMessage(sessionId: string, text: string) {
  * @param messageId Optional messageId to use (for streaming messages)
  */
 async function storeAgentMessage(sessionId: string, content: MessageContent, messageId?: string) {
-  return prisma.agentMessage.create({
-    data: {
-      id: messageId, // Use provided ID if available
-      sessionId,
-      role: 'agent',
-      content: JSON.stringify(content),
-    },
-  });
+  if (messageId) {
+    // Use upsert to ensure we use the provided ID
+    return prisma.agentMessage.upsert({
+      where: { id: messageId },
+      create: {
+        id: messageId,
+        sessionId,
+        role: 'agent',
+        content: JSON.stringify(content),
+      },
+      update: {
+        content: JSON.stringify(content),
+      },
+    });
+  } else {
+    // Let Prisma generate the ID
+    return prisma.agentMessage.create({
+      data: {
+        sessionId,
+        role: 'agent',
+        content: JSON.stringify(content),
+      },
+    });
+  }
 }
 
 /**
