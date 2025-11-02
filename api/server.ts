@@ -83,6 +83,7 @@ const shutdown = async () => {
 
 process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
+process.on('SIGUSR2', shutdown); // Handle nodemon restarts
 
 const httpServer = app.listen(port, () => {
   console.log(`API server listening on http://localhost:${port}`);

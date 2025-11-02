@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { useAgentWebSocket } from '@/lib/hooks/useAgentWebSocket';
 import type { WSServerMessage, ConnectionStatus } from '@/types/websocket';
 import type { AgentSessionData, AgentMessageData } from '@/types/agent';
@@ -35,10 +35,19 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
   const [isCreatingSession, setIsCreatingSession] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Track processed message.new to prevent duplicates
+  const processedMessageIds = useRef<Set<string>>(new Set());
+
   const wsUrl =
     typeof window !== 'undefined' ? `ws://${window.location.hostname}:4000` : 'ws://localhost:4000';
 
   const handleMessage = useCallback((message: WSServerMessage) => {
+    console.log(
+      '[AgentChat] 🔔 Received message type:',
+      message.type,
+      'Stack:',
+      new Error().stack?.split('\n')[2]
+    );
     switch (message.type) {
       case 'session.created':
         // Session created notification
@@ -53,10 +62,33 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
       case 'message.new':
         // New message (user messages only, agent uses streaming protocol)
         const { sessionId, messageId, role, content, timestamp } = message.payload;
+        console.log(`[AgentChat] 📨 Received message.new: ${messageId}, role: ${role}`);
+
+        // Check if we've already processed this message (防止重复处理)
+        if (processedMessageIds.current.has(messageId)) {
+          console.log(`[AgentChat] ⏭️  Already processed message.new: ${messageId}`);
+          break;
+        }
+        processedMessageIds.current.add(messageId);
 
         setMessages((prev) => {
           const newMessages = new Map(prev);
           const sessionMessages = newMessages.get(sessionId) || [];
+
+          console.log(
+            `[AgentChat] 🔍 Checking for duplicates. Current messages:`,
+            sessionMessages.map((m) => m.id)
+          );
+
+          // Check if message already exists (avoid duplicates from optimistic updates)
+          const existingMessage = sessionMessages.find((m) => m.id === messageId);
+          if (existingMessage) {
+            // Message already exists (from optimistic update), skip
+            console.log(`[AgentChat] ⏭️  Skipping duplicate message: ${messageId}`);
+            return prev;
+          }
+
+          console.log(`[AgentChat] ➕ Adding new message: ${messageId}`);
 
           // Add as new message
           newMessages.set(sessionId, [

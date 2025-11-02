@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"pnpm dev:web\" \"pnpm dev:server\"",
     "dev:web": "next dev",
-    "dev:server": "tsx api/server.ts",
+    "dev:server": "nodemon --watch 'api/**/*.ts' --exec 'tsx api/server.ts'",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -83,6 +83,7 @@
     "husky": "^9.1.0",
     "jsdom": "^27.1.0",
     "lint-staged": "^15.2.10",
+    "nodemon": "^3.1.10",
     "postcss": "^8.4.38",
     "prettier": "^3.3.3",
     "prisma": "^5.18.0",

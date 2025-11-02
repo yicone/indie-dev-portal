@@ -364,6 +364,9 @@ export async function sendPrompt(
 
   // Store user message
   const userMessage = await storeUserMessage(sessionId, text);
+  console.log(
+    `[SessionService] 📨 User message stored: ${userMessage.id} for session ${sessionId}`
+  );
 
   // Broadcast user message via WebSocket
   websocketService.broadcast({
@@ -376,6 +379,7 @@ export async function sendPrompt(
       timestamp: userMessage.timestamp.toISOString(),
     },
   });
+  console.log(`[SessionService] 📡 Broadcasted message.new: ${userMessage.id}`);
 
   // Send prompt to agent (don't wait for response)
   // Completion is handled by the 'response' event listener in setupACPClientHandlers

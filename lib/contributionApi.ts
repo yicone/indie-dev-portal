@@ -1,6 +1,6 @@
 import type { HeatmapData } from '@/types/heatmap';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? '/api';
 
 /**
  * Fetches contribution heatmap data from the API
