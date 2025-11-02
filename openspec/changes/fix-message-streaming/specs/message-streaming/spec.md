@@ -134,10 +134,12 @@ The system SHALL maintain responsive UI during message streaming.
 
 #### Scenario: Concurrent streaming
 
-- **WHEN** multiple messages stream simultaneously
+- **WHEN** multiple messages stream simultaneously in different sessions
 - **THEN** each message updates independently
+- **AND** messages are isolated by sessionId
+- **AND** no cross-session message pollution occurs
 - **AND** UI performance remains acceptable
-- **AND** message order is preserved
+- **AND** message order is preserved within each session
 
 ### Requirement: WebSocket Message Format
 
