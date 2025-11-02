@@ -42,31 +42,21 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
     typeof window !== 'undefined' ? `ws://${window.location.hostname}:4000` : 'ws://localhost:4000';
 
   const handleMessage = useCallback((message: WSServerMessage) => {
-    console.log(
-      '[AgentChat] 🔔 Received message type:',
-      message.type,
-      'Stack:',
-      new Error().stack?.split('\n')[2]
-    );
     switch (message.type) {
       case 'session.created':
         // Session created notification
-        console.log('[AgentChat] Session created:', message.payload);
         break;
 
       case 'session.status':
         // Session status update
-        console.log('[AgentChat] Session status:', message.payload);
         break;
 
       case 'message.new':
         // New message (user messages only, agent uses streaming protocol)
         const { sessionId, messageId, role, content, timestamp } = message.payload;
-        console.log(`[AgentChat] 📨 Received message.new: ${messageId}, role: ${role}`);
 
         // Check if we've already processed this message (防止重复处理)
         if (processedMessageIds.current.has(messageId)) {
-          console.log(`[AgentChat] ⏭️  Already processed message.new: ${messageId}`);
           break;
         }
         processedMessageIds.current.add(messageId);
@@ -75,15 +65,9 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
           const newMessages = new Map(prev);
           const sessionMessages = newMessages.get(sessionId) || [];
 
-          console.log(
-            `[AgentChat] 🔍 Checking for duplicates. Current messages:`,
-            sessionMessages.map((m) => m.id)
-          );
-
           // Check if message already exists with real ID
           const existingMessage = sessionMessages.find((m) => m.id === messageId);
           if (existingMessage) {
-            console.log(`[AgentChat] ⏭️  Skipping duplicate message: ${messageId}`);
             return prev;
           }
 
@@ -91,7 +75,6 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
           if (role === 'user') {
             const tempMessageIndex = sessionMessages.findIndex((m) => m.id.startsWith('temp-'));
             if (tempMessageIndex >= 0) {
-              console.log(`[AgentChat] 🔄 Updating temp message to real ID: ${messageId}`);
               const updatedMessages = [...sessionMessages];
               updatedMessages[tempMessageIndex] = {
                 ...updatedMessages[tempMessageIndex],
@@ -102,8 +85,6 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
               return newMessages;
             }
           }
-
-          console.log(`[AgentChat] ➕ Adding new message: ${messageId}`);
 
           // Add as new message
           newMessages.set(sessionId, [
@@ -126,7 +107,6 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         // NEW: Start of agent message streaming
         {
           const { sessionId, messageId, timestamp } = message.payload;
-          console.log('[AgentChat] Streaming started:', messageId);
 
           // Show typing indicator
           setIsTyping(true);
@@ -211,7 +191,6 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         // NEW: Complete streaming message
         {
           const { messageId, content, timestamp } = message.payload;
-          console.log('[AgentChat] Streaming completed:', messageId);
 
           // Stop typing indicator
           setIsTyping(false);
