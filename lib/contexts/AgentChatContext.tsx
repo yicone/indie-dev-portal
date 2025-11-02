@@ -51,103 +51,149 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         break;
 
       case 'message.new':
-        // New message
+        // New message (user messages only, agent uses streaming protocol)
         const { sessionId, messageId, role, content, timestamp } = message.payload;
-
-        // Stop typing indicator when agent message arrives
-        if (role === 'agent') {
-          setIsTyping(false);
-        }
 
         setMessages((prev) => {
           const newMessages = new Map(prev);
           const sessionMessages = newMessages.get(sessionId) || [];
 
-          // Check if message already exists (by messageId) to handle updates
-          const existingIndex = sessionMessages.findIndex((m) => m.id === messageId);
-
-          if (existingIndex >= 0) {
-            // Update existing message (for streaming updates)
-            const updatedMessages = [...sessionMessages];
-            updatedMessages[existingIndex] = {
-              ...updatedMessages[existingIndex],
+          // Add as new message
+          newMessages.set(sessionId, [
+            ...sessionMessages,
+            {
+              id: messageId,
+              sessionId,
+              role,
               content: JSON.stringify(content),
-              parsedContent: content,
               timestamp: new Date(timestamp),
-            };
-            newMessages.set(sessionId, updatedMessages);
-          } else {
-            // Smart merge: combine consecutive agent messages within time window
-            const MERGE_WINDOW_MS = 5000; // 5 second window (increased from 2s)
-            const shouldMerge =
-              role === 'agent' && sessionMessages.length > 0 && content.type === 'text';
-
-            if (shouldMerge) {
-              const lastMessage = sessionMessages[sessionMessages.length - 1];
-              const lastTime = lastMessage.timestamp
-                ? new Date(lastMessage.timestamp).getTime()
-                : 0;
-              const currentTime = new Date(timestamp).getTime();
-              const timeDiff = currentTime - lastTime;
-
-              console.log('[AgentChat] Merge check:', {
-                lastRole: lastMessage.role,
-                currentRole: role,
-                timeDiff,
-                window: MERGE_WINDOW_MS,
-                shouldMerge: lastMessage.role === 'agent' && timeDiff < MERGE_WINDOW_MS,
-              });
-
-              // Merge if: 1) last is also agent 2) within time window 3) both are text
-              if (
-                lastMessage.role === 'agent' &&
-                timeDiff < MERGE_WINDOW_MS &&
-                lastMessage.parsedContent?.type === 'text'
-              ) {
-                console.log('[AgentChat] Merging messages');
-                // Merge content with newline separator
-                const mergedContent = {
-                  type: 'text' as const,
-                  text: lastMessage.parsedContent.text + '\n' + content.text,
-                };
-
-                // Update last message
-                const updatedMessages = [...sessionMessages];
-                updatedMessages[updatedMessages.length - 1] = {
-                  ...lastMessage,
-                  content: JSON.stringify(mergedContent),
-                  parsedContent: mergedContent,
-                  timestamp: new Date(timestamp),
-                };
-
-                newMessages.set(sessionId, updatedMessages);
-                return newMessages;
-              } else {
-                console.log('[AgentChat] Not merging - conditions not met');
-              }
-            }
-
-            // Add as new message (no merge)
-            newMessages.set(sessionId, [
-              ...sessionMessages,
-              {
-                id: messageId,
-                sessionId,
-                role,
-                content: JSON.stringify(content),
-                timestamp: new Date(timestamp),
-                parsedContent: content,
-              } as AgentMessageData,
-            ]);
-          }
+              parsedContent: content,
+            } as AgentMessageData,
+          ]);
 
           return newMessages;
         });
         break;
 
+      case 'message.start':
+        // NEW: Start of agent message streaming
+        {
+          const { sessionId, messageId, timestamp } = message.payload;
+          console.log('[AgentChat] Streaming started:', messageId);
+
+          // Show typing indicator
+          setIsTyping(true);
+
+          setMessages((prev) => {
+            const newMessages = new Map(prev);
+            const sessionMessages = newMessages.get(sessionId) || [];
+
+            // Create placeholder message
+            newMessages.set(sessionId, [
+              ...sessionMessages,
+              {
+                id: messageId,
+                sessionId,
+                role: 'agent',
+                content: JSON.stringify({ type: 'text', text: '' }),
+                timestamp: new Date(timestamp),
+                parsedContent: { type: 'text', text: '' },
+                isStreaming: true, // Mark as streaming
+              } as AgentMessageData & { isStreaming?: boolean },
+            ]);
+
+            return newMessages;
+          });
+        }
+        break;
+
+      case 'message.chunk':
+        // NEW: Append chunk to streaming message
+        {
+          const { messageId, content } = message.payload;
+
+          // Only handle text content chunks
+          if (content.type !== 'text') {
+            console.warn('[AgentChat] Non-text chunk received, ignoring');
+            break;
+          }
+
+          setMessages((prev) => {
+            const newMessages = new Map(prev);
+
+            // Find the message across all sessions
+            for (const [sessionId, sessionMessages] of newMessages.entries()) {
+              const messageIndex = sessionMessages.findIndex((m) => m.id === messageId);
+
+              if (messageIndex >= 0) {
+                const updatedMessages = [...sessionMessages];
+                const currentMessage = updatedMessages[messageIndex];
+                const currentText =
+                  currentMessage.parsedContent?.type === 'text'
+                    ? currentMessage.parsedContent.text
+                    : '';
+                const newText = currentText + content.text;
+
+                // Append chunk to existing content
+                updatedMessages[messageIndex] = {
+                  ...currentMessage,
+                  content: JSON.stringify({ type: 'text', text: newText }),
+                  parsedContent: { type: 'text', text: newText },
+                };
+
+                newMessages.set(sessionId, updatedMessages);
+                break;
+              }
+            }
+
+            return newMessages;
+          });
+        }
+        break;
+
+      case 'message.end':
+        // NEW: Complete streaming message
+        {
+          const { messageId, content, timestamp } = message.payload;
+          console.log('[AgentChat] Streaming completed:', messageId);
+
+          // Stop typing indicator
+          setIsTyping(false);
+
+          setMessages((prev) => {
+            const newMessages = new Map(prev);
+
+            // Find the message across all sessions
+            for (const [sessionId, sessionMessages] of newMessages.entries()) {
+              const messageIndex = sessionMessages.findIndex((m) => m.id === messageId);
+
+              if (messageIndex >= 0) {
+                const updatedMessages = [...sessionMessages];
+
+                // Finalize message with complete content
+                const { isStreaming, ...messageData } = updatedMessages[
+                  messageIndex
+                ] as AgentMessageData & { isStreaming?: boolean };
+                updatedMessages[messageIndex] = {
+                  ...messageData,
+                  content: JSON.stringify(content),
+                  parsedContent: content,
+                  timestamp: new Date(timestamp),
+                };
+
+                newMessages.set(sessionId, updatedMessages);
+                break;
+              }
+            }
+
+            return newMessages;
+          });
+        }
+        break;
+
       case 'message.update':
-        // Message update (streaming)
-        console.log('[AgentChat] Message update:', message.payload);
+        // DEPRECATED: Old streaming protocol (kept for compatibility)
+        console.log('[AgentChat] Message update (deprecated):', message.payload);
         break;
 
       case 'error':
