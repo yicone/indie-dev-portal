@@ -41,15 +41,23 @@ class GeminiCliManager extends EventEmitter {
       // Set cwd to repo path so Gemini CLI uses it as workspace
       // Note: Removed --approval-mode yolo as it doesn't work reliably
       // We handle permissions via ACP protocol instead
-      const geminiProcess = spawn(this.geminiCliPath, ['--experimental-acp'], {
-        stdio: ['pipe', 'pipe', 'pipe'],
-        env: {
-          ...process.env,
-          // Ensure non-interactive mode
-          NO_COLOR: '1',
-        },
-        cwd: repoPath,
-      });
+      const geminiProcess = spawn(
+        this.geminiCliPath,
+        [
+          '--experimental-acp',
+          '--allowed-tools',
+          'run_shell_command', // Allow shell command execution
+        ],
+        {
+          stdio: ['pipe', 'pipe', 'pipe'],
+          env: {
+            ...process.env,
+            // Ensure non-interactive mode
+            NO_COLOR: '1',
+          },
+          cwd: repoPath,
+        }
+      );
 
       // Store process info
       const processInfo: ProcessInfo = {
