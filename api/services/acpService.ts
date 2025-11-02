@@ -193,8 +193,30 @@ export class ACPClient extends EventEmitter {
       prompt: [{ type: 'text', text: prompt }],
     };
 
-    this.sendRequest('session/prompt', params);
-    // Note: Response comes via session/update notifications
+    const requestId = this.sendRequest('session/prompt', params);
+
+    // Wait for the response to complete
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        this.off('response', handleResponse);
+        reject(new Error('Prompt timeout'));
+      }, 300000); // 5 minutes timeout
+
+      const handleResponse = (message: ACPMessage) => {
+        if (message.id === requestId) {
+          clearTimeout(timeout);
+          this.off('response', handleResponse);
+
+          if (message.error) {
+            reject(new Error(message.error.message));
+          } else {
+            resolve();
+          }
+        }
+      };
+
+      this.on('response', handleResponse);
+    });
   }
 
   /**
