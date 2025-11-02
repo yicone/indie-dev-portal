@@ -93,6 +93,12 @@ export class ACPClient extends EventEmitter {
       JSON.stringify(message)
     );
 
+    // Handle permission requests (special case: has both id and method)
+    if (message.id && message.method === 'session/request_permission') {
+      this.handlePermissionRequest(message);
+      return;
+    }
+
     // Handle notifications (no id field)
     if (!message.id && message.method) {
       this.handleNotification(message);
@@ -118,9 +124,6 @@ export class ACPClient extends EventEmitter {
   private handleNotification(message: ACPMessage): void {
     if (message.method === 'session/update') {
       this.emit('session-update', message.params as ACPSessionUpdate['params']);
-    } else if (message.method === 'session/request_permission') {
-      // Auto-approve permission requests (development mode)
-      this.handlePermissionRequest(message);
     } else {
       this.emit('notification', message);
     }
