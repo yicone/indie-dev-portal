@@ -55,7 +55,9 @@ export function useAgentWebSocket({
       };
 
       ws.onerror = (error) => {
-        console.error('[useAgentWebSocket] WebSocket error:', error);
+        // WebSocket error events don't contain useful error info
+        // The actual error will be in the close event
+        console.warn('[useAgentWebSocket] WebSocket error event received');
         setStatus('error');
         onError?.(error);
       };

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { ArrowUpDown, Moon, RefreshCw, Search, Sun } from 'lucide-react';
 
@@ -39,6 +40,13 @@ export function DashboardHeader({
   isRefreshing = false,
 }: DashboardHeaderProps) {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Avoid hydration mismatch by only rendering theme-dependent UI after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const isDark = theme === 'dark';
   const selectedLanguageLabel = selectedLanguage === 'all' ? 'All Languages' : selectedLanguage;
   const sortLabel =
@@ -128,7 +136,13 @@ export function DashboardHeader({
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
             aria-label="Toggle theme"
           >
-            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {!mounted ? (
+              <Sun className="h-4 w-4" />
+            ) : isDark ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
           </Button>
         </div>
       </div>

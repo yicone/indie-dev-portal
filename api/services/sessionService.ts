@@ -161,7 +161,8 @@ function setupACPClientHandlers(sessionId: string, acpClient: ACPClient): void {
             text: fullContent,
           };
 
-          const agentMessage = await storeAgentMessage(sessionId, completeContent);
+          // Store with the same messageId used during streaming
+          const agentMessage = await storeAgentMessage(sessionId, completeContent, activeMessageId);
 
           // Send message.end
           websocketService.broadcast({
@@ -174,9 +175,7 @@ function setupACPClientHandlers(sessionId: string, acpClient: ACPClient): void {
             },
           });
 
-          console.log(
-            `[SessionService] Completed streaming: ${activeMessageId}, stored as ${agentMessage.id}`
-          );
+          console.log(`[SessionService] Completed streaming: ${activeMessageId}`);
         } catch (error) {
           console.error(`[SessionService] Error finalizing streaming for ${sessionId}:`, error);
         }
@@ -553,10 +552,12 @@ async function storeUserMessage(sessionId: string, text: string) {
 
 /**
  * Store an agent message
+ * @param messageId Optional messageId to use (for streaming messages)
  */
-async function storeAgentMessage(sessionId: string, content: MessageContent) {
+async function storeAgentMessage(sessionId: string, content: MessageContent, messageId?: string) {
   return prisma.agentMessage.create({
     data: {
+      id: messageId, // Use provided ID if available
       sessionId,
       role: 'agent',
       content: JSON.stringify(content),
