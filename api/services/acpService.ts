@@ -94,7 +94,7 @@ export class ACPClient extends EventEmitter {
     );
 
     // Handle permission requests (special case: has both id and method)
-    if (message.id && message.method === 'session/request_permission') {
+    if (message.id !== undefined && message.method === 'session/request_permission') {
       this.handlePermissionRequest(message);
       return;
     }

@@ -58,6 +58,20 @@ class StreamingStateManager {
   }
 
   /**
+   * Touch a stream to update its last activity time (prevents timeout)
+   */
+  touchStream(sessionId: string): void {
+    // Find active stream for this session
+    for (const [messageId, state] of this.activeStreams.entries()) {
+      if (state.sessionId === sessionId) {
+        state.lastChunkAt = new Date();
+        console.log(`[StreamingStateManager] Touched stream: ${messageId}`);
+        return;
+      }
+    }
+  }
+
+  /**
    * Complete a stream and get the full content
    */
   completeStream(messageId: string): string {

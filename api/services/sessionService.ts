@@ -263,6 +263,9 @@ async function handleSessionUpdate(
   // Update activity timestamp
   geminiCliManager.updateActivity(sessionId);
 
+  // Touch streaming state to prevent timeout during long-running operations
+  streamingStateManager.touchStream(sessionId);
+
   const update = params.update;
   const updateType = update.sessionUpdate;
 
