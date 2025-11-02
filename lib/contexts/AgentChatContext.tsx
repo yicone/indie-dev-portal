@@ -200,6 +200,29 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         console.error('[AgentChat] Error:', message.payload);
         setError(message.payload.message || 'An error occurred');
         setIsTyping(false);
+
+        // If this is a streaming error, remove the incomplete message
+        if (message.payload.code === 'STREAMING_ERROR' && message.payload.details) {
+          const details = message.payload.details as { sessionId: string; messageId: string };
+          const errorMessageId = details.messageId;
+
+          setMessages((prev) => {
+            const newMessages = new Map(prev);
+
+            // Find and remove the incomplete streaming message
+            for (const [sessionId, sessionMessages] of newMessages.entries()) {
+              const filteredMessages = sessionMessages.filter((m) => m.id !== errorMessageId);
+
+              if (filteredMessages.length !== sessionMessages.length) {
+                newMessages.set(sessionId, filteredMessages);
+                console.log('[AgentChat] Removed incomplete streaming message:', errorMessageId);
+                break;
+              }
+            }
+
+            return newMessages;
+          });
+        }
         break;
     }
   }, []);

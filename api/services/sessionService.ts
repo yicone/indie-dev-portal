@@ -345,6 +345,21 @@ export async function sendPrompt(
       if (activeMessageId) {
         streamingStateManager.cancelStream(activeMessageId);
         clearActiveMessageId(sessionId);
+
+        // Notify frontend about the error
+        websocketService.broadcast({
+          type: 'error',
+          payload: {
+            code: 'STREAMING_ERROR',
+            message: error.message || 'Failed to complete message streaming',
+            details: {
+              sessionId,
+              messageId: activeMessageId,
+            },
+          },
+        });
+
+        console.log(`[SessionService] Sent error notification for streaming: ${activeMessageId}`);
       }
     });
 
