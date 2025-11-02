@@ -253,36 +253,8 @@ async function handleSessionUpdate(
     },
   });
 
-  // Check if this is the last chunk
-  // Gemini CLI sends 'complete: true' or similar in the last update
-  const isComplete = update.complete === true || update.partial === false;
-
-  if (isComplete) {
-    // Complete the streaming
-    const fullContent = streamingStateManager.completeStream(messageId);
-    clearActiveMessageId(sessionId);
-
-    // Store complete message to database
-    const completeContent: MessageContent = {
-      type: 'text',
-      text: fullContent,
-    };
-
-    const agentMessage = await storeAgentMessage(sessionId, completeContent);
-
-    // Send message.end
-    websocketService.broadcast({
-      type: 'message.end',
-      payload: {
-        messageId,
-        content: completeContent,
-        isComplete: true,
-        timestamp: agentMessage.timestamp.toISOString(),
-      },
-    });
-
-    console.log(`[SessionService] Completed streaming: ${messageId}, stored as ${agentMessage.id}`);
-  }
+  // Note: message.end is sent when the ACP prompt response completes
+  // See sendPrompt() function for the completion handler
 }
 
 /**
@@ -328,8 +300,53 @@ export async function sendPrompt(
     },
   });
 
-  // Send prompt to agent
-  await acpClient.sendPrompt(text);
+  // Send prompt to agent and wait for response
+  const promptPromise = acpClient.sendPrompt(text);
+
+  // Listen for response completion to finalize streaming
+  promptPromise
+    .then(() => {
+      // Prompt completed, finalize any active streaming
+      const activeMessageId = getActiveMessageId(sessionId);
+
+      if (activeMessageId) {
+        // Complete the streaming
+        const fullContent = streamingStateManager.completeStream(activeMessageId);
+        clearActiveMessageId(sessionId);
+
+        // Store complete message to database
+        const completeContent: MessageContent = {
+          type: 'text',
+          text: fullContent,
+        };
+
+        storeAgentMessage(sessionId, completeContent).then((agentMessage) => {
+          // Send message.end
+          websocketService.broadcast({
+            type: 'message.end',
+            payload: {
+              messageId: activeMessageId,
+              content: completeContent,
+              isComplete: true,
+              timestamp: agentMessage.timestamp.toISOString(),
+            },
+          });
+
+          console.log(
+            `[SessionService] Completed streaming: ${activeMessageId}, stored as ${agentMessage.id}`
+          );
+        });
+      }
+    })
+    .catch((error) => {
+      console.error(`[SessionService] Prompt error for session ${sessionId}:`, error);
+      // Clean up streaming state on error
+      const activeMessageId = getActiveMessageId(sessionId);
+      if (activeMessageId) {
+        streamingStateManager.cancelStream(activeMessageId);
+        clearActiveMessageId(sessionId);
+      }
+    });
 
   // Update activity
   geminiCliManager.updateActivity(sessionId);
