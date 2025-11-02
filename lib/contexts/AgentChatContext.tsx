@@ -80,12 +80,27 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
             sessionMessages.map((m) => m.id)
           );
 
-          // Check if message already exists (avoid duplicates from optimistic updates)
+          // Check if message already exists with real ID
           const existingMessage = sessionMessages.find((m) => m.id === messageId);
           if (existingMessage) {
-            // Message already exists (from optimistic update), skip
             console.log(`[AgentChat] ⏭️  Skipping duplicate message: ${messageId}`);
             return prev;
+          }
+
+          // Check if there's a temp message that needs to be updated (for user messages)
+          if (role === 'user') {
+            const tempMessageIndex = sessionMessages.findIndex((m) => m.id.startsWith('temp-'));
+            if (tempMessageIndex >= 0) {
+              console.log(`[AgentChat] 🔄 Updating temp message to real ID: ${messageId}`);
+              const updatedMessages = [...sessionMessages];
+              updatedMessages[tempMessageIndex] = {
+                ...updatedMessages[tempMessageIndex],
+                id: messageId,
+                status: 'sent' as const,
+              };
+              newMessages.set(sessionId, updatedMessages);
+              return newMessages;
+            }
           }
 
           console.log(`[AgentChat] ➕ Adding new message: ${messageId}`);
