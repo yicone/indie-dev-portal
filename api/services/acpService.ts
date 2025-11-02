@@ -163,13 +163,14 @@ export class ACPClient extends EventEmitter {
     }
 
     // Send permission response
-    // Per ACP spec: https://agentclientprotocol.com/protocol/schema
-    // RequestPermissionOutcome = { Approved: { optionId } } | { Cancelled: {} }
+    // Per ACP example: https://agentclientprotocol.com/protocol/tool-calls
+    // Note: Schema docs differ from examples - using example format
     const response: ACPMessage = {
       jsonrpc: '2.0',
       id: message.id,
       result: {
-        Approved: {
+        outcome: {
+          outcome: 'selected',
           optionId: allowOption.optionId,
         },
       },
