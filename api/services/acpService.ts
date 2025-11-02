@@ -93,8 +93,17 @@ export class ACPClient extends EventEmitter {
       JSON.stringify(message)
     );
 
+    // Log message type for debugging
+    if (message.method) {
+      console.log(`[ACPClient] Message type: ${message.method}`);
+    }
+    if (message.id !== undefined) {
+      console.log(`[ACPClient] Message has ID: ${message.id}`);
+    }
+
     // Handle permission requests (special case: has both id and method)
     if (message.id !== undefined && message.method === 'session/request_permission') {
+      console.log('[ACPClient] ⚡ Permission request detected!');
       this.handlePermissionRequest(message);
       return;
     }
