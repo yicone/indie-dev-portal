@@ -100,6 +100,7 @@ export interface WSMessageStart extends WSMessage {
 export interface WSMessageChunk extends WSMessage {
   type: 'message.chunk';
   payload: {
+    sessionId: string; // Added to prevent cross-session pollution
     messageId: string;
     content: MessageContent; // Incremental content
   };

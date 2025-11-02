@@ -110,7 +110,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
       case 'message.chunk':
         // NEW: Append chunk to streaming message
         {
-          const { messageId, content } = message.payload;
+          const { messageId, content, sessionId: chunkSessionId } = message.payload;
 
           // Only handle text content chunks
           if (content.type !== 'text') {
@@ -121,9 +121,18 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
           setMessages((prev) => {
             const newMessages = new Map(prev);
 
-            // Find the message across all sessions
-            for (const [sessionId, sessionMessages] of newMessages.entries()) {
-              const messageIndex = sessionMessages.findIndex((m) => m.id === messageId);
+            // If sessionId is provided, only update that specific session
+            // This prevents cross-session message pollution in concurrent scenarios
+            const sessionsToCheck: Array<[string, AgentMessageData[] | undefined]> = chunkSessionId
+              ? [[chunkSessionId, newMessages.get(chunkSessionId)]]
+              : Array.from(newMessages.entries());
+
+            for (const [sessionId, sessionMessages] of sessionsToCheck) {
+              if (!sessionMessages) continue;
+
+              const messageIndex = sessionMessages.findIndex(
+                (m: AgentMessageData) => m.id === messageId
+              );
 
               if (messageIndex >= 0) {
                 const updatedMessages = [...sessionMessages];

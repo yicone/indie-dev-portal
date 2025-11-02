@@ -325,6 +325,7 @@ async function handleSessionUpdate(
   websocketService.broadcast({
     type: 'message.chunk',
     payload: {
+      sessionId, // Include sessionId to prevent cross-session pollution
       messageId,
       content,
     },
