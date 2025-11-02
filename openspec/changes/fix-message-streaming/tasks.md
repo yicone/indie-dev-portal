@@ -33,11 +33,11 @@
 ## 4. 测试
 
 - [x] 4.1 测试 streaming 基本流程（Smoking 测试通过）
-- [x] 4.2 测试网络中断恢复（已验证 - 错误通知和清理工作正常）
-- [ ] 4.3 测试消息顺序（可选 - 跳过）
-- [ ] 4.4 测试并发 streaming（可选 - 跳过）
+- [ ] 4.2 测试网络中断恢复（需要手动测试 - 使用 scripts/test-streaming.sh）
+- [ ] 4.3 测试消息顺序（需要手动测试 - 使用 scripts/test-streaming.sh）
+- [ ] 4.4 测试并发 streaming（需要手动测试 - 使用 scripts/test-streaming.sh）
 - [x] 4.5 测试刷新后消息保持合并（Smoking 测试通过）
-- [ ] 4.6 性能测试（可选 - 跳过）
+- [ ] 4.6 性能测试（需要手动测试 - 使用 scripts/test-streaming.sh）
 - [x] 4.7 Agent 工具调用测试（已修复 - Shell 命令执行成功）
 
 ## 5. 数据迁移（可选）
