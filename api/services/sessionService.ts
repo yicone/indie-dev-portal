@@ -180,6 +180,34 @@ function setupACPClientHandlers(sessionId: string, acpClient: ACPClient): void {
         } catch (error) {
           console.error(`[SessionService] Error finalizing streaming for ${sessionId}:`, error);
         }
+      } else {
+        // No active streaming - Agent completed without sending message chunks
+        // This can happen if Agent only sends thoughts or tool calls
+        console.log(
+          `[SessionService] Agent completed without message chunks for session ${sessionId}`
+        );
+
+        // Create a placeholder message indicating completion
+        const placeholderContent: MessageContent = {
+          type: 'text',
+          text: '(Agent completed task without text response)',
+        };
+
+        const agentMessage = await storeAgentMessage(sessionId, placeholderContent);
+
+        // Send a complete message directly
+        websocketService.broadcast({
+          type: 'message.new',
+          payload: {
+            sessionId,
+            messageId: agentMessage.id,
+            role: 'agent',
+            content: placeholderContent,
+            timestamp: agentMessage.timestamp.toISOString(),
+          },
+        });
+
+        console.log(`[SessionService] Sent placeholder message for session ${sessionId}`);
       }
     }
   });
