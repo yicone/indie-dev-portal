@@ -154,11 +154,14 @@ export class ACPClient extends EventEmitter {
     }
 
     // Send permission response
+    // Note: Gemini CLI expects the response to match the exact format it needs
     const response: ACPMessage = {
       jsonrpc: '2.0',
       id: message.id,
       result: {
         optionId: allowOption.optionId,
+        // Add outcome field that Gemini CLI might be looking for
+        outcome: 'approved',
       },
     };
 
