@@ -27,6 +27,20 @@ app.use('/contributions', contributionsRouter);
 app.use('/sessions', sessionsRouter);
 app.use('/test-control', testControlRouter);
 
+app.post('/api/gemini/chat', async (req, res) => {
+  const { sessionId, message } = req.body;
+  if (!sessionId || !message) {
+    return res.status(400).send('Missing sessionId or message');
+  }
+  try {
+    const response = await geminiCliManager.chat(sessionId, message);
+    res.json(response);
+  } catch (error) {
+    console.error('[Server] Error in Gemini chat endpoint:', error);
+    res.status(500).send('Error processing chat message');
+  }
+});
+
 const port = Number(process.env.API_PORT ?? 4000);
 
 // Verify Gemini CLI on startup
