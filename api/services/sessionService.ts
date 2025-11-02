@@ -138,6 +138,52 @@ function setupACPClientHandlers(sessionId: string, acpClient: ACPClient): void {
     }
   });
 
+  // Handle ACP responses (for detecting completion)
+  acpClient.on('response', async (message) => {
+    // Check if this is a prompt completion response
+    if (message.result && typeof message.result === 'object' && 'stopReason' in message.result) {
+      console.log(
+        `[SessionService] Prompt completed for session ${sessionId}, stopReason: ${message.result.stopReason}`
+      );
+
+      // Finalize any active streaming
+      const activeMessageId = getActiveMessageId(sessionId);
+
+      if (activeMessageId) {
+        try {
+          // Complete the streaming
+          const fullContent = streamingStateManager.completeStream(activeMessageId);
+          clearActiveMessageId(sessionId);
+
+          // Store complete message to database
+          const completeContent: MessageContent = {
+            type: 'text',
+            text: fullContent,
+          };
+
+          const agentMessage = await storeAgentMessage(sessionId, completeContent);
+
+          // Send message.end
+          websocketService.broadcast({
+            type: 'message.end',
+            payload: {
+              messageId: activeMessageId,
+              content: completeContent,
+              isComplete: true,
+              timestamp: agentMessage.timestamp.toISOString(),
+            },
+          });
+
+          console.log(
+            `[SessionService] Completed streaming: ${activeMessageId}, stored as ${agentMessage.id}`
+          );
+        } catch (error) {
+          console.error(`[SessionService] Error finalizing streaming for ${sessionId}:`, error);
+        }
+      }
+    }
+  });
+
   // Handle ACP errors
   acpClient.on('acp-error', async (error) => {
     console.error(`[SessionService] ACP error for session ${sessionId}:`, error);
@@ -300,68 +346,32 @@ export async function sendPrompt(
     },
   });
 
-  // Send prompt to agent and wait for response
-  const promptPromise = acpClient.sendPrompt(text);
+  // Send prompt to agent (don't wait for response)
+  // Completion is handled by the 'response' event listener in setupACPClientHandlers
+  acpClient.sendPrompt(text).catch((error) => {
+    console.error(`[SessionService] Prompt error for session ${sessionId}:`, error);
+    // Clean up streaming state on error
+    const activeMessageId = getActiveMessageId(sessionId);
+    if (activeMessageId) {
+      streamingStateManager.cancelStream(activeMessageId);
+      clearActiveMessageId(sessionId);
 
-  // Listen for response completion to finalize streaming
-  promptPromise
-    .then(() => {
-      // Prompt completed, finalize any active streaming
-      const activeMessageId = getActiveMessageId(sessionId);
-
-      if (activeMessageId) {
-        // Complete the streaming
-        const fullContent = streamingStateManager.completeStream(activeMessageId);
-        clearActiveMessageId(sessionId);
-
-        // Store complete message to database
-        const completeContent: MessageContent = {
-          type: 'text',
-          text: fullContent,
-        };
-
-        storeAgentMessage(sessionId, completeContent).then((agentMessage) => {
-          // Send message.end
-          websocketService.broadcast({
-            type: 'message.end',
-            payload: {
-              messageId: activeMessageId,
-              content: completeContent,
-              isComplete: true,
-              timestamp: agentMessage.timestamp.toISOString(),
-            },
-          });
-
-          console.log(
-            `[SessionService] Completed streaming: ${activeMessageId}, stored as ${agentMessage.id}`
-          );
-        });
-      }
-    })
-    .catch((error) => {
-      console.error(`[SessionService] Prompt error for session ${sessionId}:`, error);
-      // Clean up streaming state on error
-      const activeMessageId = getActiveMessageId(sessionId);
-      if (activeMessageId) {
-        streamingStateManager.cancelStream(activeMessageId);
-        clearActiveMessageId(sessionId);
-
-        // Notify frontend about the error
-        websocketService.broadcast({
-          type: 'error',
-          payload: {
-            code: 'STREAMING_ERROR',
-            message: error.message || 'Failed to complete message streaming',
-            details: {
-              sessionId,
-              messageId: activeMessageId,
-            },
+      // Notify frontend about the error
+      websocketService.broadcast({
+        type: 'error',
+        payload: {
+          code: 'STREAMING_ERROR',
+          message: error.message || 'Failed to complete message streaming',
+          details: {
+            sessionId,
+            messageId: activeMessageId,
           },
-        });
+        },
+      });
 
-        console.log(`[SessionService] Sent error notification for streaming: ${activeMessageId}`);
-      }
-    });
+      console.log(`[SessionService] Sent error notification for streaming: ${activeMessageId}`);
+    }
+  });
 
   // Update activity
   geminiCliManager.updateActivity(sessionId);
