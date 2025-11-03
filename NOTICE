@@ -1,0 +1,138 @@
+# Third-Party Notices
+
+DevDesk uses third-party libraries or other resources that may be distributed under licenses different from the DevDesk software.
+
+## Runtime Dependencies
+
+### Next.js
+
+- License: MIT
+- Copyright (c) 2024 Vercel, Inc.
+- <https://github.com/vercel/next.js>
+
+### React
+
+- License: MIT
+- Copyright (c) Meta Platforms, Inc. and affiliates.
+- <https://github.com/facebook/react>
+
+### Prisma
+
+- License: Apache-2.0
+- Copyright (c) 2024 Prisma Data, Inc.
+- <https://github.com/prisma/prisma>
+
+### Express
+
+- License: MIT
+- Copyright (c) 2009-2014 TJ Holowaychuk <tj@vision-media.ca>
+- Copyright (c) 2013-2014 Roman Shtylman <shtylman+expressjs@gmail.com>
+- Copyright (c) 2014-2015 Douglas Christopher Wilson <doug@somethingdoug.com>
+- <https://github.com/expressjs/express>
+
+### simple-git
+
+- License: MIT
+- Copyright (c) 2015 Steve King
+- <https://github.com/steveukx/git-js>
+
+### Tailwind CSS
+
+- License: MIT
+- Copyright (c) Tailwind Labs, Inc.
+- <https://github.com/tailwindlabs/tailwindcss>
+
+### Radix UI
+
+- License: MIT
+- Copyright (c) 2022 WorkOS
+- <https://github.com/radix-ui/primitives>
+
+### Lucide Icons
+
+- License: ISC
+- Copyright (c) 2024 Lucide Contributors
+- <https://github.com/lucide-icons/lucide>
+
+### React Markdown
+
+- License: MIT
+- Copyright (c) 2015 Espen Hovlandsdal
+- <https://github.com/remarkjs/react-markdown>
+
+### React Syntax Highlighter
+
+- License: MIT
+- Copyright (c) 2024 Josh Cena
+- <https://github.com/react-syntax-highlighter/react-syntax-highlighter>
+
+### TanStack Query
+
+- License: MIT
+- Copyright (c) 2021-present Tanner Linsley
+- <https://github.com/TanStack/query>
+
+### Zod
+
+- License: MIT
+- Copyright (c) 2020 Colin McDonnell
+- <https://github.com/colinhacks/zod>
+
+### ws (WebSocket)
+
+- License: MIT
+- Copyright (c) 2011 Einar Otto Stangvik <einaros@gmail.com>
+- <https://github.com/websockets/ws>
+
+### Agent Client Protocol SDK
+
+- License: MIT
+- Copyright (c) 2024 Agent Client Protocol Contributors
+- <https://github.com/agentclientprotocol/sdk>
+
+## Development Dependencies
+
+### TypeScript
+
+- License: Apache-2.0
+- Copyright (c) Microsoft Corporation
+- <https://github.com/microsoft/TypeScript>
+
+### ESLint
+
+- License: MIT
+- Copyright OpenJS Foundation and other contributors
+- <https://github.com/eslint/eslint>
+
+### Prettier
+
+- License: MIT
+- Copyright © James Long and contributors
+- <https://github.com/prettier/prettier>
+
+### Vitest
+
+- License: MIT
+- Copyright (c) 2021-Present Anthony Fu <https://github.com/antfu>
+- Copyright (c) 2021-Present Matias Capeletto <https://github.com/patak-dev>
+- <https://github.com/vitest-dev/vitest>
+
+### Husky
+
+- License: MIT
+- Copyright (c) 2021 typicode
+- <https://github.com/typicode/husky>
+
+### commitlint
+
+- License: MIT
+- Copyright (c) 2016 - present Mario Nebl
+- <https://github.com/conventional-changelog/commitlint>
+
+## Full License Texts
+
+For the full license texts of these dependencies, please refer to their respective repositories or the `node_modules` directory after installation.
+
+## Compliance
+
+This project complies with all license requirements of its dependencies. If you believe there is a license compliance issue, please contact the maintainers.

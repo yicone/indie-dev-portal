@@ -2,6 +2,7 @@
   "name": "devdesk",
   "version": "0.1.0",
   "description": "A local-first multi-repo workspace for developers.",
+  "license": "AGPL-3.0",
   "private": true,
   "scripts": {
     "dev": "concurrently \"pnpm dev:web\" \"pnpm dev:server\"",
