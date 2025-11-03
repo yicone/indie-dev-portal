@@ -45,7 +45,10 @@
     "db:seed": "tsx scripts/seed.ts",
     "db:clean-mock": "tsx scripts/clean-mock-data.ts",
     "git:sync": "tsx scripts/sync-git-repos.ts",
-    "lint:md": "prettier --check '**/*.md'",
+    "lint:md": "markdownlint-cli2 '**/*.md'",
+    "lint:md:fix": "markdownlint-cli2 '**/*.md' --fix",
+    "format:md": "prettier --check '**/*.md'",
+    "format:md:fix": "prettier --write '**/*.md'",
     "doc:check": "DOC_AI_CHECK=true ./scripts/doc-agent-check.sh standard",
     "doc:check:quick": "./scripts/doc-agent-check.sh quick",
     "doc:check:full": "./scripts/doc-agent-check.sh deep",
@@ -105,6 +108,7 @@
     "husky": "^9.1.0",
     "jsdom": "^27.1.0",
     "lint-staged": "^15.2.10",
+    "markdownlint-cli2": "^0.18.1",
     "nodemon": "^3.1.10",
     "postcss": "^8.4.38",
     "prettier": "^3.3.3",
@@ -124,6 +128,9 @@
     ],
     "*.{ts,tsx,js,jsx}": [
       "eslint --fix"
+    ],
+    "*.{md}": [
+      "markdownlint-cli2 --fix"
     ]
   }
 }

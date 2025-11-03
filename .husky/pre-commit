@@ -8,23 +8,15 @@ pnpm lint-staged
 echo ""
 echo "📚 Running documentation checks..."
 
-# 1. Markdown linting (fast, always run)
-if git diff --cached --name-only | grep -q '\.md$'; then
-    echo "  🔍 Linting markdown files..."
-    pnpm lint:md || {
-        echo "  ❌ Markdown linting failed"
-        exit 1
-    }
-fi
 
-# 2. Link checking (fast, always run)
+# 1. Link checking (fast, always run)
 echo "  🔗 Checking documentation links..."
 ./scripts/check-links.sh || {
     echo "  ❌ Link check failed"
     exit 1
 }
 
-# 3. AI documentation review (optional, controlled by DOC_AI_CHECK)
+# 2. AI documentation review (optional, controlled by DOC_AI_CHECK)
 if [ "$DOC_AI_CHECK" != "false" ]; then
     echo "  🤖 Running AI documentation review..."
     ./scripts/doc-agent-check.sh quick || {
