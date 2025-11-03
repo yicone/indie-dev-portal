@@ -1,8 +1,8 @@
-# Personal Developer Dashboard - Functional Specification
+# DevDesk - Functional Specification
 
 ## Overview
 
-The Personal Developer Dashboard is a Next.js 15 application that provides developers with a centralized view of their local repositories, recent commits, and quick actions. This document outlines the functional behavior implemented in the application.
+The DevDesk is a Next.js 15 application that provides developers with a centralized view of their local repositories, recent commits, and quick actions. This document outlines the functional behavior implemented in the application.
 
 ## Core Features
 

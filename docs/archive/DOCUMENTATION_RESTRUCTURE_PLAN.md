@@ -103,7 +103,7 @@ touch CHANGELOG.md
 **New README.md Structure**:
 
 ````markdown
-# Personal Developer Dashboard
+# DevDesk
 
 [Brief 2-3 sentence description]
 

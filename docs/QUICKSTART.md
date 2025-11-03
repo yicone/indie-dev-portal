@@ -149,4 +149,4 @@ After verifying everything works:
 3. Configure git scanning paths in `.env`
 4. Run `pnpm git:sync` regularly to update repository data
 
-Enjoy your Personal Developer Dashboard! 🚀
+Enjoy your DevDesk! 🚀

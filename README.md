@@ -1,6 +1,6 @@
-# Personal Developer Dashboard
+# DevDesk
 
-A modern, AI-first developer dashboard that surfaces your local git repositories, recent commits, and quick actions at a glance.
+A local-first multi-repo workspace for developers.
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)

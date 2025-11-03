@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Personal Developer Dashboard now supports **real git integration**, automatically scanning your local filesystem for git repositories and extracting metadata, commits, and project information.
+DevDesk supports **real git integration**, automatically scanning your local filesystem for git repositories and extracting metadata, commits, and project information.
 
 ## Features
 

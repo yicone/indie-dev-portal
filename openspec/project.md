@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Personal Developer Dashboard that surfaces local repos, recent commits, and quick actions.
+DevDesk that surfaces local repos, recent commits, and quick actions.
 
 ## Tech Stack
 
