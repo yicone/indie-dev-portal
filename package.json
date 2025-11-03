@@ -3,6 +3,26 @@
   "version": "0.1.0",
   "description": "A local-first multi-repo workspace for developers.",
   "license": "AGPL-3.0",
+  "author": "yicone <yicone@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yicone/indie-dev-portal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yicone/indie-dev-portal/issues"
+  },
+  "homepage": "https://github.com/yicone/indie-dev-portal#readme",
+  "keywords": [
+    "developer-tools",
+    "git",
+    "dashboard",
+    "local-first",
+    "multi-repo",
+    "workspace",
+    "ai-agent",
+    "nextjs",
+    "typescript"
+  ],
   "private": true,
   "scripts": {
     "dev": "concurrently \"pnpm dev:web\" \"pnpm dev:server\"",

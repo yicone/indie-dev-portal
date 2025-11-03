@@ -4,7 +4,8 @@ A local-first multi-repo workspace for developers.
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+![Node.js](https://img.shields.io/badge/Node.js-20+-green)
+![License](https://img.shields.io/badge/license-AGPL--3.0-blue)
 
 ## ✨ Highlights
 
@@ -127,27 +128,28 @@ DATABASE_URL="file:./dev.db"
 
 ## 🤝 Contributing
 
-This project was built with AI pair programming using Windsurf Cascade.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-**For Contributors**:
+### Quick Start for Contributors
 
-- **AI Agents**: See [AGENTS.md](AGENTS.md) for OpenSpec workflow entry point
-- **OpenSpec Process**: Follow [OpenSpec Workflow](openspec/AGENTS.md) for spec-driven development
-- **Project Rules**: Review [AGENTS.md](AGENTS.md) for project conventions
-- **Code Style**: Run `pnpm lint` and `pnpm format:write` before committing
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes following our [code style](CONTRIBUTING.md#code-style)
+4. Write tests for your changes
+5. Commit using [Conventional Commits](https://www.conventionalcommits.org/)
+6. Push to your fork and open a Pull Request
 
-**Documentation Standards**:
+### Code of Conduct
 
-- **Specifications**: All specs in `openspec/specs/` and `openspec/changes/`
-- **Supplementary Docs**: Testing guides, migration docs in `docs/`
-- **SSOT Principle**: Every piece of information has one authoritative source
-- **Entry Points**: Start with `AGENTS.md`, `openspec/project.md`, or `docs/README.md`
+This project adheres to the Contributor Covenant [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
 
-[OpenSpec lessons learned →](docs/OPENSPEC_LESSONS_LEARNED.md)
+### Security
+
+If you discover a security vulnerability, please follow our [Security Policy](SECURITY.md).
 
 ## 📄 License
 
-MIT
+AGPL-3.0 - see [LICENSE](LICENSE) for details
 
 ## 🙏 Acknowledgments
 

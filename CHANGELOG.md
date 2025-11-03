@@ -53,6 +53,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Open Source Preparation**: Prepared project for open source release
+  - Rebranded to "DevDesk" with new tagline
+  - Added AGPL-3.0 license
+  - Created comprehensive CONTRIBUTING.md guide
+  - Added CODE_OF_CONDUCT.md (Contributor Covenant v2.1)
+  - Added SECURITY.md with vulnerability reporting process
+  - Added GitHub issue templates (bug report, feature request)
+  - Added GitHub pull request template
+  - Configured commitlint for commit message validation
+  - Added commit message template (.gitmessage)
+  - Updated package.json with repository metadata
+  - Added NOTICE file documenting third-party licenses
+
 - **Documentation Management System**: Complete documentation management framework
   - `docs/DOCUMENTATION_MANAGEMENT.md`: Comprehensive guide for AI agents and contributors
   - Documentation templates in `docs/templates/` for new projects
@@ -63,9 +76,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Project Name**: Renamed from "Personal Developer Dashboard" to "DevDesk"
+- **License**: Changed to AGPL-3.0 (copyleft)
 - **AGENTS.md**: Updated `[documentation-agent]` responsibilities to reference new management guide
-- **README.md**: Added documentation standards to Contributing section
-- **docs/README.md**: Added DOCUMENTATION_MANAGEMENT.md to entry points and index
+- **README.md**: Updated title, tagline, and added documentation standards
+- **docs/**: Updated all references to use new project name
 
 ### Planned
 
