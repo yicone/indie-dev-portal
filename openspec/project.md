@@ -40,6 +40,45 @@ DevDesk that surfaces local repos, recent commits, and quick actions.
 
 <!-- [Describe your code style preferences, formatting rules, and naming conventions] -->
 
+#### Documentation Files
+
+**In docs/ directory**:
+
+- Use `SCREAMING_SNAKE_CASE.md` for top-level docs (e.g., `QUICKSTART.md`, `ROADMAP.md`)
+- Use `kebab-case.md` for subdirectory docs (e.g., `testing/agent-chat-ui-testing-guide.md`)
+- Use descriptive names that indicate purpose
+
+**In openspec/ directory**:
+
+- Use `kebab-case` for change IDs (e.g., `add-feature-name`, `fix-bug-name`)
+- Use `kebab-case` for capability names (e.g., `agent-chat-ui`, `http-server`)
+- Standard files: `proposal.md`, `tasks.md`, `design.md`, `spec.md`
+
+#### Code Files
+
+Follow Next.js and TypeScript conventions:
+
+- Components: `PascalCase.tsx` (e.g., `AgentChatPanel.tsx`)
+- Utilities: `camelCase.ts` (e.g., `gitUtils.ts`)
+- API routes: `kebab-case.ts` (e.g., `agent-sessions.ts`)
+- Types: `PascalCase` (e.g., `SessionStatus`)
+
+#### TypeScript/React
+
+- Use functional components with hooks
+- Prefer `const` over `let`
+- Use TypeScript strict mode
+- Avoid `any` type (use proper types or `unknown`)
+- Use async/await over promises
+
+#### Documentation
+
+- Use Markdown for all documentation
+- Include code examples where helpful
+- Link to related documents
+- Keep line length reasonable (<120 characters)
+- Use relative links for internal references
+
 ### Architecture Patterns
 
 <!-- [Document your architectural decisions and patterns] -->
@@ -47,6 +86,25 @@ DevDesk that surfaces local repos, recent commits, and quick actions.
 ### Testing Strategy
 
 <!-- [Explain your testing approach and requirements] -->
+
+#### Before Committing
+
+- ✅ TypeScript compilation passes (`pnpm exec tsc --noEmit`)
+- ✅ No console errors
+- ✅ Markdown linting passes (automatic via pre-commit hook)
+- ✅ Documentation links valid (automatic via pre-commit hook)
+
+#### For OpenSpec Changes
+
+- ✅ Validate with `openspec validate <change-id> --strict`
+- ✅ All tasks in tasks.md marked as complete
+- ✅ Spec deltas follow correct format (#### Scenario:)
+
+#### For Features
+
+- ✅ Manual testing completed
+- ✅ Testing checklist followed (if exists)
+- ✅ No regressions in existing functionality
 
 ### Git Workflow
 
@@ -108,6 +166,53 @@ DevDesk that surfaces local repos, recent commits, and quick actions.
 
 - `docs/summaries/` - Keep for 1 month, then archive or delete
 - `docs/archive/` - Review annually, delete if no longer relevant
+
+### AI Agent Behavior
+
+#### When Starting a Task
+
+1. Check for existing OpenSpec specs and changes
+2. Read relevant documentation
+3. Understand the context before coding
+4. Ask clarifying questions if needed
+
+#### When Implementing Features
+
+1. Always create OpenSpec change first
+2. Follow the spec deltas
+3. Update tasks.md as you progress
+4. Test frequently during development
+5. Commit incrementally with clear messages
+
+#### When Documenting
+
+1. Specifications → OpenSpec (`openspec/specs/` and `openspec/changes/`)
+2. Supplementary guides → `docs/` (testing, migration, lessons learned)
+3. Never duplicate specifications
+
+#### Documentation Management
+
+**OpenSpec Territory** (Specifications and Requirements):
+
+- ✅ All feature specifications → `openspec/specs/<capability>/spec.md`
+- ✅ All change proposals → `openspec/changes/<change-id>/`
+- ✅ All architectural decisions → `openspec/specs/<capability>/design.md`
+- ✅ Project conventions → `openspec/project.md`
+
+**docs/ Territory** (Supplementary Documentation Only):
+
+- ✅ Testing guides and checklists
+- ✅ Migration guides
+- ✅ Lessons learned
+- ✅ Quick start guides
+- ✅ Roadmaps
+- ❌ Never create specification documents in docs/
+
+### References
+
+- **OpenSpec Workflow**: `openspec/AGENTS.md`
+- **Project Conventions**: `openspec/project.md`
+- **Lessons Learned**: `docs/OPENSPEC_LESSONS_LEARNED.md`
 
 ## External Dependencies
 
