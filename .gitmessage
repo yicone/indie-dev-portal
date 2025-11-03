@@ -1,0 +1,38 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+
+# Type must be one of:
+# feat:     New feature
+# fix:      Bug fix
+# docs:     Documentation changes
+# spec:     OpenSpec changes
+# refactor: Code refactoring
+# test:     Test changes
+# chore:    Build/tooling changes
+# perf:     Performance improvements
+# ci:       CI/CD changes
+# build:    Build system changes
+# revert:   Revert a commit
+# style:    Code style changes
+
+# Scope is optional, examples: feat(api), fix(ui), docs(readme)
+
+# Subject:
+# - Use imperative, present tense: "add" not "added" or "adds"
+# - Don't capitalize first letter
+# - No period at the end
+# - Maximum 100 characters
+
+# Body:
+# - Must have blank line after subject
+# - Explain what and why, not how
+# - Maximum 200 characters per line
+# - Can have multiple paragraphs
+
+# Footer:
+# - Must have blank line after body
+# - Use for breaking changes and issue references
+# - Examples: Closes #123, BREAKING CHANGE: ...
