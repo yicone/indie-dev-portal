@@ -1,1 +1,7 @@
+#!/bin/sh
+
+# Run commitlint for basic format validation
 pnpm exec commitlint --edit $1
+
+# Run custom commit message validator for content quality checks
+python3 scripts/git-commit-message-quality-tools/commit_msg_validator.py $1
