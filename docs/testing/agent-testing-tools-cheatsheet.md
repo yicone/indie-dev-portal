@@ -1,6 +1,8 @@
 # Agent Testing Tools - Cheatsheet
 
-Quick reference for common testing scenarios.
+> **Quick Reference** for common testing scenarios.
+>
+> **Complete Guide**: See [AGENT_TESTING_TOOLS.md](./AGENT_TESTING_TOOLS.md) for full documentation.
 
 ## 🚀 Recommended: Use API (No Restart!)
 
@@ -126,5 +128,5 @@ Test in sequence:
 
 ## 📚 Full Documentation
 
-- **Quick Test Guide**: `docs/testing/agent-testing-tools-quick-test.md`
-- **Full Usage Guide**: `docs/AGENT_TESTING_TOOLS_USAGE_GUIDE.md`
+- **Complete Guide**: [AGENT_TESTING_TOOLS.md](./AGENT_TESTING_TOOLS.md) - Single source of truth
+- **Requirements Spec**: [agent-testing-tools spec](../../openspec/specs/agent-testing-tools/spec.md)
