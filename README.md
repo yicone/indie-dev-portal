@@ -19,27 +19,16 @@ A local-first multi-repo workspace for developers.
 
 ## 🚀 Quick Start
 
+For complete setup instructions, see **[Quick Start Guide](docs/QUICKSTART.md)**.
+
 ```bash
-# 1. Install dependencies
-pnpm install
-
-# 2. Setup database
+# Quick setup
+pnpm install && cp .env.example .env
 pnpm db:generate && pnpm db:migrate
-
-# 3. Configure git scanning
-cp .env.example .env
-# Edit .env: Set GIT_SCAN_PATHS to your project directories
-
-# 4. Sync repositories
-pnpm git:sync
-
-# 5. Start development
-pnpm dev
+pnpm git:sync && pnpm dev
 ```
 
 Open <http://localhost:3000> to view the dashboard.
-
-[Detailed setup guide →](docs/QUICKSTART.md)
 
 ## 📖 Documentation
 
@@ -49,24 +38,27 @@ Open <http://localhost:3000> to view the dashboard.
 - **[Git Integration Guide](docs/GIT_INTEGRATION.md)** - How repository scanning works
 - **[Roadmap & Limitations](docs/ROADMAP.md)** - Future plans and current limitations
 
-### For Developers
-
-- **[Project Conventions](openspec/project.md)** - Tech stack, data inputs, and development workflow
-- **[OpenSpec Workflow](openspec/AGENTS.md)** - Spec-driven development process
-- **[Agent Collaboration](AGENTS.md)** - AI agent entry point
-- **[Changelog](CHANGELOG.md)** - Version history
-
 ### For Contributors
 
-- **[Documentation Index](docs/README.md)** - All supplementary documentation
-- **[OpenSpec Lessons](docs/OPENSPEC_LESSONS_LEARNED.md)** - Best practices and lessons learned
-- **[Historical Fixes](docs/FIXES_INDEX.md)** - Pre-OpenSpec fix records (archived)
+- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to this project
+- **[Project Conventions](openspec/project.md)** - Tech stack, architecture, and development workflow
+- **[Feature Specifications](openspec/specs/)** - Current feature specs and requirements
+- **[OpenSpec Workflow](openspec/AGENTS.md)** - Spec-driven development process
+- **[Code of Conduct](CODE_OF_CONDUCT.md)** - Community guidelines
+- **[Changelog](CHANGELOG.md)** - Version history
 
-## 🛠️ Tech Stack
+### For AI Agents
+
+- **[Agent Collaboration](AGENTS.md)** - AI agent entry point
+- **[OpenSpec Lessons](docs/OPENSPEC_LESSONS_LEARNED.md)** - Best practices and lessons learned
+
+## 🚽️ Tech Stack
 
 **Frontend**: Next.js 15, TypeScript, Tailwind CSS, shadcn/ui, React Query  
 **Backend**: Express, Prisma, SQLite, simple-git  
 **Development**: ESLint, Prettier, Husky
+
+[See detailed architecture →](openspec/project.md#architecture-patterns)
 
 ## 📝 Key Commands
 
@@ -77,19 +69,9 @@ pnpm db:migrate   # Run database migrations
 pnpm lint         # Run linting
 ```
 
-[See detailed setup guide →](docs/QUICKSTART.md)
-
 ## 🔧 Configuration
 
-Key environment variables in `.env`:
-
-```bash
-GIT_SCAN_PATHS="/Users/username/Projects,/Users/username/Workspace"
-GIT_SCAN_DEPTH=2
-DATABASE_URL="file:./dev.db"
-```
-
-[See setup guide for details →](docs/QUICKSTART.md)
+[See configuration details →](docs/QUICKSTART.md)
 
 ## 🔄 How It Works
 
@@ -98,7 +80,7 @@ DATABASE_URL="file:./dev.db"
 3. **Browse**: View all projects in the dashboard at `localhost:3000`
 4. **Update**: Run `pnpm git:sync` periodically to refresh data
 
-[Learn more about git integration →](docs/GIT_INTEGRATION.md)
+[Learn more →](docs/GIT_INTEGRATION.md)
 
 ## 🐛 Troubleshooting
 
@@ -112,11 +94,7 @@ DATABASE_URL="file:./dev.db"
 
 ## 🚧 Known Limitations
 
-- **No Real-Time Updates**: Requires manual `pnpm git:sync` to refresh
-- **Local Repositories Only**: No GitHub/GitLab integration yet
-- **Browser Restrictions**: Some protocols may be blocked
-
-[See complete list and workarounds →](docs/ROADMAP.md#known-limitations)
+[See limitations and workarounds →](docs/ROADMAP.md#known-limitations)
 
 ## 🗺️ Roadmap
 

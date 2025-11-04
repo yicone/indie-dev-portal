@@ -62,28 +62,13 @@ pnpm dev
 
 The application will be available at <http://localhost:3000>.
 
-### Project Structure
-
-```
-indie-dev-portal/
-├── api/              # Backend API (Express)
-├── app/              # Next.js app directory
-├── components/       # React components
-├── lib/              # Shared utilities
-├── prisma/           # Database schema
-├── openspec/         # OpenSpec specifications
-├── docs/             # Documentation
-└── scripts/          # Build and utility scripts
-```
+For detailed project structure, see [Project Structure](openspec/project.md#project-structure) in project conventions.
 
 ## Making Changes
 
 ### Branching Strategy
 
-- `main` - Production-ready code
-- `feature/*` - New features
-- `fix/*` - Bug fixes
-- `docs/*` - Documentation updates
+See [Git Workflow](openspec/project.md#git-workflow) in project conventions for our branching strategy and commit guidelines.
 
 ### Workflow
 
@@ -120,61 +105,13 @@ indie-dev-portal/
 
 We follow [Conventional Commits](https://www.conventionalcommits.org/) specification.
 
-### Commit Message Format
+For detailed commit conventions and examples, see [Git Workflow](openspec/project.md#git-workflow) in project conventions.
 
-```
-<type>(<scope>): <subject>
+**Quick Reference**:
 
-<body>
-
-<footer>
-```
-
-### Types
-
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Code style changes (formatting, missing semicolons, etc.)
-- `refactor`: Code refactoring
-- `perf`: Performance improvements
-- `test`: Adding or updating tests
-- `chore`: Maintenance tasks
-- `ci`: CI/CD changes
-- `build`: Build system changes
-
-### Scope (Optional)
-
-The scope should be the name of the affected module or component:
-
-- `api`: Backend API
-- `ui`: User interface
-- `db`: Database
-- `git`: Git integration
-- `agent`: AI agent features
-- `docs`: Documentation
-
-### Examples
-
-```bash
-# Feature
-git commit -m "feat(agent): add streaming response support"
-
-# Bug fix
-git commit -m "fix(api): correct session status transition logic"
-
-# Documentation
-git commit -m "docs: update contribution guidelines"
-
-# Breaking change
-git commit -m "feat(api): redesign authentication flow
-
-BREAKING CHANGE: API endpoints now require JWT tokens"
-```
-
-### Commit Message Validation
-
-Commits are automatically validated using commitlint. Invalid commit messages will be rejected.
+- Format: `<type>(<scope>): <subject>`
+- Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `spec`
+- Commits are automatically validated using commitlint
 
 ## Pull Request Process
 
@@ -189,142 +126,30 @@ Commits are automatically validated using commitlint. Invalid commit messages wi
 - [ ] No console errors or warnings
 - [ ] Commit messages follow conventions
 
-### PR Description Template
-
-When you open a PR, please fill out the template:
-
-```markdown
-## Description
-
-Brief description of changes
-
-## Type of Change
-
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Breaking change
-- [ ] Documentation update
-
-## Testing
-
-How to test these changes
-
-## Checklist
-
-- [ ] Code follows style guidelines
-- [ ] Self-reviewed
-- [ ] Commented complex code
-- [ ] Updated documentation
-- [ ] Added tests
-- [ ] All tests pass
-```
-
-### Review Process
-
-1. **Automated checks** must pass (linting, tests, build)
-2. **Code review** by at least one maintainer
-3. **Changes requested** may require updates
-4. **Approval** and merge by maintainer
+For PR template and review process details, see [Git Workflow](openspec/project.md#git-workflow) in project conventions.
 
 ## Code Style
 
-### TypeScript/JavaScript
+For detailed code style guidelines, see [Code Style](openspec/project.md#code-style) in project conventions.
+
+**Quick Reference**:
 
 - Use TypeScript for all new code
 - Prefer `const` over `let`, avoid `var`
 - Use async/await over promises
-- Avoid `any` type - use proper types or `unknown`
-- Use functional components with hooks (React)
-
-### Naming Conventions
-
-- **Files**: `camelCase.ts` for utilities, `PascalCase.tsx` for components
-- **Variables**: `camelCase`
-- **Constants**: `SCREAMING_SNAKE_CASE`
-- **Types/Interfaces**: `PascalCase`
-- **Functions**: `camelCase`
-
-### Code Organization
-
-```typescript
-// 1. Imports (external, then internal)
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-
-// 2. Types/Interfaces
-interface Props {
-  title: string;
-}
-
-// 3. Component/Function
-export function MyComponent({ title }: Props) {
-  // 4. Hooks
-  const [state, setState] = useState();
-
-  // 5. Functions
-  const handleClick = () => {
-    // ...
-  };
-
-  // 6. Render
-  return <div>{title}</div>;
-}
-```
-
-### Formatting
-
-We use Prettier for code formatting. Run before committing:
-
-```bash
-pnpm format:write
-```
-
-Configuration is in `.prettierrc`.
+- Avoid `any` type
+- Files: `camelCase.ts` for utilities, `PascalCase.tsx` for components
+- Run `pnpm format:write` before committing
 
 ## Testing
 
-### Running Tests
+For testing strategy and guidelines, see [Testing Strategy](openspec/project.md#testing-strategy) in project conventions.
 
-```bash
-# Run all tests
-pnpm test
+**Quick Reference**:
 
-# Run tests in watch mode
-pnpm test
-
-# Run tests with UI
-pnpm test:ui
-
-# Run tests once (CI mode)
-pnpm test:run
-```
-
-### Writing Tests
-
-- Place tests next to the code: `myModule.test.ts`
-- Use descriptive test names
+- Place tests next to code: `*.test.ts`
+- Run tests: `pnpm test`
 - Follow AAA pattern: Arrange, Act, Assert
-- Mock external dependencies
-
-Example:
-
-```typescript
-import { describe, it, expect } from 'vitest';
-import { myFunction } from './myModule';
-
-describe('myFunction', () => {
-  it('should return expected result', () => {
-    // Arrange
-    const input = 'test';
-
-    // Act
-    const result = myFunction(input);
-
-    // Assert
-    expect(result).toBe('expected');
-  });
-});
-```
 
 ## Documentation
 

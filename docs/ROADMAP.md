@@ -152,7 +152,7 @@
 
 ## 💡 Feature Requests
 
-Have an idea? [Open an issue](https://github.com/username/repo/issues) with the `enhancement` label.
+Have an idea? Open an issue on GitHub with the `enhancement` label.
 
 ## 📝 Notes
 

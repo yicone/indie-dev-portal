@@ -38,69 +38,89 @@ DevDesk that surfaces local repos, recent commits, and quick actions.
 
 ### Code Style
 
-<!-- [Describe your code style preferences, formatting rules, and naming conventions] -->
+**TypeScript/JavaScript**:
 
-#### Documentation Files
-
-**In docs/ directory**:
-
-- Use `SCREAMING_SNAKE_CASE.md` for top-level docs (e.g., `QUICKSTART.md`, `ROADMAP.md`)
-- Use `kebab-case.md` for subdirectory docs (e.g., `testing/agent-chat-ui-testing-guide.md`)
-- Use descriptive names that indicate purpose
-
-**In openspec/ directory**:
-
-- Use `kebab-case` for change IDs (e.g., `add-feature-name`, `fix-bug-name`)
-- Use `kebab-case` for capability names (e.g., `agent-chat-ui`, `http-server`)
-- Standard files: `proposal.md`, `tasks.md`, `design.md`, `spec.md`
-
-#### Code Files
-
-Follow Next.js and TypeScript conventions:
-
-- Components: `PascalCase.tsx` (e.g., `AgentChatPanel.tsx`)
-- Utilities: `camelCase.ts` (e.g., `gitUtils.ts`)
-- API routes: `kebab-case.ts` (e.g., `agent-sessions.ts`)
-- Types: `PascalCase` (e.g., `SessionStatus`)
-
-#### TypeScript/React
-
-- Use functional components with hooks
-- Prefer `const` over `let`
-- Use TypeScript strict mode
-- Avoid `any` type (use proper types or `unknown`)
+- Use TypeScript for all new code (strict mode enabled)
+- Prefer `const` over `let`, avoid `var`
 - Use async/await over promises
+- Avoid `any` type - use proper types or `unknown`
+- Use functional components with hooks (React)
 
-#### Documentation
+**Naming Conventions**:
+
+- Variables/Functions: `camelCase`
+- Constants: `SCREAMING_SNAKE_CASE`
+- Types/Interfaces: `PascalCase`
+- Components: `PascalCase.tsx`
+- Utilities: `camelCase.ts`
+- API routes: `kebab-case.ts`
+
+**Formatting**: Use Prettier (`.prettierrc`). Run `pnpm format:write` before committing.
+
+### File Naming Conventions
+
+**Documentation files**:
+
+- `docs/`: `SCREAMING_SNAKE_CASE.md` for top-level, `kebab-case.md` for subdirectories
+- `openspec/`: `kebab-case` for change IDs and capability names
+- Standard OpenSpec files: `proposal.md`, `tasks.md`, `design.md`, `spec.md`
+
+**Code documentation**:
 
 - Use Markdown for all documentation
 - Include code examples where helpful
 - Link to related documents
-- Keep line length reasonable (<120 characters)
+- Keep line length <120 characters
 - Use relative links for internal references
+
+### Project Structure
+
+```
+indie-dev-portal/
+├── api/              # Backend API (Express)
+├── app/              # Next.js app directory
+├── components/       # React components
+├── lib/              # Shared utilities
+├── prisma/           # Database schema
+├── openspec/         # OpenSpec specifications
+├── docs/             # Documentation
+└── scripts/          # Build and utility scripts
+```
 
 ### Architecture Patterns
 
-<!-- [Document your architectural decisions and patterns] -->
+**Frontend**: Next.js 15 App Router with React Server Components  
+**Backend**: Express REST API with Prisma ORM  
+**Database**: SQLite for local-first storage  
+**State Management**: React Query for server state, React hooks for local state  
+**Styling**: Tailwind CSS + shadcn/ui components
+
+**Data Flow**: Filesystem → Git Service → Prisma → API → React Query → UI
 
 ### Testing Strategy
 
-<!-- [Explain your testing approach and requirements] -->
+**Unit Tests**: Vitest for utilities and components  
+**E2E Tests**: Playwright (planned)  
+**API Tests**: `pnpm test:api` for endpoint validation  
+**Test Files**: Place tests next to code as `*.test.ts`  
+**Coverage**: Focus on critical paths and business logic
 
-#### Before Committing
+### Quality Checks
+
+**Before Committing**:
 
 - ✅ TypeScript compilation passes (`pnpm exec tsc --noEmit`)
 - ✅ No console errors
 - ✅ Markdown linting passes (automatic via pre-commit hook)
 - ✅ Documentation links valid (automatic via pre-commit hook)
 
-#### For OpenSpec Changes
+**For OpenSpec Changes**:
 
 - ✅ Validate with `openspec validate <change-id> --strict`
 - ✅ All tasks in tasks.md marked as complete
 - ✅ Spec deltas follow correct format (#### Scenario:)
 
-#### For Features
+**For Features**:
 
 - ✅ Manual testing completed
 - ✅ Testing checklist followed (if exists)
@@ -108,24 +128,63 @@ Follow Next.js and TypeScript conventions:
 
 ### Git Workflow
 
-<!-- [Describe your branching strategy and commit conventions] -->
+**Branching Strategy**:
+
+- `main` - Production-ready code
+- `feature/*` - New features
+- `fix/*` - Bug fixes
+- `docs/*` - Documentation updates
+
+**Commit Convention**: [Conventional Commits](https://www.conventionalcommits.org/)
+
+- Format: `<type>(<scope>): <subject>`
+- Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `spec`
+- Validation: Automatic via commitlint + husky
+
+**Pull Requests**:
+
+- Require passing CI checks and code review before merge
+- Use PR template: Description, Type of Change, Testing, Checklist
+- Review process: Automated checks → Code review → Approval → Merge
 
 ## Domain Context
 
-<!-- [Add domain-specific knowledge that AI assistants need to understand] -->
+**Core Concept**: DevDesk is a local-first developer workspace that discovers and tracks git repositories on the local filesystem.
+
+**Key Workflows**:
+
+1. Repository discovery via filesystem scanning
+2. Metadata extraction from git history and config files
+3. Dashboard visualization with search/filter/sort
+4. Quick actions (open in VS Code, view diffs, add notes)
 
 ## Important Constraints
 
-<!-- [List any technical, business, or regulatory constraints] -->
+**Technical**:
 
-### Collaboration Workflow
+- Local-first: No cloud dependencies, all data stored in SQLite
+- Browser security: Protocol handlers (`vscode://`, `file://`) may be restricted
+- Manual sync: No real-time updates, requires `pnpm git:sync`
 
-- **Bootstrap** `pnpm install` then approve optional build scripts if required.
-- **Database** `pnpm db:generate` → `pnpm db:migrate` → `pnpm git:sync` (syncs real git repos).
-- **Development** Run `pnpm dev` to start Next.js and Express concurrently (`http://localhost:3000`, `http://localhost:4000`).
-- **Git Sync** Run `pnpm git:sync` to discover and update repositories from filesystem.
-- **Lint/Format** Use `pnpm lint` and `pnpm format:write` before handoffs.
-- **Design Verification** Cross-check every UI change against the prototype folder before merging.
+**Performance**:
+
+- Scan depth limited by `GIT_SCAN_DEPTH` to avoid excessive filesystem traversal
+- Pagination: 6 repos per page to maintain UI responsiveness
+
+## Development Workflow
+
+**Setup**:
+
+1. `pnpm install` - Install dependencies
+2. `pnpm db:generate` → `pnpm db:migrate` - Setup database
+3. `pnpm git:sync` - Sync real git repositories
+4. `pnpm dev` - Start servers (`localhost:3000`, `localhost:4000`)
+
+**Daily Workflow**:
+
+- Run `pnpm git:sync` to update repository data
+- Use `pnpm lint` and `pnpm format:write` before commits
+- Cross-check UI changes against prototype folder
 
 ### Documentation Principles
 
@@ -134,7 +193,7 @@ Follow Next.js and TypeScript conventions:
 3. **Audience-Oriented**: Organize by user type (Users/Developers/Contributors)
 4. **Progressive Disclosure**: Brief summaries + links to details
 
-### Documentation Territory
+## Documentation Territory
 
 **OpenSpec Territory** (Specifications & Requirements):
 
@@ -145,27 +204,24 @@ Follow Next.js and TypeScript conventions:
 
 **docs/ Territory** (Supplementary Documentation ONLY):
 
-- `docs/QUICKSTART.md`, `docs/ROADMAP.md` - Top-level guides (SCREAMING_SNAKE_CASE)
-- `docs/testing/` - Testing guides and checklists (kebab-case)
-- `docs/summaries/YYYY-MM-DD-summary.md` - Work summaries (kebab-case, dated)
-- `docs/archive/` - Outdated documentation
+- `docs/QUICKSTART.md`, `docs/ROADMAP.md` - Top-level guides
+- `docs/testing/` - Testing guides and checklists
+- `docs/summaries/YYYY-MM-DD-summary.md` - Work summaries (keep 1 month)
+- `docs/archive/` - Outdated documentation (review annually)
 
-**Forbidden**:
+**Rules**:
 
-- ❌ Never create specification documents in `docs/`
-- ❌ Never duplicate requirements from OpenSpec in `docs/`
-- ❌ Never create feature proposals in `docs/`
+- ✅ Specifications → `openspec/specs/`
+- ✅ Change proposals → `openspec/changes/`
+- ✅ Supplementary guides → `docs/`
+- ❌ Never create specifications in `docs/`
+- ❌ Never duplicate requirements from OpenSpec
 
-**Testing Documentation Rules**:
+**Testing Documentation**:
 
-- **Change-specific tests** → `openspec/changes/<id>/TESTING.md` or `openspec/changes/archive/YYYY-MM-DD-<id>/TESTING.md`
-- **General testing guides** → `docs/testing/<topic>-testing-guide.md`
-- **Test checklists** → `docs/testing/<feature>-test-checklist.md`
-
-**Lifecycle Management**:
-
-- `docs/summaries/` - Keep for 1 month, then archive or delete
-- `docs/archive/` - Review annually, delete if no longer relevant
+- Change-specific tests → `openspec/changes/<id>/TESTING.md` or `openspec/changes/archive/YYYY-MM-DD-<id>/TESTING.md`
+- General testing guides → `docs/testing/<topic>-testing-guide.md`
+- Test checklists → `docs/testing/<feature>-test-checklist.md`
 
 ### AI Agent Behavior
 
@@ -190,34 +246,23 @@ Follow Next.js and TypeScript conventions:
 2. Supplementary guides → `docs/` (testing, migration, lessons learned)
 3. Never duplicate specifications
 
-#### Documentation Management
-
-**OpenSpec Territory** (Specifications and Requirements):
-
-- ✅ All feature specifications → `openspec/specs/<capability>/spec.md`
-- ✅ All change proposals → `openspec/changes/<change-id>/`
-- ✅ All architectural decisions → `openspec/specs/<capability>/design.md`
-- ✅ Project conventions → `openspec/project.md`
-
-**docs/ Territory** (Supplementary Documentation Only):
-
-- ✅ Testing guides and checklists
-- ✅ Migration guides
-- ✅ Lessons learned
-- ✅ Quick start guides
-- ✅ Roadmaps
-- ❌ Never create specification documents in docs/
-
-### References
-
-- **OpenSpec Workflow**: `openspec/AGENTS.md`
-- **Project Conventions**: `openspec/project.md`
-- **Lessons Learned**: `docs/OPENSPEC_LESSONS_LEARNED.md`
-
 ## External Dependencies
 
-<!-- [Document key external services, APIs, or systems] -->
+**Prerequisites**:
 
-### Design source
+- Node.js 20.x or higher
+- pnpm 8.x or higher
+- Git CLI
+- VS Code (optional, for protocol handler integration)
 
-- Use prototype assets under `prototype/Peronal Developer Dashboard - AI First Draft/` as the UI authority.
+**Key Libraries**:
+
+- Next.js 15, TypeScript, Tailwind CSS, shadcn/ui, React Query
+- Express, Prisma, SQLite, simple-git
+- ESLint, Prettier, Husky
+
+## Design Guidelines
+
+- Use prototype assets under `prototype/DevDesk - AI First Draft/` as the UI authority
+- Follow Catppuccin color palette for theming
+- Maintain WCAG accessibility standards
