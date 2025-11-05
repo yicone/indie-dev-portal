@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { DashboardHeader, SortOption } from "./components/DashboardHeader";
 import { ProjectCard, Project } from "./components/ProjectCard";
 import { Skeleton } from "./components/ui/skeleton";
+import { ChatPanel } from "./components/ChatPanel";
+import { ChatButton } from "./components/ChatButton";
 
 // Mock data for projects
 const mockProjects: Project[] = [
@@ -365,6 +367,8 @@ export default function App() {
   const [sortBy, setSortBy] = useState<SortOption>("lastOpened");
   const [isLoading, setIsLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatInitialRepo, setChatInitialRepo] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     // Apply theme to document
@@ -399,6 +403,11 @@ export default function App() {
         project.id === projectId ? { ...project, notes } : project
       )
     );
+  };
+
+  const handleChatWithRepo = (repoName: string) => {
+    setChatInitialRepo(repoName);
+    setIsChatOpen(true);
   };
 
   const filteredProjects = projects
@@ -493,6 +502,7 @@ export default function App() {
                 key={project.id} 
                 project={project}
                 onUpdateNotes={handleUpdateNotes}
+                onChatWithRepo={handleChatWithRepo}
               />
             ))}
           </div>
@@ -517,6 +527,18 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Chat Panel & Button */}
+      <ChatButton onClick={() => setIsChatOpen(true)} isOpen={isChatOpen} />
+      <ChatPanel 
+        isOpen={isChatOpen} 
+        onClose={() => {
+          setIsChatOpen(false);
+          setChatInitialRepo(undefined);
+        }}
+        repositories={projects.map(p => p.name)}
+        initialRepository={chatInitialRepo}
+      />
     </div>
   );
 }

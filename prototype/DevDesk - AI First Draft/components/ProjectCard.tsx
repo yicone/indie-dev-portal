@@ -9,7 +9,8 @@ import {
   XCircle,
   Clock,
   StickyNote,
-  Edit3
+  Edit3,
+  MessageSquare
 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
@@ -48,6 +49,7 @@ export interface Project {
 interface ProjectCardProps {
   project: Project;
   onUpdateNotes?: (projectId: string, notes: string) => void;
+  onChatWithRepo?: (repoName: string) => void;
 }
 
 const languageColors: Record<string, string> = {
@@ -126,7 +128,7 @@ const getCIStatusBadge = (status: CIStatus) => {
   }
 };
 
-export function ProjectCard({ project, onUpdateNotes }: ProjectCardProps) {
+export function ProjectCard({ project, onUpdateNotes, onChatWithRepo }: ProjectCardProps) {
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [notes, setNotes] = useState(project.notes || "");
 
@@ -229,6 +231,15 @@ export function ProjectCard({ project, onUpdateNotes }: ProjectCardProps) {
           >
             <FolderOpen className="h-3.5 w-3.5" />
             Folder
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onChatWithRepo?.(project.name)}
+            className="gap-2 bg-surface0 border-overlay0 hover:bg-lavender hover:text-background hover:border-lavender transition-all"
+          >
+            <MessageSquare className="h-3.5 w-3.5" />
+            Chat
           </Button>
           <Button
             size="sm"

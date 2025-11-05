@@ -42,6 +42,9 @@
   --mauve: #8839ef;
   --pink: #ea76cb;
   
+  --crust: #dce0e8;
+  --mantle: #e6e9ef;
+  --base: #eff1f5;
   --surface0: #ccd0da;
   --surface1: #bcc0cc;
   --surface2: #acb0be;
@@ -103,6 +106,9 @@
   --mauve: #c6a0f6;
   --pink: #f5bde6;
   
+  --crust: #181926;
+  --mantle: #1e2030;
+  --base: #24273a;
   --surface0: #363a4f;
   --surface1: #494d64;
   --surface2: #5b6078;
@@ -166,6 +172,9 @@
   --color-mauve: var(--mauve);
   --color-pink: var(--pink);
   
+  --color-crust: var(--crust);
+  --color-mantle: var(--mantle);
+  --color-base: var(--base);
   --color-surface0: var(--surface0);
   --color-surface1: var(--surface1);
   --color-surface2: var(--surface2);
