@@ -8,14 +8,16 @@ TBD - created by archiving change add-agent-chat-ui. Update Purpose after archiv
 
 ### Requirement: Agent Chat Panel Component
 
-The system SHALL provide a slide-in chat panel for real-time agent conversations.
+The system SHALL provide a slide-in chat panel with repository-aware header and consistent visual design.
 
 #### Scenario: Open chat panel
 
 - **WHEN** user clicks the floating AI Assistant button
-- **THEN** the chat panel slides in from the right side
+- **THEN** the chat panel slides in from the right with spring animation
+- **AND** the panel has a fixed width of 420px
+- **AND** the panel has a dark theme background (crust color)
+- **AND** the panel has a left border (surface1 color)
 - **AND** displays the active session or prompts to create new session
-- **AND** panel width is 400px on desktop, full-screen on mobile
 
 #### Scenario: Close chat panel
 
@@ -24,9 +26,27 @@ The system SHALL provide a slide-in chat panel for real-time agent conversations
 - **AND** WebSocket connection remains active
 - **AND** conversation state is preserved
 
+#### Scenario: Panel header structure
+
+- **WHEN** viewing the chat panel header
+- **THEN** the header displays Repository Selector on the left
+- **AND** the header displays Plus button and Close button on the right
+- **AND** the header has bottom border separation (surface0 color)
+- **AND** header elements use consistent padding (px-4 py-3)
+- **AND** below the header is the Session Selector with px-4 pb-3 padding
+
+#### Scenario: Input area styling
+
+- **WHEN** viewing the message input area
+- **THEN** the input has surface0 background with surface1 border
+- **AND** the input has mauve focus ring
+- **AND** the send button has mauve background
+- **AND** the send button is embedded in the input (absolute positioning)
+- **AND** agent/model selectors are displayed above the input
+
 ### Requirement: Chat Message Display
 
-The system SHALL display chat messages with role-based styling, timestamps, and copy functionality.
+The system SHALL display chat messages with role-based styling, compact spacing, timestamps, and copy functionality.
 
 #### Scenario: Display user message
 
@@ -60,13 +80,16 @@ The system SHALL display chat messages with role-based styling, timestamps, and 
 - **AND** the button is positioned in the bottom-right of the message
 - **AND** the button has proper z-index to appear above content
 
-#### Scenario: Message spacing and layout
+#### Scenario: Compact message spacing and layout
 
 - **WHEN** messages are displayed in the chat area
 - **THEN** each message has consistent vertical spacing (minimum 1rem between messages)
-- **AND** message content has adequate padding for comfortable reading
-- **AND** the overall layout provides a comfortable reading experience
-- **AND** messages do not appear cramped or cluttered
+- **THEN** message bubbles have compact padding (px-3 py-2)
+- **AND** messages are wrapped in a container with space-y-3
+- **AND** the wrapper has py-4 padding
+- **AND** user messages have base text color
+- **AND** message bubbles maintain rounded-2xl corners
+- **AND** proper spacing is maintained with typing indicator
 
 ### Requirement: Message Input
 
@@ -87,14 +110,74 @@ The system SHALL provide a text input for composing and sending messages.
 
 ### Requirement: Session Management UI
 
-The system SHALL provide UI for creating, switching, and managing agent sessions with different states, including archiving functionality.
+The system SHALL provide UI for creating, switching, and managing agent sessions with repository-based filtering and quick session creation.
 
-#### Scenario: Create new session
+#### Scenario: Header with repository selector
 
-- **WHEN** user clicks "New Session" button
-- **THEN** a repository selector appears
-- **AND** user selects a repository
-- **AND** a new session is created and becomes active
+- **WHEN** viewing the chat panel header
+- **THEN** display a Repository Selector dropdown at the top left
+- **AND** the selector shows "All Repositories" or selected repository name
+- **AND** the selector has FolderGit2 icon and ChevronDown icon
+- **AND** clicking opens dropdown with all available repositories
+- **AND** selecting a repository filters sessions to show only that repo's sessions
+
+#### Scenario: Quick session creation
+
+- **WHEN** a repository is selected in the header
+- **THEN** display a Plus button next to the repository selector
+- **AND** the button is disabled when no repository is selected
+- **AND** the button shows a ring highlight when repo is selected but no sessions exist
+- **AND** clicking the button creates a new session for the selected repository immediately
+- **AND** no dialog is shown - session is created directly
+
+#### Scenario: Session selector with filtering
+
+- **WHEN** viewing the session selector dropdown below the header
+- **THEN** display a compact button (h-8) showing current session name
+- **AND** the button is disabled when a repository is selected but has no sessions
+- **AND** the button shows placeholder text based on filter state
+- **AND** clicking opens dropdown with filtered sessions
+
+#### Scenario: Session dropdown with search
+
+- **WHEN** the session dropdown is opened
+- **THEN** display a search input at the top with Search icon
+- **AND** the search input filters sessions by name in real-time
+- **AND** the dropdown shows filtered active sessions first
+- **AND** the dropdown shows filtered archived sessions in a separate section
+- **AND** the dropdown width is 380px with mantle background
+
+#### Scenario: Session list item with hover actions
+
+- **WHEN** hovering over a session in the dropdown
+- **THEN** hide the timestamp
+- **AND** show Edit2 (rename) icon
+- **AND** show Archive icon
+- **AND** clicking rename icon enters inline edit mode
+- **AND** clicking archive icon archives the session with confirmation
+
+#### Scenario: Inline session rename in dropdown
+
+- **WHEN** user clicks rename icon on a session
+- **THEN** switch to edit mode with input field
+- **AND** the input is pre-filled with current name and focused
+- **AND** display Check and X buttons
+- **AND** pressing Enter or clicking Check saves the new name
+- **AND** pressing Escape or clicking X cancels editing
+
+#### Scenario: Repository-based empty states
+
+- **WHEN** no repository is selected and no session is active
+- **THEN** show "Select a repository or create a session" message
+- **AND** display FolderGit2 icon
+
+- **WHEN** a repository is selected but has no sessions
+- **THEN** show "No Sessions Yet" message
+- **AND** show "Create your first chat session" description
+- **AND** display a "Create Session" button with mauve background
+
+- **WHEN** a repository is selected and has sessions but none are active
+- **THEN** show "Select a session from the dropdown above" message
 
 #### Scenario: Switch sessions
 
@@ -106,26 +189,18 @@ The system SHALL provide UI for creating, switching, and managing agent sessions
 #### Scenario: Session status display
 
 - **WHEN** viewing the session dropdown
-- **THEN** each session displays the repository name (if available)
-- **AND** falls back to "Session [id-prefix]" if no repository name exists
-- **AND** shows session status after the name (e.g., "repo-name - active")
-- **AND** archived sessions show "(archived)" label when "Show Archived" is enabled
-- **AND** sessions are filtered based on "Show Archived" toggle state
+- **THEN** each session displays custom name (if set) or repository name
+- **AND** displays repository name below in muted text (text-xs)
+- **AND** displays last active time on the right (text-xs)
+- **AND** shows a green dot indicator for the currently active session
+- **AND** archived sessions show in separate section with reduced opacity
 
-#### Scenario: Display active repository context
+#### Scenario: Archive session action
 
-- **WHEN** a session is active
-- **THEN** the panel header displays the current repository name
-- **AND** provides clear visual context for the current conversation
-- **AND** helps users identify which repository they are working with
-
-#### Scenario: Archive session button
-
-- **WHEN** an active or suspended session is selected
-- **THEN** an "Archive Session" button is displayed
-- **AND** the button shows Archive icon
-- **AND** clicking the button triggers confirmation dialog
-- **AND** the button is hidden for already archived sessions
+- **WHEN** hovering over a session in the dropdown
+- **THEN** display Archive icon on hover
+- **AND** clicking triggers confirmation dialog
+- **AND** archived sessions can be unarchived
 
 ### Requirement: Connection Status Indicator
 
@@ -254,7 +329,16 @@ The system SHALL provide syntax highlighting for code blocks to improve code rea
 
 ### Requirement: Empty State Display
 
-The system SHALL provide informative empty states with icons for different session conditions.
+The system SHALL provide informative empty states with repository context and different session conditions.
+
+#### Scenario: Active session with no messages
+
+- **WHEN** an active session has no messages
+- **THEN** display a centered empty state with FolderGit2 icon
+- **AND** the icon is in a rounded square container (w-16 h-16, rounded-2xl, bg-surface0)
+- **AND** display "Start a Conversation" heading
+- **AND** display helpful description text with repository name
+- **AND** all text is center-aligned with proper spacing
 
 #### Scenario: No active session
 
@@ -277,12 +361,6 @@ The system SHALL provide informative empty states with icons for different sessi
 - **AND** shows "Session is suspended" title
 - **AND** shows descriptive message about resumption
 - **AND** uses consistent spacing (space-y-2)
-
-#### Scenario: Empty conversation
-
-- **WHEN** an active session has no messages
-- **THEN** displays "Start a conversation" message
-- **AND** shows instruction to ask questions
 
 ### Requirement: Session Rename
 
@@ -506,3 +584,32 @@ The system SHALL provide improved error recovery mechanisms to help users resolv
 - **AND** clicking the link opens a pre-filled issue template
 - **AND** the template includes error details (status code, message, timestamp)
 - **AND** the template includes session context (session ID, repo)
+
+### Requirement: Agent and Model Selector UI
+
+The system SHALL provide compact agent and model selectors at the bottom of the panel.
+
+#### Scenario: Selector layout
+
+- **WHEN** viewing the input area
+- **THEN** display agent and model selectors above the message input
+- **AND** display a Plus button on the left for attachments
+- **AND** display a Mic button on the right for voice input
+- **AND** all buttons are compact (h-7 w-7) with ghost variant
+- **AND** all buttons have hover state (hover:bg-surface0/50)
+- **AND** selectors are separated by small gaps (gap-1)
+
+#### Scenario: Agent selector display
+
+- **WHEN** viewing the agent selector
+- **THEN** display current agent icon and name (e.g., "Gemini")
+- **AND** display a ChevronDown icon
+- **AND** the selector is a compact button with proper styling
+- **AND** clicking opens a dropdown with available agents
+
+#### Scenario: Model selector display
+
+- **WHEN** viewing the model selector
+- **THEN** display current model name (e.g., "Gemini 2.5 Pro")
+- **AND** display a ChevronDown icon
+- **AND** the selector is a compact button with proper styling
