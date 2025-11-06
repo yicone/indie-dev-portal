@@ -257,7 +257,7 @@ indie-dev-portal/
 
 **Key Libraries**:
 
-- Next.js 15, TypeScript, Tailwind CSS, shadcn/ui, React Query
+- Next.js 15, TypeScript, @radix-ui, Tailwind CSS, shadcn/ui, React Query
 - Express, Prisma, SQLite, simple-git
 - ESLint, Prettier, Husky
 

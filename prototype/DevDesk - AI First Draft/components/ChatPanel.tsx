@@ -3,7 +3,6 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { 
-  MessageSquare, 
   X, 
   Send, 
   Plus, 
@@ -11,7 +10,10 @@ import {
   Archive,
   Edit2,
   Check,
-  Mic
+  Mic,
+  Search,
+  Copy,
+  FolderGit2
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -21,7 +23,6 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { motion, AnimatePresence } from "motion/react";
-import { NewSessionDialog } from "./NewSessionDialog";
 import { AgentSelector } from "./AgentSelector";
 import { ModelSelector } from "./ModelSelector";
 
@@ -105,6 +106,27 @@ const mockSessions: ChatSession[] = [
   },
   {
     id: "4",
+    name: "API Gateway Performance Analysis",
+    repository: "api-gateway",
+    lastActive: "5d",
+    messages: []
+  },
+  {
+    id: "5",
+    name: "Component Library Refactoring",
+    repository: "component-library",
+    lastActive: "3d",
+    messages: []
+  },
+  {
+    id: "6",
+    name: "Mobile App Push Notifications",
+    repository: "mobile-app",
+    lastActive: "1d",
+    messages: []
+  },
+  {
+    id: "7",
     name: "Figma MCP Introduction",
     repository: "component-library",
     lastActive: "12d",
@@ -117,23 +139,93 @@ export function ChatPanel({ isOpen, onClose, repositories, initialRepository }: 
   const [sessions, setSessions] = useState<ChatSession[]>(mockSessions);
   const [activeSessionId, setActiveSessionId] = useState<string>("1");
   const [message, setMessage] = useState("");
-  const [isCreatingNew, setIsCreatingNew] = useState(false);
-  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
   const [editedTitle, setEditedTitle] = useState("");
   const [selectedAgent, setSelectedAgent] = useState("gemini");
   const [selectedModel, setSelectedModel] = useState("gemini-2.5-pro");
+  const [selectedRepository, setSelectedRepository] = useState<string>("");
+  const [sessionSearchQuery, setSessionSearchQuery] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const titleInputRef = useRef<HTMLInputElement>(null);
+  const editInputRef = useRef<HTMLInputElement>(null);
 
   const activeSession = sessions.find(s => s.id === activeSessionId);
-  const activeSessions = sessions.filter(s => !s.archived);
+
+  // Filter sessions based on selected repository and search query
+  const filteredActiveSessions = sessions.filter(s => {
+    if (s.archived) return false;
+    
+    // Filter by selected repository
+    if (selectedRepository && s.repository !== selectedRepository) return false;
+    
+    // Filter by search query
+    if (sessionSearchQuery) {
+      const query = sessionSearchQuery.toLowerCase();
+      return s.name.toLowerCase().includes(query);
+    }
+    
+    return true;
+  });
+
   const archivedSessions = sessions.filter(s => s.archived);
+
+  // Get unique repositories from all sessions (including archived)
+  const sessionRepositories = Array.from(new Set(sessions.map(s => s.repository)));
+  const allRepositories = Array.from(new Set([...repositories, ...sessionRepositories]));
+
+  // Check if current repo has any sessions (including archived)
+  const filteredArchivedSessions = selectedRepository 
+    ? archivedSessions.filter(s => s.repository === selectedRepository)
+    : archivedSessions;
+  const hasAnySessions = filteredActiveSessions.length > 0 || filteredArchivedSessions.length > 0;
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [activeSession?.messages]);
+
+  // Initialize selected repository
+  useEffect(() => {
+    if (isOpen) {
+      if (initialRepository) {
+        setSelectedRepository(initialRepository);
+      } else if (activeSession && !selectedRepository) {
+        setSelectedRepository(activeSession.repository);
+      }
+    }
+  }, [isOpen, initialRepository, activeSession, selectedRepository]);
+
+  // Clear active session when switching repos if no sessions exist for the new repo
+  useEffect(() => {
+    if (!selectedRepository) {
+      // When "All Repositories" is selected, keep current session if any
+      return;
+    }
+    
+    if (activeSession) {
+      // If active session doesn't belong to selected repo, clear it
+      if (activeSession.repository !== selectedRepository) {
+        const repoSessions = sessions.filter(s => 
+          s.repository === selectedRepository && !s.archived
+        );
+        if (repoSessions.length > 0) {
+          // Auto-select first session of the new repo
+          setActiveSessionId(repoSessions[0].id);
+        } else {
+          // Clear active session if no sessions for this repo
+          setActiveSessionId(null);
+        }
+      }
+    } else if (selectedRepository) {
+      // If no active session but a repo is selected, try to select first available
+      const repoSessions = sessions.filter(s => 
+        s.repository === selectedRepository && !s.archived
+      );
+      if (repoSessions.length > 0) {
+        setActiveSessionId(repoSessions[0].id);
+      }
+    }
+  }, [selectedRepository, activeSession, sessions]);
 
   // Handle opening chat with a specific repository
   useEffect(() => {
@@ -142,24 +234,38 @@ export function ChatPanel({ isOpen, onClose, repositories, initialRepository }: 
       const existingSession = sessions.find(s => s.repository === initialRepository && !s.archived);
       if (existingSession) {
         setActiveSessionId(existingSession.id);
+        setSelectedRepository(initialRepository);
       } else {
-        // Create a new session for this repo
-        setIsCreatingNew(true);
+        // Auto-create a new session for this repo
+        const newSession: ChatSession = {
+          id: String(Date.now()),
+          name: `New Chat - ${initialRepository}`,
+          repository: initialRepository,
+          lastActive: "now",
+          messages: []
+        };
+        setSessions(prev => [newSession, ...prev]);
+        setActiveSessionId(newSession.id);
+        setSelectedRepository(initialRepository);
       }
     }
   }, [isOpen, initialRepository]);
 
   useEffect(() => {
-    if (isEditingTitle && titleInputRef.current) {
-      titleInputRef.current.focus();
-      titleInputRef.current.select();
+    if (editingSessionId && editInputRef.current) {
+      editInputRef.current.focus();
+      editInputRef.current.select();
     }
-  }, [isEditingTitle]);
+  }, [editingSessionId]);
 
   const handleSendMessage = () => {
     if (!message.trim()) return;
     // Handle send message logic here
     setMessage("");
+  };
+
+  const handleCopyMessage = (content: string) => {
+    navigator.clipboard.writeText(content);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -175,36 +281,40 @@ export function ChatPanel({ isOpen, onClose, repositories, initialRepository }: 
     ));
   };
 
-  const handleCreateSession = (name: string, repository: string) => {
+  const handleQuickCreateSession = (repo?: string) => {
+    const targetRepo = repo || selectedRepository;
+    if (!targetRepo) return;
+    
     const newSession: ChatSession = {
-      id: String(sessions.length + 1),
-      name,
-      repository,
+      id: String(Date.now()),
+      name: `New Chat - ${targetRepo}`,
+      repository: targetRepo,
       lastActive: "now",
       messages: []
     };
-    setSessions([...sessions, newSession]);
+    setSessions(prev => [newSession, ...prev]);
     setActiveSessionId(newSession.id);
+    setSelectedRepository(targetRepo);
   };
 
-  const handleStartEdit = () => {
-    if (activeSession) {
-      setEditedTitle(activeSession.name);
-      setIsEditingTitle(true);
-    }
+  const handleStartEditSession = (sessionId: string, currentName: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingSessionId(sessionId);
+    setEditedTitle(currentName);
   };
 
-  const handleSaveTitle = () => {
-    if (editedTitle.trim() && activeSession) {
+  const handleSaveSessionTitle = () => {
+    if (editedTitle.trim() && editingSessionId) {
       setSessions(sessions.map(s => 
-        s.id === activeSession.id ? { ...s, name: editedTitle.trim() } : s
+        s.id === editingSessionId ? { ...s, name: editedTitle.trim() } : s
       ));
     }
-    setIsEditingTitle(false);
+    setEditingSessionId(null);
+    setEditedTitle("");
   };
 
-  const handleCancelEdit = () => {
-    setIsEditingTitle(false);
+  const handleCancelEditSession = () => {
+    setEditingSessionId(null);
     setEditedTitle("");
   };
 
@@ -220,202 +330,365 @@ export function ChatPanel({ isOpen, onClose, repositories, initialRepository }: 
         >
           {/* Header */}
           <div className="flex-shrink-0 border-b border-surface0">
-            <div className="flex items-center justify-between px-4 py-3">
-              <div className="flex items-center gap-2">
-                <MessageSquare className="h-4 w-4 text-mauve" />
-                <span className="text-sm">AI Assistant</span>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="h-7 w-7 hover:bg-surface0"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-
-            {/* Session Selector - Compact Windsurf Style */}
-            <div className="px-4 pb-3">
+            {/* Top Bar: Repo Selector & Actions */}
+            <div className="flex items-center justify-between gap-2 px-4 py-3">
+              {/* Repository Selector */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="w-full justify-between h-8 px-3 bg-surface0/50 hover:bg-surface0 border border-surface1"
+                    className="flex-1 justify-start gap-2 h-8 px-2 hover:bg-surface0/50 min-w-0"
+                  >
+                    <FolderGit2 className="h-4 w-4 text-mauve flex-shrink-0" />
+                    <span className="text-sm truncate">
+                      {selectedRepository || "All Repositories"}
+                    </span>
+                    <ChevronDown className="h-3 w-3 ml-auto opacity-50 flex-shrink-0" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  align="start" 
+                  className="w-[280px] bg-mantle border-surface0"
+                >
+                  <DropdownMenuItem
+                    onClick={() => setSelectedRepository("")}
+                    className={`px-3 py-2 cursor-pointer hover:bg-surface0 text-sm ${
+                      !selectedRepository ? "bg-surface0/50" : ""
+                    }`}
+                  >
+                    All Repositories
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-surface0" />
+                  {allRepositories.map((repo) => (
+                    <DropdownMenuItem
+                      key={repo}
+                      onClick={() => setSelectedRepository(repo)}
+                      className={`px-3 py-2 cursor-pointer hover:bg-surface0 text-sm ${
+                        selectedRepository === repo ? "bg-surface0/50" : ""
+                      }`}
+                    >
+                      {repo}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleQuickCreateSession()}
+                  disabled={!selectedRepository}
+                  className={`h-7 w-7 hover:bg-surface0/50 disabled:opacity-50 ${
+                    selectedRepository && filteredActiveSessions.length === 0 ? 'ring-1 ring-mauve/50' : ''
+                  }`}
+                  title={selectedRepository 
+                    ? `Create new chat for ${selectedRepository}`
+                    : "Select a repository first"}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onClose}
+                  className="h-7 w-7 hover:bg-surface0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Session Selector */}
+            <div className="px-4 pb-3">
+
+              {/* Session Selector with Search */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    disabled={selectedRepository && !hasAnySessions}
+                    className={`w-full justify-between h-8 px-3 bg-surface0/50 hover:bg-surface0 border border-surface1 ${
+                      selectedRepository && filteredActiveSessions.length === 0 
+                        ? 'border-mauve/30 text-muted-foreground italic' 
+                        : ''
+                    }`}
                   >
                     <span className="text-sm truncate">
-                      {activeSession?.name || "Select a session"}
+                      {activeSession && activeSession.repository === selectedRepository
+                        ? activeSession.name
+                        : selectedRepository && !hasAnySessions
+                          ? "No sessions"
+                          : selectedRepository && filteredActiveSessions.length === 0 
+                            ? "No active sessions"
+                            : "Select a session"}
                     </span>
                     <ChevronDown className="h-3 w-3 ml-2 opacity-50 flex-shrink-0" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="start" 
-                  className="w-[380px] bg-mantle border-surface0"
+                  className="w-[380px] bg-mantle border-surface0 p-0"
                 >
-                  {/* Active Sessions */}
-                  <div className="py-1">
-                    {activeSessions.map((session) => (
-                      <DropdownMenuItem
-                        key={session.id}
-                        onClick={() => setActiveSessionId(session.id)}
-                        className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-surface0"
-                      >
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            {session.id === activeSessionId && (
-                              <div className="w-1.5 h-1.5 rounded-full bg-green flex-shrink-0" />
-                            )}
-                            <span className="text-sm truncate">{session.name}</span>
-                          </div>
-                          <div className="text-xs text-muted-foreground mt-0.5">
-                            {session.repository}
-                          </div>
-                        </div>
-                        <span className="text-xs text-muted-foreground ml-2 flex-shrink-0">
-                          {session.lastActive}
-                        </span>
-                      </DropdownMenuItem>
-                    ))}
+                  {/* Search Box */}
+                  <div className="p-2 border-b border-surface0">
+                    <div className="relative">
+                      <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+                      <Input
+                        value={sessionSearchQuery}
+                        onChange={(e) => setSessionSearchQuery(e.target.value)}
+                        placeholder="Search sessions..."
+                        className="h-7 pl-7 text-xs bg-surface0/50 border-surface1"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
                   </div>
 
-                  <DropdownMenuSeparator className="bg-surface0" />
-
-                  {/* New Session */}
-                  <DropdownMenuItem
-                    onClick={() => setIsCreatingNew(true)}
-                    className="px-3 py-2 cursor-pointer hover:bg-surface0"
-                  >
-                    <Plus className="h-3 w-3 mr-2" />
-                    <span className="text-sm">New Chat Session</span>
-                  </DropdownMenuItem>
-
-                  {/* Archive Current Session */}
-                  {activeSession && (
-                    <>
-                      <DropdownMenuSeparator className="bg-surface0" />
-                      <DropdownMenuItem
-                        onClick={() => handleArchiveSession(activeSession.id)}
-                        className="px-3 py-2 cursor-pointer hover:bg-surface0"
-                      >
-                        <Archive className="h-3 w-3 mr-2" />
-                        <span className="text-sm">
-                          {activeSession.archived ? "Unarchive" : "Archive"} Session
-                        </span>
-                      </DropdownMenuItem>
-                    </>
-                  )}
+                  {/* Filtered Sessions */}
+                  <ScrollArea className="max-h-[300px]">
+                    <div className="py-1">
+                      {filteredActiveSessions.length === 0 ? (
+                        <div className="px-4 py-6 text-center">
+                          <div className="text-sm text-muted-foreground mb-3">
+                            {sessionSearchQuery 
+                              ? "No sessions match your search"
+                              : selectedRepository 
+                                ? `No active sessions for ${selectedRepository}`
+                                : "No active sessions"}
+                          </div>
+                          {selectedRepository && !sessionSearchQuery && (
+                            <Button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleQuickCreateSession();
+                              }}
+                              size="sm"
+                              className="h-7 bg-mauve hover:bg-mauve/90 text-base"
+                            >
+                              <Plus className="h-3.5 w-3.5 mr-1.5" />
+                              Create Session
+                            </Button>
+                          )}
+                        </div>
+                      ) : (
+                        filteredActiveSessions.map((session) => (
+                          <div key={session.id} className="mx-1 mb-0.5">
+                            {editingSessionId === session.id ? (
+                              <div className="flex items-center gap-1 px-2 py-1.5" onClick={(e) => e.stopPropagation()}>
+                                <Input
+                                  ref={editInputRef}
+                                  value={editedTitle}
+                                  onChange={(e) => setEditedTitle(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") handleSaveSessionTitle();
+                                    if (e.key === "Escape") handleCancelEditSession();
+                                    e.stopPropagation();
+                                  }}
+                                  className="h-6 text-xs bg-surface0 border-surface1"
+                                  onClick={(e) => e.stopPropagation()}
+                                />
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSaveSessionTitle();
+                                  }}
+                                  className="h-6 w-6 hover:bg-surface0 flex-shrink-0"
+                                >
+                                  <Check className="h-3 w-3" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCancelEditSession();
+                                  }}
+                                  className="h-6 w-6 hover:bg-surface0 flex-shrink-0"
+                                >
+                                  <X className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            ) : (
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setActiveSessionId(session.id);
+                                  setSessionSearchQuery("");
+                                }}
+                                className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-surface0 rounded group"
+                              >
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2">
+                                    {session.id === activeSessionId && (
+                                      <div className="w-1.5 h-1.5 rounded-full bg-green flex-shrink-0" />
+                                    )}
+                                    <span className="text-sm truncate">{session.name}</span>
+                                  </div>
+                                  <div className="text-xs text-muted-foreground mt-0.5">
+                                    {session.repository}
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-1 ml-2">
+                                  <span className="text-xs text-muted-foreground group-hover:hidden flex-shrink-0">
+                                    {session.lastActive}
+                                  </span>
+                                  <div className="hidden group-hover:flex items-center gap-0.5">
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={(e) => handleStartEditSession(session.id, session.name, e)}
+                                      className="h-6 w-6 hover:bg-surface1"
+                                      title="Rename"
+                                    >
+                                      <Edit2 className="h-3 w-3" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleArchiveSession(session.id);
+                                      }}
+                                      className="h-6 w-6 hover:bg-surface1"
+                                      title="Archive"
+                                    >
+                                      <Archive className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </DropdownMenuItem>
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </ScrollArea>
 
                   {/* Archived Sessions */}
-                  {archivedSessions.length > 0 && (
+                  {filteredArchivedSessions.length > 0 && (
                     <>
                       <DropdownMenuSeparator className="bg-surface0" />
                       <div className="px-3 py-1.5 text-xs text-muted-foreground">
                         Archived
                       </div>
-                      {archivedSessions.map((session) => (
-                        <DropdownMenuItem
-                          key={session.id}
-                          onClick={() => setActiveSessionId(session.id)}
-                          className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-surface0 opacity-60"
-                        >
-                          <div className="flex-1 min-w-0">
-                            <span className="text-sm truncate block">{session.name}</span>
-                            <span className="text-xs text-muted-foreground">
-                              {session.repository}
-                            </span>
-                          </div>
-                          <span className="text-xs text-muted-foreground ml-2">
-                            {session.lastActive}
-                          </span>
-                        </DropdownMenuItem>
-                      ))}
+                      <ScrollArea className="max-h-[150px]">
+                        <div className="py-1">
+                          {filteredArchivedSessions.map((session) => (
+                            <div key={session.id} className="mx-1 mb-0.5">
+                              <DropdownMenuItem
+                                onClick={() => setActiveSessionId(session.id)}
+                                className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-surface0 rounded opacity-60 hover:opacity-100 group"
+                              >
+                                <div className="flex-1 min-w-0">
+                                  <span className="text-sm truncate block">{session.name}</span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {session.repository}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1 ml-2">
+                                  <span className="text-xs text-muted-foreground group-hover:hidden flex-shrink-0">
+                                    {session.lastActive}
+                                  </span>
+                                  <div className="hidden group-hover:flex items-center gap-0.5">
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleArchiveSession(session.id);
+                                      }}
+                                      className="h-6 w-6 hover:bg-surface1"
+                                      title="Unarchive"
+                                    >
+                                      <Archive className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </DropdownMenuItem>
+                            </div>
+                          ))}
+                        </div>
+                      </ScrollArea>
                     </>
                   )}
+
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Editable Title & Repo Info */}
-              {activeSession && (
-                <div className="mt-2">
-                  {isEditingTitle ? (
-                    <div className="flex items-center gap-1">
-                      <Input
-                        ref={titleInputRef}
-                        value={editedTitle}
-                        onChange={(e) => setEditedTitle(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") handleSaveTitle();
-                          if (e.key === "Escape") handleCancelEdit();
-                        }}
-                        className="h-7 text-xs bg-surface0 border-surface1"
-                      />
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={handleSaveTitle}
-                        className="h-7 w-7 hover:bg-surface0"
-                      >
-                        <Check className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={handleCancelEdit}
-                        className="h-7 w-7 hover:bg-surface0"
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <div 
-                      className="flex items-center justify-between p-2 rounded-md hover:bg-surface0/30 cursor-pointer group"
-                      onClick={handleStartEdit}
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs truncate">{activeSession.name}</div>
-                        <div className="text-xs text-muted-foreground">
-                          Repo: {activeSession.repository}
-                        </div>
-                      </div>
-                      <Edit2 className="h-3 w-3 opacity-0 group-hover:opacity-50 flex-shrink-0" />
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           </div>
 
           {/* Messages Area */}
           <ScrollArea className="flex-1 px-4" ref={scrollRef}>
-            {activeSession?.messages.length === 0 ? (
+            {!activeSession ? (
+              <div className="flex flex-col items-center justify-center h-full text-center py-12 px-6">
+                <div className="w-16 h-16 rounded-2xl bg-surface0 flex items-center justify-center mb-4">
+                  <FolderGit2 className="h-8 w-8 text-mauve" />
+                </div>
+                <h3 className="mb-2">
+                  {selectedRepository && filteredActiveSessions.length === 0 
+                    ? "No Sessions Yet"
+                    : "No Session Selected"}
+                </h3>
+                <p className="text-sm text-muted-foreground max-w-[280px] mb-4">
+                  {selectedRepository && filteredActiveSessions.length === 0
+                    ? `Start chatting about ${selectedRepository} by creating your first session.`
+                    : selectedRepository 
+                      ? `Select a session from the list above or create a new one.`
+                      : "Select a repository and create a new chat to get started."}
+                </p>
+                {selectedRepository && filteredActiveSessions.length === 0 && (
+                  <Button
+                    onClick={() => handleQuickCreateSession()}
+                    size="sm"
+                    className="bg-mauve hover:bg-mauve/90 text-base"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create Session
+                  </Button>
+                )}
+              </div>
+            ) : activeSession.messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center py-12">
                 <div className="w-16 h-16 rounded-2xl bg-surface0 flex items-center justify-center mb-4">
-                  <MessageSquare className="h-8 w-8 text-mauve" />
+                  <FolderGit2 className="h-8 w-8 text-mauve" />
                 </div>
                 <h3 className="mb-2">Start a Conversation</h3>
                 <p className="text-sm text-muted-foreground max-w-[280px]">
-                  Ask questions about {activeSession?.repository}. Get help with code, architecture, or documentation.
+                  Ask questions about {activeSession.repository}. Get help with code, architecture, or documentation.
                 </p>
               </div>
             ) : (
-              <div className="space-y-4 py-4">
-                {activeSession?.messages.map((msg) => (
+              <div className="space-y-3 py-4">
+                {activeSession.messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} group`}
                   >
                     <div
-                      className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
+                      className={`max-w-[85%] rounded-2xl px-3 py-2 ${
                         msg.role === "user"
                           ? "bg-mauve text-base"
                           : "bg-surface0 text-text"
                       }`}
                     >
-                      <p className="text-sm leading-relaxed">{msg.content}</p>
-                      <span className="text-xs opacity-60 mt-1.5 block">
-                        {msg.timestamp}
-                      </span>
+                      <p className="text-sm leading-snug">{msg.content}</p>
+                      <div className="flex items-center justify-between gap-2 mt-0.5">
+                        <span className="text-[10px] opacity-50">
+                          {msg.timestamp}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleCopyMessage(msg.content)}
+                          className="h-4 w-4 p-0 opacity-0 group-hover:opacity-60 hover:opacity-100 transition-opacity"
+                          title="Copy message"
+                        >
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -475,15 +748,6 @@ export function ChatPanel({ isOpen, onClose, repositories, initialRepository }: 
           </div>
         </motion.div>
       )}
-
-      {/* New Session Dialog */}
-      <NewSessionDialog
-        isOpen={isCreatingNew}
-        onClose={() => setIsCreatingNew(false)}
-        onCreateSession={handleCreateSession}
-        repositories={repositories}
-        initialRepository={initialRepository}
-      />
     </AnimatePresence>
   );
 }

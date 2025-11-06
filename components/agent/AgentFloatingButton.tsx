@@ -5,13 +5,16 @@ import { Button } from '@/components/ui/button';
 import { useAgentChat } from '@/lib/contexts/AgentChatContext';
 
 export function AgentFloatingButton() {
-  const { openPanel, sessions } = useAgentChat();
+  const { openPanel, sessions, isOpen } = useAgentChat();
 
   // Count active and suspended sessions (exclude archived and error)
   const activeSessionCount = Array.from(sessions.values()).filter((session) => {
     const s = session as unknown as { status: string };
     return s.status === 'active' || s.status === 'suspended';
   }).length;
+
+  // Hide button when panel is open
+  if (isOpen) return null;
 
   return (
     <Button

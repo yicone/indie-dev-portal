@@ -1,40 +1,56 @@
-import { type ClassValue, clsx } from 'clsx';
+import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatDateTime(value: string, options?: Intl.DateTimeFormatOptions) {
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    ...options,
-  }).format(new Date(value));
-}
+/**
+ * Format a date string to relative time (e.g., "2 hours ago", "3 days ago")
+ */
+export function formatRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-export function formatRelativeTime(value: string) {
-  const formatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-  const date = new Date(value);
-  const diff = date.getTime() - Date.now();
-
-  const divisions: Array<[Intl.RelativeTimeFormatUnit, number]> = [
-    ['year', 1000 * 60 * 60 * 24 * 365],
-    ['month', 1000 * 60 * 60 * 24 * 30],
-    ['week', 1000 * 60 * 60 * 24 * 7],
-    ['day', 1000 * 60 * 60 * 24],
-    ['hour', 1000 * 60 * 60],
-    ['minute', 1000 * 60],
-    ['second', 1000],
-  ];
-
-  for (const [unit, amount] of divisions) {
-    const delta = diff / amount;
-    if (Math.abs(delta) >= 1 || unit === 'second') {
-      return formatter.format(Math.round(delta), unit);
-    }
+  if (diffInSeconds < 60) {
+    return 'just now';
   }
 
-  return formatter.format(0, 'second');
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+  }
+
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+  }
+
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) {
+    return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+  }
+
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) {
+    return `${diffInMonths} month${diffInMonths > 1 ? 's' : ''} ago`;
+  }
+
+  const diffInYears = Math.floor(diffInMonths / 12);
+  return `${diffInYears} year${diffInYears > 1 ? 's' : ''} ago`;
+}
+
+/**
+ * Format a date string to a readable date/time format
+ */
+export function formatDateTime(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }
