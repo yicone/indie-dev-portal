@@ -54,7 +54,6 @@ The system SHALL support the following session statuses for future extensibility
 - **WHEN** user explicitly archives session
 - **THEN** status is 'archived'
 - **AND** session is hidden from UI by default
-- **AND** can be viewed in "Show Archived" mode
 - **AND** cannot accept new messages
 
 #### Scenario: Error session

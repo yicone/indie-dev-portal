@@ -249,21 +249,12 @@ The system SHALL provide functionality to archive sessions to keep the session l
 
 #### Scenario: View archived sessions
 
-- **WHEN** user clicks "Show Archived" toggle button
-- **THEN** the button text changes to "Hide Archived"
-- **AND** archived sessions appear in the session dropdown with "(archived)" label
-- **AND** user can select an archived session to view its history
-
-#### Scenario: Hide archived sessions
-
-- **WHEN** user clicks "Hide Archived" toggle button
-- **THEN** the button text changes to "Show Archived"
-- **AND** archived sessions are removed from the session dropdown
-- **AND** only active and suspended sessions are visible
+- **WHEN** user clicks an archived session in the session dropdown
+- **THEN** the archived session is selected and its history is displayed
 
 #### Scenario: Archived session empty state
 
-- **WHEN** user selects an archived session
+- **WHEN** user views an archived session
 - **THEN** the messages area displays an Archive icon
 - **AND** shows "Archived Session" title
 - **AND** shows descriptive message about viewing history only
