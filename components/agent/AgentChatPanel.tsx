@@ -723,7 +723,9 @@ export function AgentChatPanel() {
                           <ReactMarkdown
                             remarkPlugins={[remarkGfm]}
                             components={{
-                              p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
+                              p: ({ children }) => (
+                                <p className="mb-4 last:mb-0 text-sm">{children}</p>
+                              ),
                               ul: ({ children }) => (
                                 <ul className="mb-4 last:mb-0 space-y-1 list-disc pl-6">
                                   {children}
