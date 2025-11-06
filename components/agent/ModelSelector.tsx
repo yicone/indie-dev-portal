@@ -15,13 +15,25 @@ interface ModelSelectorProps {
 }
 
 const AVAILABLE_MODELS = [
-  { id: 'gemini-2.0-flash-exp', name: 'gemini-2.0-flash-exp', description: 'Latest experimental' },
-  { id: 'gemini-1.5-pro', name: 'gemini-1.5-pro', description: 'Production ready' },
-  { id: 'gemini-1.5-flash', name: 'gemini-1.5-flash', description: 'Fast responses' },
+  {
+    id: 'gemini-2.5-pro',
+    name: 'gemini-2.5-pro',
+    description: 'For complex tasks that require deep reasoning and creativity',
+  },
+  {
+    id: 'gemini-2.5-flash',
+    name: 'gemini-2.5-flash',
+    description: 'For tasks that need a balance of speed and reasoning',
+  },
+  {
+    id: 'gemini-2.5-flash-lite',
+    name: 'gemini-2.5-flash-lite',
+    description: 'For simple tasks that need to be done quickly',
+  },
 ];
 
 export function ModelSelector({
-  currentModel = 'gemini-2.0-flash-exp',
+  currentModel = 'gemini-2.5-pro',
   onModelChange,
 }: ModelSelectorProps) {
   const selectedModel = AVAILABLE_MODELS.find((m) => m.id === currentModel) || AVAILABLE_MODELS[0];
