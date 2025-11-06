@@ -176,7 +176,7 @@ Note: Agent process exit does NOT change state
 
 - ✅ `active`
 - ✅ `suspended`
-- ❌ `archived` (hidden by default, shown with "Show Archived" toggle)
+- ✅ `archived`
 - ❌ `error`
 
 ### Counted in Badge
@@ -249,13 +249,13 @@ Response: { sessionId, status: 'active' }
 
 **New Transitions**:
 
-- `active` → `cancelled` (user cancels)
+- `active` → `archived` (user cancels)
 
 **API**:
 
 ```typescript
 POST /sessions/:id/cancel
-Response: { sessionId, status: 'cancelled' }
+Response: { sessionId, status: 'archived' }
 ```
 
 **UI**:
