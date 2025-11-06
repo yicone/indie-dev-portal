@@ -49,9 +49,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - simple-git for git operations
 - Prisma for database management
 
-## [Unreleased]
+## [1.1.0] - 2025-11-06
 
 ### Added
+
+- **Chat with Repos**: AI-powered coding assistant with repository context
+  - Repository-aware chat sessions with automatic context loading
+  - Session management with inline editing and archiving
+  - Quick session creation with repository filtering
+  - Compact message display with syntax highlighting
+  - Real-time streaming responses via WebSocket
+  - Agent and model selection (currently supports Gemini CLI)
+  - Session search and filtering by repository
+  - Archive/unarchive sessions for better organization
 
 - **Open Source Preparation**: Prepared project for open source release
   - Rebranded to "DevDesk" with new tagline

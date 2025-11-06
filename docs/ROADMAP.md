@@ -39,6 +39,29 @@
 
 ### Short-term (1-3 months)
 
+#### AI Agent Features
+
+- [ ] **Multi-Agent Support**
+  - Add Codex CLI integration
+  - Add Claude Code integration
+  - Agent-specific capabilities
+- [ ] **Keyboard Shortcuts**
+  - Session navigation (Cmd/Ctrl+K)
+  - Quick actions (Cmd/Ctrl+N, E, R)
+  - Shortcuts help modal
+
+#### AI Agent Advanced Features
+
+- [ ] **Agent Task Panel** (In Progress)
+  - Real-time task monitoring
+  - File change preview with diff
+  - Approval workflow for destructive operations
+  - Task history and filtering
+- [ ] **Advanced Message Display**
+  - Rich content rendering (tables, charts)
+  - Interactive elements in messages
+  - Context-aware code suggestions
+
 #### Testing & Quality
 
 - [ ] Add unit tests for React components (Vitest/Jest)
@@ -57,10 +80,22 @@
 
 - [ ] Add commit graph visualization
 - [ ] Improve search with fuzzy matching
-- [ ] Add keyboard shortcuts
 - [ ] Add repository grouping/tagging
 
 ### Mid-term (3-6 months)
+
+#### AI Agent Features
+
+- [ ] **Session Export**
+  - Export to JSON format
+  - Export to Markdown format
+
+#### AI Agent Advanced Features
+
+- [ ] **Agent Permission Control**
+  - Fine-grained permission system
+  - Per-repository access control
+  - Audit logging for agent actions
 
 #### Remote Integration
 
@@ -76,7 +111,6 @@
 - [ ] File system watcher for auto-sync
 - [ ] Git hooks integration
 - [ ] Real-time commit detection
-- [ ] WebSocket for live updates
 
 #### Advanced Features
 
@@ -86,16 +120,8 @@
   - Contributor statistics
 - [ ] Code search across repositories
 - [ ] Snippet management
-- [ ] Task/TODO tracking
 
 ### Long-term (6+ months)
-
-#### Multi-user Support
-
-- [ ] Authentication system
-- [ ] User profiles
-- [ ] Team collaboration features
-- [ ] Shared repositories
 
 #### CI/CD Integration
 
@@ -120,34 +146,55 @@
 
 ## 📊 Priority Matrix
 
-| Feature          | Impact | Effort | Priority |
-| ---------------- | ------ | ------ | -------- |
-| Branch Detection | High   | Low    | **P0**   |
-| Unit Tests       | High   | Medium | **P0**   |
-| GitHub API       | High   | High   | **P1**   |
-| File Watcher     | Medium | Medium | **P1**   |
-| Commit Graph     | Medium | Low    | **P2**   |
-| Multi-user       | Low    | High   | **P3**   |
+| Feature                  | Impact | Effort | Priority |
+| ------------------------ | ------ | ------ | -------- |
+| Agent Task Panel         | High   | High   | **P0**   |
+| Multi-Agent Support      | High   | Medium | **P0**   |
+| Advanced Message Display | High   | Medium | **P1**   |
+| Branch Detection         | High   | Low    | **P1**   |
+| Unit Tests               | High   | Medium | **P1**   |
+| Keyboard Shortcuts       | Medium | Low    | **P2**   |
+| GitHub API               | High   | High   | **P2**   |
+| File Watcher             | Medium | Medium | **P2**   |
+| Commit Graph             | Medium | Low    | **P3**   |
+| Session Export           | Medium | Low    | **P3**   |
 
 ## 🔄 Version Planning
 
-### v1.1.0 (Next Release)
+### v1.2.0 (Next Release - Target: Dec 2025)
 
-- Branch detection
-- Unit tests
-- E2E tests
-- Improved search
+- **Agent Task Panel** (In Progress - P0)
+  - Real-time task monitoring
+  - File change preview and approval
+  - Approval workflow for destructive operations
+  - Task history and filtering
+- **Multi-Agent Support** (P0)
+  - Codex CLI integration
+  - Claude Code integration
+  - Agent-specific capabilities
+- **Advanced Message Display** (P1)
+  - Rich content rendering (tables, charts)
+  - Interactive elements in messages
+  - Context-aware code suggestions
 
-### v1.2.0
+### v1.3.0 (Target: Q1 2026)
 
-- GitHub API integration
-- File system watcher
-- Commit graph visualization
+- Branch Detection (P1)
+- Unit Tests (P1)
+- Keyboard Shortcuts (P2)
+- Session Export (P3)
 
-### v2.0.0
+### v1.4.0 (Target: Q2 2026)
 
-- Multi-user support
-- Real-time updates
+- GitHub API integration (P2)
+- File system watcher (P2)
+- Agent Permission Control
+- Commit graph visualization (P3)
+
+### Future (Undecided)
+
+- CI/CD integration
+- Plugin system
 - Advanced git operations
 
 ## 💡 Feature Requests
@@ -163,6 +210,6 @@ Have an idea? Open an issue on GitHub with the `enhancement` label.
 
 ---
 
-**Last Updated**: October 26, 2025  
-**Current Version**: 1.0.0  
-**Next Release**: v1.1.0 (Target: December 2025)
+**Last Updated**: Nov 6, 2025  
+**Current Version**: v1.1.0  
+**Next Release**: v1.2.0 (Target: Dec 2025)

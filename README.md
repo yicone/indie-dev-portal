@@ -11,6 +11,7 @@ A local-first multi-repo workspace for developers.
 
 - 🔍 **Real Git Integration** - Automatic repository discovery and metadata extraction
 - 📊 **Smart Dashboard** - Search, filter, and sort your projects
+- 🤖 **Chat with Repos** - AI-powered coding assistant with repository context (powered by Gemini CLI)
 - 🎯 **Quick Actions** - Open in VS Code, view diffs, add notes
 - 🎨 **Modern UI** - Light/Dark themes with smooth animations
 - ⚡ **Fast & Local** - SQLite database, no cloud dependencies
@@ -98,9 +99,9 @@ pnpm lint         # Run linting
 
 ## 🗺️ Roadmap
 
-**Short-term**: Branch detection, unit tests, improved search  
-**Mid-term**: GitHub API, file watcher, commit graphs  
-**Long-term**: Multi-user support, CI/CD integration
+**Short-term**: Agent Task Panel for real-time task monitoring, Multi-agent support (Codex CLI, Claude Code)  
+**Mid-term**: Keyboard shortcuts, GitHub API integration, file watcher  
+**Long-term**: Session export, advanced git operations
 
 [View detailed roadmap →](docs/ROADMAP.md)
 
