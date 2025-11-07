@@ -515,38 +515,83 @@ export function AgentChatPanel() {
                       <div className="py-1">
                         {filteredArchivedSessions.map((session: any) => (
                           <div key={session.id} className="mx-1 mb-0.5">
-                            <DropdownMenuItem
-                              onClick={() => setActiveSession(session.id)}
-                              className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-surface0 rounded opacity-60 hover:opacity-100 group"
-                            >
-                              <div className="flex-1 min-w-0">
-                                <span className="text-sm truncate block">
-                                  {getSessionDisplayName(session)}
-                                </span>
-                                <span className="text-xs text-muted-foreground">
-                                  {session.repo?.name || 'Unknown'}
-                                </span>
+                            {editingSessionId === session.id ? (
+                              <div
+                                className="flex items-center gap-1 px-2 py-1.5"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Input
+                                  ref={editInputRef}
+                                  value={editedTitle}
+                                  onChange={(e) => setEditedTitle(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') handleSaveSessionTitle();
+                                    if (e.key === 'Escape') handleCancelEditSession();
+                                    e.stopPropagation();
+                                  }}
+                                  className="h-6 text-xs bg-surface0 border-surface1"
+                                  onClick={(e) => e.stopPropagation()}
+                                />
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSaveSessionTitle();
+                                  }}
+                                  className="h-6 w-6 hover:bg-surface0 flex-shrink-0"
+                                >
+                                  <Check className="h-3 w-3" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCancelEditSession();
+                                  }}
+                                  className="h-6 w-6 hover:bg-surface0 flex-shrink-0"
+                                >
+                                  <X className="h-3 w-3" />
+                                </Button>
                               </div>
-                              <div className="flex items-center gap-1 ml-2">
-                                <span className="text-xs text-muted-foreground group-hover:hidden flex-shrink-0">
-                                  {session.updatedAt ? formatRelativeTime(session.updatedAt) : ''}
-                                </span>
-                                <div className="hidden group-hover:flex items-center gap-0.5">
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleArchiveSession(session.id);
-                                    }}
-                                    className="h-6 w-6 hover:bg-surface1"
-                                    title="Unarchive"
-                                  >
-                                    <Archive className="h-3 w-3" />
-                                  </Button>
+                            ) : (
+                              <DropdownMenuItem
+                                onClick={() => setActiveSession(session.id)}
+                                className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-surface0 rounded opacity-60 hover:opacity-100 group"
+                              >
+                                <div className="flex-1 min-w-0">
+                                  <span className="text-sm truncate block">
+                                    {getSessionDisplayName(session)}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {session.repo?.name || 'Unknown'}
+                                  </span>
                                 </div>
-                              </div>
-                            </DropdownMenuItem>
+                                <div className="flex items-center gap-1 ml-2">
+                                  <span className="text-xs text-muted-foreground group-hover:hidden flex-shrink-0">
+                                    {session.updatedAt ? formatRelativeTime(session.updatedAt) : ''}
+                                  </span>
+                                  <div className="hidden group-hover:flex items-center gap-0.5">
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={(e) =>
+                                        handleStartEditSession(
+                                          session.id,
+                                          getSessionDisplayName(session),
+                                          e
+                                        )
+                                      }
+                                      className="h-6 w-6 hover:bg-surface1"
+                                      title="Rename"
+                                    >
+                                      <Edit2 className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </DropdownMenuItem>
+                            )}
                           </div>
                         ))}
                       </div>
