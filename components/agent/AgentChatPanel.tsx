@@ -40,6 +40,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
 import { AgentSelector } from './AgentSelector';
 import { ModelSelector } from './ModelSelector';
+import SessionListItem from './SessionListItem';
 
 export function AgentChatPanel() {
   const {
@@ -377,7 +378,33 @@ export function AgentChatPanel() {
                 {/* Filtered Sessions */}
                 <ScrollArea className="h-[300px]">
                   <div className="py-1">
-                    {filteredActiveSessions.length === 0 ? (
+                    {filteredActiveSessions.length > 0 ? (
+                      filteredActiveSessions.map((session: any) => (
+                        <SessionListItem
+                          key={session.id}
+                          session={session}
+                          isActive={session.id === activeSessionId}
+                          isEditing={editingSessionId === session.id}
+                          editedTitle={editedTitle}
+                          editInputRef={editInputRef}
+                          onSetActive={() => {
+                            setActiveSession(session.id);
+                            setSessionSearchQuery('');
+                          }}
+                          onSetEditedTitle={setEditedTitle}
+                          onSave={handleSaveSessionTitle}
+                          onCancel={handleCancelEditSession}
+                          onStartEdit={(e: React.MouseEvent) =>
+                            handleStartEditSession(session.id, getSessionDisplayName(session), e)
+                          }
+                          onArchive={(e: React.MouseEvent) => {
+                            e.stopPropagation();
+                            handleArchiveSession(session.id);
+                          }}
+                          getSessionDisplayName={getSessionDisplayName}
+                        />
+                      ))
+                    ) : (
                       <div className="px-4 py-6 text-center">
                         <div className="text-sm text-muted-foreground mb-3">
                           {sessionSearchQuery
@@ -400,108 +427,6 @@ export function AgentChatPanel() {
                           </Button>
                         )}
                       </div>
-                    ) : (
-                      filteredActiveSessions.map((session: any) => (
-                        <div key={session.id} className="mx-1 mb-0.5">
-                          {editingSessionId === session.id ? (
-                            <div
-                              className="flex items-center gap-1 px-2 py-1.5"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <Input
-                                ref={editInputRef}
-                                value={editedTitle}
-                                onChange={(e) => setEditedTitle(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') handleSaveSessionTitle();
-                                  if (e.key === 'Escape') handleCancelEditSession();
-                                  e.stopPropagation();
-                                }}
-                                className="h-6 text-xs bg-surface0 border-surface1"
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleSaveSessionTitle();
-                                }}
-                                className="h-6 w-6 hover:bg-surface0 flex-shrink-0"
-                              >
-                                <Check className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleCancelEditSession();
-                                }}
-                                className="h-6 w-6 hover:bg-surface0 flex-shrink-0"
-                              >
-                                <X className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <DropdownMenuItem
-                              onClick={() => {
-                                setActiveSession(session.id);
-                                setSessionSearchQuery('');
-                              }}
-                              className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-surface0 rounded group"
-                            >
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  {session.id === activeSessionId && (
-                                    <div className="w-1.5 h-1.5 rounded-full bg-green flex-shrink-0" />
-                                  )}
-                                  <span className="text-sm truncate">
-                                    {getSessionDisplayName(session)}
-                                  </span>
-                                </div>
-                                <div className="text-xs text-muted-foreground mt-0.5">
-                                  {session.repo?.name || 'Unknown'}
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-1 ml-2">
-                                <span className="text-xs text-muted-foreground group-hover:hidden flex-shrink-0">
-                                  {session.updatedAt ? formatRelativeTime(session.updatedAt) : ''}
-                                </span>
-                                <div className="hidden group-hover:flex items-center gap-0.5">
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={(e) =>
-                                      handleStartEditSession(
-                                        session.id,
-                                        getSessionDisplayName(session),
-                                        e
-                                      )
-                                    }
-                                    className="h-6 w-6 hover:bg-surface1"
-                                    title="Rename"
-                                  >
-                                    <Edit2 className="h-3 w-3" />
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleArchiveSession(session.id);
-                                    }}
-                                    className="h-6 w-6 hover:bg-surface1"
-                                    title="Archive"
-                                  >
-                                    <Archive className="h-3 w-3" />
-                                  </Button>
-                                </div>
-                              </div>
-                            </DropdownMenuItem>
-                          )}
-                        </div>
-                      ))
                     )}
                   </div>
                 </ScrollArea>
@@ -514,85 +439,26 @@ export function AgentChatPanel() {
                     <ScrollArea className="h-[150px]">
                       <div className="py-1">
                         {filteredArchivedSessions.map((session: any) => (
-                          <div key={session.id} className="mx-1 mb-0.5">
-                            {editingSessionId === session.id ? (
-                              <div
-                                className="flex items-center gap-1 px-2 py-1.5"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <Input
-                                  ref={editInputRef}
-                                  value={editedTitle}
-                                  onChange={(e) => setEditedTitle(e.target.value)}
-                                  onKeyDown={(e) => {
-                                    if (e.key === 'Enter') handleSaveSessionTitle();
-                                    if (e.key === 'Escape') handleCancelEditSession();
-                                    e.stopPropagation();
-                                  }}
-                                  className="h-6 text-xs bg-surface0 border-surface1"
-                                  onClick={(e) => e.stopPropagation()}
-                                />
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSaveSessionTitle();
-                                  }}
-                                  className="h-6 w-6 hover:bg-surface0 flex-shrink-0"
-                                >
-                                  <Check className="h-3 w-3" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleCancelEditSession();
-                                  }}
-                                  className="h-6 w-6 hover:bg-surface0 flex-shrink-0"
-                                >
-                                  <X className="h-3 w-3" />
-                                </Button>
-                              </div>
-                            ) : (
-                              <DropdownMenuItem
-                                onClick={() => setActiveSession(session.id)}
-                                className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-surface0 rounded opacity-60 hover:opacity-100 group"
-                              >
-                                <div className="flex-1 min-w-0">
-                                  <span className="text-sm truncate block">
-                                    {getSessionDisplayName(session)}
-                                  </span>
-                                  <span className="text-xs text-muted-foreground">
-                                    {session.repo?.name || 'Unknown'}
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-1 ml-2">
-                                  <span className="text-xs text-muted-foreground group-hover:hidden flex-shrink-0">
-                                    {session.updatedAt ? formatRelativeTime(session.updatedAt) : ''}
-                                  </span>
-                                  <div className="hidden group-hover:flex items-center gap-0.5">
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      onClick={(e) =>
-                                        handleStartEditSession(
-                                          session.id,
-                                          getSessionDisplayName(session),
-                                          e
-                                        )
-                                      }
-                                      className="h-6 w-6 hover:bg-surface1"
-                                      title="Rename"
-                                    >
-                                      <Edit2 className="h-3 w-3" />
-                                    </Button>
-                                  </div>
-                                </div>
-                              </DropdownMenuItem>
-                            )}
-                          </div>
+                          <SessionListItem
+                            key={session.id}
+                            session={session}
+                            isActive={session.id === activeSessionId}
+                            isEditing={editingSessionId === session.id}
+                            editedTitle={editedTitle}
+                            editInputRef={editInputRef}
+                            onSetActive={() => setActiveSession(session.id)}
+                            onSetEditedTitle={setEditedTitle}
+                            onSave={handleSaveSessionTitle}
+                            onCancel={handleCancelEditSession}
+                            onStartEdit={(e: React.MouseEvent) =>
+                              handleStartEditSession(session.id, getSessionDisplayName(session), e)
+                            }
+                            onArchive={(e: React.MouseEvent) => {
+                              e.stopPropagation();
+                              handleArchiveSession(session.id);
+                            }}
+                            getSessionDisplayName={getSessionDisplayName}
+                          />
                         ))}
                       </div>
                     </ScrollArea>
