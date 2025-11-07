@@ -224,32 +224,6 @@ export function AgentChatPanel() {
     }
   };
 
-  const handleStartRename = (sessionId: string) => {
-    const session = sessions.get(sessionId);
-    if (session) {
-      setRenamingSessionId(sessionId);
-      setRenameInput(getSessionDisplayName(session));
-    }
-  };
-
-  const handleSaveRename = async () => {
-    if (!renamingSessionId || !renameInput.trim()) return;
-
-    try {
-      await renameSession(renamingSessionId, renameInput.trim());
-      setRenamingSessionId(null);
-      setRenameInput('');
-    } catch (error) {
-      console.error('Failed to rename session:', error);
-      // Error is already set in context
-    }
-  };
-
-  const handleCancelRename = () => {
-    setRenamingSessionId(null);
-    setRenameInput('');
-  };
-
   const handleSend = async () => {
     if (!input.trim() || sending) return;
 
