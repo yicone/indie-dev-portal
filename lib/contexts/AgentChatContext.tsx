@@ -23,6 +23,7 @@ interface AgentChatContextType {
   sendMessage: (text: string) => Promise<void>;
   retryMessage: (messageId: string) => Promise<void>;
   renameSession: (sessionId: string, newName: string) => Promise<void>;
+  archiveSession: (sessionId: string) => Promise<void>;
   clearError: () => void;
 }
 
@@ -597,6 +598,40 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const archiveSession = useCallback(async (sessionId: string) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Session not found. It may have already been archived.');
+        }
+        throw new Error('Failed to archive session');
+      }
+
+      // Update session status to 'archived' in local state
+      setSessions((prev) => {
+        const newSessions = new Map(prev);
+        const sessionToArchive = newSessions.get(sessionId);
+        if (sessionToArchive) {
+          newSessions.set(sessionId, {
+            ...sessionToArchive,
+            updatedAt: new Date(),
+            status: 'archived',
+          });
+        }
+        return newSessions;
+      });
+    } catch (error) {
+      console.error('[AgentChat] Failed to archive session:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to archive session';
+      setError(errorMessage);
+      throw error;
+    }
+  }, []);
+
   const clearError = useCallback(() => {
     setError(null);
   }, []);
@@ -630,6 +665,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
     sendMessage,
     retryMessage,
     renameSession,
+    archiveSession,
     clearError,
   };
 

@@ -1,29 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import {
-  X,
-  Send,
-  AlertCircle,
-  Loader2,
-  Archive,
-  Copy,
-  Check,
-  RefreshCw,
-  Edit2,
-  MessageSquare,
-  ChevronDown,
-  Plus,
-  Mic,
-  Search,
-  FolderGit2,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { formatRelativeTime } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,17 +8,38 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Textarea } from '@/components/ui/textarea';
 import { useAgentChat } from '@/lib/contexts/AgentChatContext';
-import { useQuery } from '@tanstack/react-query';
 import { fetchRepos } from '@/lib/gitUtils';
+import { formatRelativeTime } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
+import {
+  AlertCircle,
+  Archive,
+  Check,
+  ChevronDown,
+  Copy,
+  Edit2,
+  FolderGit2,
+  Loader2,
+  MessageSquare,
+  Mic,
+  Plus,
+  RefreshCw,
+  Search,
+  Send,
+  X,
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import remarkGfm from 'remark-gfm';
 import { AgentSelector } from './AgentSelector';
 import { ModelSelector } from './ModelSelector';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? '/api';
 
 export function AgentChatPanel() {
   const {
@@ -53,6 +51,7 @@ export function AgentChatPanel() {
     sendMessage,
     retryMessage,
     renameSession,
+    archiveSession,
     connectionStatus,
     createSession,
     setActiveSession,
@@ -200,26 +199,16 @@ export function AgentChatPanel() {
 
     setArchivingSession(sessionId);
     try {
-      const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error('Session not found. It may have already been archived or deleted.');
-        }
-        throw new Error('Failed to archive session');
-      }
+      await archiveSession(sessionId);
 
       // If we archived the active session, clear it
       if (sessionId === activeSessionId) {
         setActiveSession(null);
       }
     } catch (error) {
-      console.error('Failed to archive session:', error);
-      const errorMessage =
-        error instanceof Error ? error.message : 'Failed to archive session. Please try again.';
-      alert(errorMessage);
+      // Error is already set in the context, but we can log it here too
+      console.error('Failed to archive session from panel:', error);
+      // The context will show the error to the user
     } finally {
       setArchivingSession(null);
     }
@@ -394,11 +383,11 @@ export function AgentChatPanel() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="start"
-                className="w-[380px] max-h-[500px] bg-mantle border-surface0 p-0"
+                className="w-[380px] bg-mantle border-surface0 p-0 flex flex-col h-full"
                 sideOffset={4}
               >
                 {/* Search Box */}
-                <div className="p-2 border-b border-surface0">
+                <div className="p-2 border-b border-surface0 flex-shrink-0">
                   <div className="relative">
                     <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
                     <Input
@@ -546,9 +535,9 @@ export function AgentChatPanel() {
                 {/* Archived Sessions */}
                 {filteredArchivedSessions.length > 0 && (
                   <>
-                    <DropdownMenuSeparator className="bg-surface0" />
+                    <DropdownMenuSeparator className="bg-surface0 my-1" />
                     <div className="px-3 py-1.5 text-xs text-muted-foreground">Archived</div>
-                    <ScrollArea className="max-h-[150px]">
+                    <ScrollArea className="h-[150px]">
                       <div className="py-1">
                         {filteredArchivedSessions.map((session: any) => (
                           <div key={session.id} className="mx-1 mb-0.5">
