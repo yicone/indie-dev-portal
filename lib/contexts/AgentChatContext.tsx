@@ -5,6 +5,8 @@ import { useAgentWebSocket } from '@/lib/hooks/useAgentWebSocket';
 import type { WSServerMessage, ConnectionStatus } from '@/types/websocket';
 import type { AgentSessionData, AgentMessageData } from '@/types/agent';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? '/api';
+
 interface AgentChatContextType {
   isOpen: boolean;
   activeSessionId: string | null;
@@ -274,7 +276,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
   // Load messages for a session
   const loadSessionMessages = useCallback(async (sessionId: string) => {
     try {
-      const response = await fetch(`http://localhost:4000/sessions/${sessionId}/messages`);
+      const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}/messages`);
       if (response.ok) {
         const messagesData = await response.json();
         // Parse content for each message
@@ -299,7 +301,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const loadSessions = async () => {
       try {
-        const response = await fetch('http://localhost:4000/sessions');
+        const response = await fetch(`${API_BASE_URL}/sessions`);
         if (response.ok) {
           const data = await response.json();
           const sessionsMap = new Map();
@@ -319,7 +321,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
   const createSession = useCallback(async (repoId: number) => {
     setIsCreatingSession(true);
     try {
-      const response = await fetch('http://localhost:4000/sessions', {
+      const response = await fetch(`${API_BASE_URL}/sessions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ repoId }),
@@ -358,7 +360,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
       setIsOpen(true);
 
       // Reload sessions in background to get complete data (don't block on this)
-      fetch('http://localhost:4000/sessions')
+      fetch(`${API_BASE_URL}/sessions`)
         .then((res) => res.json())
         .then((data) => {
           const sessionsArray = Array.isArray(data) ? data : data.sessions || [];
@@ -410,7 +412,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         setError(null);
         setIsTyping(true);
 
-        const response = await fetch(`http://localhost:4000/sessions/${activeSessionId}/prompt`, {
+        const response = await fetch(`${API_BASE_URL}/sessions/${activeSessionId}/prompt`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text }),
@@ -504,7 +506,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
         setError(null);
         setIsTyping(true);
 
-        const response = await fetch(`http://localhost:4000/sessions/${activeSessionId}/prompt`, {
+        const response = await fetch(`${API_BASE_URL}/sessions/${activeSessionId}/prompt`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text }),
@@ -568,7 +570,7 @@ export function AgentChatProvider({ children }: { children: React.ReactNode }) {
 
   const renameSession = useCallback(async (sessionId: string, newName: string) => {
     try {
-      const response = await fetch(`http://localhost:4000/sessions/${sessionId}`, {
+      const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newName }),

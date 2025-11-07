@@ -22,7 +22,7 @@ export function openGitDiff(repoPath: string): void {
 }
 
 export async function updateRepoNotes(repoSlug: string, notes: string): Promise<void> {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000';
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? '/api';
 
   const response = await fetch(`${apiBaseUrl}/repos/${repoSlug}/notes`, {
     method: 'PATCH',

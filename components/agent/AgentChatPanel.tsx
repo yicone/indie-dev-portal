@@ -41,6 +41,8 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { AgentSelector } from './AgentSelector';
 import { ModelSelector } from './ModelSelector';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? '/api';
+
 export function AgentChatPanel() {
   const {
     isOpen,
@@ -198,11 +200,14 @@ export function AgentChatPanel() {
 
     setArchivingSession(sessionId);
     try {
-      const response = await fetch(`/api/sessions/${sessionId}`, {
+      const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Session not found. It may have already been archived or deleted.');
+        }
         throw new Error('Failed to archive session');
       }
 
@@ -212,7 +217,9 @@ export function AgentChatPanel() {
       }
     } catch (error) {
       console.error('Failed to archive session:', error);
-      alert('Failed to archive session. Please try again.');
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to archive session. Please try again.';
+      alert(errorMessage);
     } finally {
       setArchivingSession(null);
     }

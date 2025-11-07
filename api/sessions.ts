@@ -229,10 +229,16 @@ sessionsRouter.patch('/:id', async (req: Request, res: Response) => {
 sessionsRouter.delete('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    // First, verify the session exists
+    await sessionService.getSession(id);
+    // Then, cancel it
     await sessionService.cancelSession(id);
-    res.json({ success: true });
+    res.status(204).end();
   } catch (error) {
     console.error('[SessionsAPI] Error cancelling session:', error);
+    if (error instanceof Error && error.message.includes('not found')) {
+      return res.status(404).json({ error: error.message });
+    }
     res.status(500).json({ error: 'Failed to cancel session' });
   }
 });

@@ -36,7 +36,7 @@ const commitsResponseSchema = z.object({
   data: z.array(commitSchema),
 });
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? '/api';
 
 async function fetchJson<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
   const response = await fetch(input, {
